@@ -1,6 +1,6 @@
 # Space-Lotus
 
-# Guidelines (Recommended by GitHub Assignment Doc)
+# General Guidelines (Recommended by GitHub Assignment Doc)
 * Commits to main branch require pull requests
 * Always pull the latest code *before making changes* and *before pushing*
 * Each Team Member should have an individual scene file to work on
