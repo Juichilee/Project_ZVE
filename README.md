@@ -1,7 +1,7 @@
 # Space-Lotus
 
 # General Guidelines (Recommended by GitHub Assignment Doc)
-* Commits to main branch require pull requests
+* Commits to main branch should require pull requests
 * Always pull the latest code *before making changes* and *before pushing*
 * Each Team Member should have an individual scene file to work on
 * If there is a merge conflict with your local scene and a scene in remote and you cannot pull the latest changes...
