@@ -168,7 +168,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &88070086
 GameObject:
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 88070087}
   m_Layer: 6
   m_Name: Arena
-  m_TagString: ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -380,7 +380,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &331920728
 GameObject:
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 331920729}
   m_Layer: 6
   m_Name: Cube
-  m_TagString: ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -434,7 +434,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fc40f7f533c0640babbb9927aaf3b077, type: 2}
+  - {fileID: 2100000, guid: 086a4dc030643c14690983b7dc86f5dd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -477,7 +477,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: -30, y: 0, z: 0}
 --- !u!1 &685738503
 GameObject:
@@ -519,7 +519,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100138, guid: 11d723d356152494ea1f1dc10ed906ef, type: 3}
       propertyPath: m_Name
-      value: Y_Bot
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 400138, guid: 11d723d356152494ea1f1dc10ed906ef, type: 3}
       propertyPath: m_RootOrder
@@ -602,9 +602,9 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!136 &1186672263
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -647,22 +647,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7688ae2a775f4c7baef8f572a0397f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonPressStandingSpot: {fileID: 0}
-  buttonCloseEnoughForMatchDistance: 2
-  buttonCloseEnoughForPressDistance: 0.22
-  buttonCloseEnoughForPressAngleDegrees: 5
-  initalMatchTargetsAnimTime: 0.25
-  exitMatchTargetsAnimTime: 0.75
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
-  buttonObject: {fileID: 0}
+  maxVerticalSpeed: 10
+  groundDrag: 0
   jumpableGroundNormalMaxAngle: 45
   closeToJumpableGround: 0
-  curVelocity: {x: 0, y: 0, z: 0}
-  prevVelocity: {x: 0, y: 0, z: 0}
-  maxVerticalSpeed: 10
+  airSpeedMultiplier: 100
+  airTurnSpeed: 270
+  jumpForce: 0
+  jumpCooldown: 0
+  readyToJump: 0
+  localVelocity: {x: 0, y: 0, z: 0}
+  prevWorldVelocity: {x: 0, y: 0, z: 0}
+  worldVelocity: {x: 0, y: 0, z: 0}
   isGrounded: 1
+  playerHeight: 1.75
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1262388032
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,7 +709,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1404255393
 GameObject:
@@ -810,37 +814,6 @@ MonoBehaviour:
   rotationMaxSpeed: 100
   desiredPose: {fileID: 0}
   target: {fileID: 0}
---- !u!1 &1808089164
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1808089165}
-  m_Layer: 0
-  m_Name: Player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1808089165
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1808089164}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.14, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1910185374
 GameObject:
   m_ObjectHideFlags: 0
