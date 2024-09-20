@@ -13,7 +13,8 @@ public class CharacterCommon {
         float jumpableGroundNormalMaxAngle, 
         float rayDepth, //how far down from charPos will we look for ground?
         float rayOriginOffset, //charPos near bottom of collider, so need a fudge factor up away from there
-        out bool isJumpable
+        out bool isJumpable,
+        LayerMask whatisGround // Layermask for determining what layers are considered ground for the Raycast
     ) 
     {
 
@@ -25,28 +26,20 @@ public class CharacterCommon {
 
         Ray ray = new Ray(charPos + Vector3.up * rayOriginOffset, Vector3.down);
 
-        int layerMask = 1 << LayerMask.NameToLayer("Default");
-
-
-        RaycastHit[] hits = Physics.RaycastAll(ray, totalRayLen, layerMask);
+        RaycastHit[] hits = Physics.RaycastAll(ray, totalRayLen, whatisGround);
 
         RaycastHit groundHit = new RaycastHit();
 
         foreach(RaycastHit hit in hits)
         {
 
-            if (hit.collider.gameObject.CompareTag("ground"))
-            {           
+            ret = true;
 
-                ret = true;
+            groundHit = hit;
 
-                groundHit = hit;
+            _isJumpable = Vector3.Angle(Vector3.up, hit.normal) < jumpableGroundNormalMaxAngle;
 
-                _isJumpable = Vector3.Angle(Vector3.up, hit.normal) < jumpableGroundNormalMaxAngle;
-
-                break; //only need to find the ground once
-
-            }
+            break; //only need to find the ground once
 
         }
 
