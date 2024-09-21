@@ -7,9 +7,6 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
 
-
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -21,6 +18,8 @@ public class PlayerControlScript : MonoBehaviour
 {
     private Animator anim;	
     private Rigidbody rbody;
+    public Camera mainCamera;
+    public Transform orientation;
 
     #region Controller Input Reading & Caching
     private CharacterInputController cinput;
@@ -31,6 +30,7 @@ public class PlayerControlScript : MonoBehaviour
     // cached.
     bool _inputActionFired = false;
     float _inputForward = 0f;
+    float _inputRight = 0f;
     float _inputTurn = 0f;
     bool _inputJump = false;
     #endregion
@@ -47,13 +47,16 @@ public class PlayerControlScript : MonoBehaviour
     public bool closeToJumpableGround;
     private float prev_inputForward; // Used to preserve direction and momentum before jump
     public float airTurnSpeed = 270f; 
+    public float rotationSpeed = 30f;
     // Base air forward speed allowing user to move while in air (i.e., how far the player is allowed to move in air after jumping in place)
-    float baseAirForwardSpeed = 1.5f; 
+    public float baseAirForwardSpeed = 1.5f; 
+    public float horizontalSpeed = 5f;
     public float jumpForce = 100f;
     public float jumpCooldown = 1f;
     public bool isJumping;
     public bool hasJumped = false;
     public bool multiJump = false;
+    public bool cameraTurningPlayer = true;
     private Coroutine jumpRoutine = null;
 
     [Header("Physics")]
@@ -105,21 +108,31 @@ public class PlayerControlScript : MonoBehaviour
 
         // if (leftFoot == null || rightFoot == null)
         //     Debug.Log("One of the feet could not be found");
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
     }
 
     private void Update()
     {
         if (cinput.enabled)
         {
-            _inputForward = cinput.Forward;
-            _inputTurn = cinput.Turn;
+            _inputForward = cinput.Forward; // for translating forward and backward
+            _inputRight = cinput.Right; // For translating side to side
 
             // Note that we don't overwrite a true value already stored
             // Is only cleared to false in FixedUpdate()
             // This makes certain that the action is handled!
             _inputActionFired = _inputActionFired || cinput.Action;
-
         }
+        // Third Person Camera Based Directional Input
+        Transform mainCameraTrans = mainCamera.transform;
+        Vector3 viewDir = transform.position - new Vector3(mainCameraTrans.position.x, transform.position.y, mainCameraTrans.position.z);
+        if(_inputForward > 0){
+            orientation.forward = viewDir.normalized;
+        } else {
+            orientation.forward = -viewDir.normalized;
+        }
+
 
         // Handle drag
         if (isGrounded){
@@ -134,7 +147,6 @@ public class PlayerControlScript : MonoBehaviour
 
     void FixedUpdate()
     {
-
         // Physics calculations for rigidbody because animator velocity is inaccurate
         worldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
         prevWorldPosition = transform.position;
@@ -164,7 +176,6 @@ public class PlayerControlScript : MonoBehaviour
         LayerMask groundLayer = LayerMask.GetMask("ground");
         isGrounded = GetGrounded || Physics.CheckSphere(pos, radius, groundLayer);
 
-
         anim.SetFloat("velx", _inputTurn);
         anim.SetFloat("velz", _inputForward);
         anim.SetFloat("vely", normalizedVerticalSpeed);
@@ -180,7 +191,7 @@ public class PlayerControlScript : MonoBehaviour
             _inputJump = hasJumped || !isGrounded ? false : _inputJump; // If multi-jump is not enabled, then player must be grounded before jump
         }
 
-        if(_inputJump)
+        if (_inputJump)
         {
             // Store prevVelocity for setting forward jump velocity in future frame
             prevVelocity = localVelocity;
@@ -196,6 +207,33 @@ public class PlayerControlScript : MonoBehaviour
 
         } else {
             anim.SetBool("startJump", false);
+        }
+
+        // Camera Turning Input
+        Vector3 inputDir = orientation.forward * _inputForward;
+
+        if (cameraTurningPlayer) //  && inputDir != Vector3.zero  Turn on and off camera based player turning
+        {
+            
+            Vector3 newForward = Vector3.Lerp(transform.forward, inputDir.normalized, Time.fixedDeltaTime * rotationSpeed);
+
+            // Calculate the cross product to determine turn direction
+            Vector3 crossProduct = Vector3.Cross(orientation.forward.normalized, transform.forward.normalized);
+
+            // Check the Y component of the cross product to determine if turning left or right
+            // if (crossProduct.y > 0)
+            // {
+            //     Debug.Log("Turning Right");
+            // }
+            // else if (crossProduct.y < 0)
+            // {
+            //     Debug.Log("Turning Left");
+            // }
+            // else
+            // {
+            //     Debug.Log("Not Turning (or very small angle)");
+            // }
+            _inputTurn = -Mathf.Clamp(crossProduct.y, -1f, 1f);
         }
     }
 
@@ -256,10 +294,14 @@ public class PlayerControlScript : MonoBehaviour
             //use rotational root motion as is
             newRootRotation = anim.rootRotation;
 
+            // Movement sideways (strafing)
+            // Vector3 sideMovement = transform.right * _inputRight * horizontalSpeed * Time.fixedDeltaTime;
+
             //TODO Here, you could scale the difference in position and rotation to make the character go faster or slower
-            newRootPosition = Vector3.LerpUnclamped(this.transform.position, newRootPosition, rootMovementSpeed);
+            newRootPosition = Vector3.LerpUnclamped(-this.transform.position, newRootPosition, rootMovementSpeed);
             newRootRotation = Quaternion.LerpUnclamped(this.transform.rotation, newRootRotation, rootTurnSpeed);
 
+            
             rbody.MovePosition(newRootPosition);
             rbody.MoveRotation(newRootRotation);    
         }
@@ -270,15 +312,20 @@ public class PlayerControlScript : MonoBehaviour
             // Calculate the amount of rotation for this frame
             float turnAmount = _inputTurn * (airTurnSpeed * speedMultiplier) * Time.fixedDeltaTime;
 
+            // Allow the player to control forward and backward movement in air slightly
+            float inputForwardBlend = Mathf.Clamp(prev_inputForward + _inputForward, -1, 1);
+            
             // Create a Quaternion for the turn (rotate around the Y-axis)
-            Quaternion turnRotation = Quaternion.Euler(0f, turnAmount, 0f);
+            Quaternion turnRotation; 
+            if(inputForwardBlend > 0){
+                turnRotation = Quaternion.Euler(0f, turnAmount, 0f); // Forwards Turning
+            } else {
+                turnRotation = Quaternion.Euler(0f, -turnAmount, 0f); // Backwards Turning
+            }
 
             // Apply the rotation to the Rigidbody's current rotation
             rbody.MoveRotation(rbody.rotation * turnRotation);
 
-            // Allow the player to control forward and backward movement in air slightly
-            float inputForwardBlend = Mathf.Clamp(prev_inputForward + _inputForward, -1, 1);
-            
             float forwardVelocity = Math.Max(baseAirForwardSpeed, prevVelocity.z) * speedMultiplier; // The floor for forward velocity is baseAirForwardSpeed
             Vector3 moveDir = transform.forward.normalized * inputForwardBlend * forwardVelocity;
             rbody.MovePosition(rbody.position + moveDir * Time.fixedDeltaTime);  
