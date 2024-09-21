@@ -40,13 +40,15 @@ public class PlayerControlScript : MonoBehaviour
     private float animationSpeed = 1f;
     private float rootMovementSpeed = 1f;
     private float rootTurnSpeed = 1f;
-    public float maxVerticalSpeed = 10f;
-    public float groundDrag;
+    public float maxVerticalSpeed = 10f; // Maximum falling speed for falling animation blend
+    public float groundDrag = 0f;
+    public float airDrag = 0.2f;
     public float jumpableGroundNormalMaxAngle = 45;
     public bool closeToJumpableGround;
     private float prev_inputForward; // Used to preserve direction and momentum before jump
     public float airTurnSpeed = 270f; 
-    public float airForwardSpeed = 5f;
+    // Base air forward speed allowing user to move while in air (i.e., how far the player is allowed to move in air after jumping in place)
+    float baseAirForwardSpeed = 1.5f; 
     public float jumpForce = 100f;
     public float jumpCooldown = 1f;
     public bool isJumping;
@@ -59,6 +61,7 @@ public class PlayerControlScript : MonoBehaviour
     public Vector3 localVelocity = new Vector3();
     private Vector3 prevWorldPosition;
     private Vector3 worldVelocity;
+    public Vector3 prevVelocity = new Vector3();
 
     [Header("Ground Check")]
     private int groundContactCount = 0;
@@ -123,7 +126,7 @@ public class PlayerControlScript : MonoBehaviour
             rbody.drag = groundDrag;
             prev_inputForward = _inputForward; // Preserve previous inputForward momentum
         }else{
-            rbody.drag = 0;
+            rbody.drag = airDrag;
         }
 
         _inputJump = cinput.Jump;
@@ -179,6 +182,9 @@ public class PlayerControlScript : MonoBehaviour
 
         if(_inputJump)
         {
+            // Store prevVelocity for setting forward jump velocity in future frame
+            prevVelocity = localVelocity;
+
             anim.SetBool("startJump", true);
             anim.SetBool("isJumping", true);
             hasJumped = true;
@@ -238,7 +244,6 @@ public class PlayerControlScript : MonoBehaviour
 
     void OnAnimatorMove()
     {
-
         Vector3 newRootPosition;
         Quaternion newRootRotation;
         AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(0);
@@ -263,7 +268,7 @@ public class PlayerControlScript : MonoBehaviour
             Debug.Log("Kinematic Control");
             // If not grounded, still allow the player to be controlled in the air
             // Calculate the amount of rotation for this frame
-            float turnAmount = _inputTurn * airTurnSpeed * Time.fixedDeltaTime;
+            float turnAmount = _inputTurn * (airTurnSpeed * speedMultiplier) * Time.fixedDeltaTime;
 
             // Create a Quaternion for the turn (rotate around the Y-axis)
             Quaternion turnRotation = Quaternion.Euler(0f, turnAmount, 0f);
@@ -273,12 +278,11 @@ public class PlayerControlScript : MonoBehaviour
 
             // Allow the player to control forward and backward movement in air slightly
             float inputForwardBlend = Mathf.Clamp(prev_inputForward + _inputForward, -1, 1);
-            // float xzMagnitude = Mathf.Sqrt(Mathf.Pow(localVelocity.x, 2) + Mathf.Pow(localVelocity.z, 2));
-            // float horizontalSpeed = Mathf.Sqrt(prevVelocity.x * prevVelocity.x + prevVelocity.z * prevVelocity.z);
-            Vector3 dir = transform.forward * inputForwardBlend  * airForwardSpeed;
-            rbody.MovePosition(rbody.position + dir * Time.fixedDeltaTime);
-
-        }        
+            
+            float forwardVelocity = Math.Max(baseAirForwardSpeed, prevVelocity.z) * speedMultiplier; // The floor for forward velocity is baseAirForwardSpeed
+            Vector3 moveDir = transform.forward.normalized * inputForwardBlend * forwardVelocity;
+            rbody.MovePosition(rbody.position + moveDir * Time.fixedDeltaTime);  
+        }     
     }
 
     // void OnAnimatorIK(int layerIndex)
