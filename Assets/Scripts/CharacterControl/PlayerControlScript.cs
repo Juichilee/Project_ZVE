@@ -239,6 +239,7 @@ public class PlayerControlScript : MonoBehaviour
 
         if (_inputActionFired)
         {
+            _inputActionFired = false;
             meleeAttack.startAttack();
         }
 
