@@ -43,8 +43,6 @@ public class EnemyRootMotionControl : MonoBehaviour
     public float maxHealth = 100f;
     public bool isDead = false;
 
-
-
     // Awake is To grab the components
     void Awake()
     {
@@ -107,9 +105,11 @@ public class EnemyRootMotionControl : MonoBehaviour
     private void Die() 
     {
         isDead = true;
-        anim.enabled = false;
-        cc.enabled = false;
-        aiAgent.isStopped = true;
+        // anim.enabled = false;
+        // cc.enabled = false;
+        // aiAgent.isStopped = true;
+        Destroy(this.gameObject);
+
     }
 
 
