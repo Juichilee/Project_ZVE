@@ -42,6 +42,7 @@ public class PlayerControlScript : MonoBehaviour
     public float rootMovementSpeed = 1f;
     public float rootTurnSpeed = 1f;
     public float maxVerticalSpeed = 10f; // Maximum falling speed for falling animation blend
+    public float maxHorizontalSpeed = 20f;
     public float groundDrag = 0f;
     public float airDrag = 0.2f;
     public float jumpableGroundNormalMaxAngle = 45;
@@ -334,7 +335,7 @@ public class PlayerControlScript : MonoBehaviour
             // Apply the rotation to the Rigidbody's current rotation
             rbody.MoveRotation(rbody.rotation * turnRotation);
 
-            float forwardVelocity = Math.Max(baseAirForwardSpeed, prevVelocity.z) * speedMultiplier; //  // The floor for forward velocity is baseAirForwardSpeed
+            float forwardVelocity = Mathf.Min(Math.Max(baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), maxHorizontalSpeed); //  // The floor for forward velocity is baseAirForwardSpeed
             Vector3 moveDir = transform.forward.normalized * inputForwardBlend * forwardVelocity;
             rbody.MovePosition(rbody.position + moveDir * Time.fixedDeltaTime);  
         }     
