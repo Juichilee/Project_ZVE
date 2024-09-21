@@ -20,6 +20,7 @@ public class PlayerControlScript : MonoBehaviour
     private Rigidbody rbody;
     public Camera mainCamera;
     public Transform orientation;
+    public MeleeAttack meleeAttack;
 
     #region Controller Input Reading & Caching
     private CharacterInputController cinput;
@@ -235,6 +236,12 @@ public class PlayerControlScript : MonoBehaviour
             // }
             _inputTurn = -Mathf.Clamp(crossProduct.y, -1f, 1f);
         }
+
+        if (_inputActionFired)
+        {
+            meleeAttack.startAttack();
+        }
+
     }
 
     private void ResetJump()
