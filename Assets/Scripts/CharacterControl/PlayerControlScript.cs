@@ -38,9 +38,9 @@ public class PlayerControlScript : MonoBehaviour
 
     [Header("Movement & Animation")]
     public float speedMultiplier = 1f; // Sets the animationSpeed, rootMovementSpeed, and rootTurnSpeed
-    private float animationSpeed = 1f;
-    private float rootMovementSpeed = 1f;
-    private float rootTurnSpeed = 1f;
+    public float animationSpeed = 1f;
+    public float rootMovementSpeed = 1f;
+    public float rootTurnSpeed = 1f;
     public float maxVerticalSpeed = 10f; // Maximum falling speed for falling animation blend
     public float groundDrag = 0f;
     public float airDrag = 0.2f;
@@ -306,12 +306,12 @@ public class PlayerControlScript : MonoBehaviour
             // Vector3 sideMovement = transform.right * _inputRight * horizontalSpeed * Time.fixedDeltaTime;
 
             //TODO Here, you could scale the difference in position and rotation to make the character go faster or slower
-            newRootPosition = Vector3.LerpUnclamped(-this.transform.position, newRootPosition, rootMovementSpeed);
+            newRootPosition = Vector3.LerpUnclamped(this.transform.position, newRootPosition, rootMovementSpeed);
             newRootRotation = Quaternion.LerpUnclamped(this.transform.rotation, newRootRotation, rootTurnSpeed);
 
             
             rbody.MovePosition(newRootPosition);
-            rbody.MoveRotation(newRootRotation);    
+            rbody.MoveRotation(newRootRotation);
         }
         else
         { 
@@ -334,7 +334,7 @@ public class PlayerControlScript : MonoBehaviour
             // Apply the rotation to the Rigidbody's current rotation
             rbody.MoveRotation(rbody.rotation * turnRotation);
 
-            float forwardVelocity = Math.Max(baseAirForwardSpeed, prevVelocity.z) * speedMultiplier; // The floor for forward velocity is baseAirForwardSpeed
+            float forwardVelocity = Math.Max(baseAirForwardSpeed, prevVelocity.z) * speedMultiplier; //  // The floor for forward velocity is baseAirForwardSpeed
             Vector3 moveDir = transform.forward.normalized * inputForwardBlend * forwardVelocity;
             rbody.MovePosition(rbody.position + moveDir * Time.fixedDeltaTime);  
         }     
