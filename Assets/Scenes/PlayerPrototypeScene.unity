@@ -647,18 +647,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7688ae2a775f4c7baef8f572a0397f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationSpeed: 1
-  rootMovementSpeed: 1
-  rootTurnSpeed: 1
+  speedMultiplier: 1
   maxVerticalSpeed: 10
   groundDrag: 0
   jumpableGroundNormalMaxAngle: 45
   closeToJumpableGround: 0
-  airSpeedMultiplier: 100
   airTurnSpeed: 270
-  jumpForce: 0
-  jumpCooldown: 0
-  readyToJump: 0
+  jumpForce: 150
+  jumpCooldown: 1
+  isJumping: 0
+  hasJumped: 0
+  multiJump: 0
   localVelocity: {x: 0, y: 0, z: 0}
   prevWorldVelocity: {x: 0, y: 0, z: 0}
   worldVelocity: {x: 0, y: 0, z: 0}
@@ -810,8 +809,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   positionSmoothTime: 0.5
   rotationSmoothTime: 0.5
-  positionMaxSpeed: 100
-  rotationMaxSpeed: 100
+  positionMaxSpeed: 200
+  rotationMaxSpeed: 200
   desiredPose: {fileID: 0}
   target: {fileID: 0}
 --- !u!1 &1910185374

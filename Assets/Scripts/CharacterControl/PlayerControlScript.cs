@@ -5,6 +5,8 @@ using UnityEngine;
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
+
 
 
 
@@ -30,27 +32,33 @@ public class PlayerControlScript : MonoBehaviour
     bool _inputActionFired = false;
     float _inputForward = 0f;
     float _inputTurn = 0f;
+    bool _inputJump = false;
     #endregion
 
     [Header("Movement & Animation")]
-    public float animationSpeed = 1f;
-    public float rootMovementSpeed = 1f;
-    public float rootTurnSpeed = 1f;
+    public float speedMultiplier = 1f; // Sets the animationSpeed, rootMovementSpeed, and rootTurnSpeed
+    private float animationSpeed = 1f;
+    private float rootMovementSpeed = 1f;
+    private float rootTurnSpeed = 1f;
     public float maxVerticalSpeed = 10f;
     public float groundDrag;
     public float jumpableGroundNormalMaxAngle = 45;
     public bool closeToJumpableGround;
-    public float airSpeedMultiplier= 200f; // How much faster the user moves in the air
-    public float airTurnSpeed = 270f;
-    public float jumpForce;
-    public float jumpCooldown;
-    public bool readyToJump;
+    private float prev_inputForward; // Used to preserve direction and momentum before jump
+    public float airTurnSpeed = 270f; 
+    public float airForwardSpeed = 5f;
+    public float jumpForce = 100f;
+    public float jumpCooldown = 1f;
+    public bool isJumping;
+    public bool hasJumped = false;
+    public bool multiJump = false;
+    private Coroutine jumpRoutine = null;
 
     [Header("Physics")]
     // Variables to store calculated character's directional velocity
     public Vector3 localVelocity = new Vector3();
-    public Vector3 prevWorldVelocity;
-    public Vector3 worldVelocity;
+    private Vector3 prevWorldPosition;
+    private Vector3 worldVelocity;
 
     [Header("Ground Check")]
     private int groundContactCount = 0;
@@ -109,42 +117,42 @@ public class PlayerControlScript : MonoBehaviour
             _inputActionFired = _inputActionFired || cinput.Action;
 
         }
+
         // Handle drag
         if (isGrounded){
             rbody.drag = groundDrag;
+            prev_inputForward = _inputForward; // Preserve previous inputForward momentum
         }else{
             rbody.drag = 0;
         }
-        if (Input.GetKey(KeyCode.Space) && readyToJump && isGrounded)
-        {
-            readyToJump = false;
-            Jump();
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }
-    }
 
+        _inputJump = cinput.Jump;
+    }
 
     void FixedUpdate()
     {
 
         // Physics calculations for rigidbody because animator velocity is inaccurate
-        worldVelocity = (transform.position - prevWorldVelocity) / Time.fixedDeltaTime;
-        prevWorldVelocity = transform.position;
+        worldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
+        prevWorldPosition = transform.position;
 
         // Project the world velocity onto the character's local axes
         localVelocity.z = Vector3.Dot(worldVelocity, transform.forward);
         localVelocity.y = Vector3.Dot(worldVelocity, transform.up);
         localVelocity.x = Vector3.Dot(worldVelocity, transform.right);
 
-        // Debug.Log(localVelocity);
-
+        // Map local velocity to a value between 0 and 1 (0.5 at rest). 
         float normalizedVerticalSpeed = (localVelocity.y + maxVerticalSpeed) / (2 * maxVerticalSpeed);
 
+        // Update all animation/root speed based on speed multiplier
+        animationSpeed = speedMultiplier;
+        rootMovementSpeed = speedMultiplier;
+        rootTurnSpeed = speedMultiplier;
+        // Update animation speed if necessary
         this.anim.speed = animationSpeed;
-        // bool doButtonPress = false;
-        // bool doMatchToButtonPress = false;
 
         // Check if isGrounded
+
         // isGrounded = GetGrounded || CharacterCommon.CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.5f, 1f, out closeToJumpableGround, whatIsGround);
         float radius = GetComponent<CapsuleCollider>().radius * 0.9f;
         //get the position (assuming its right at the bottom) and move it up by almost the whole radius
@@ -153,12 +161,55 @@ public class PlayerControlScript : MonoBehaviour
         LayerMask groundLayer = LayerMask.GetMask("ground");
         isGrounded = GetGrounded || Physics.CheckSphere(pos, radius, groundLayer);
 
+
         anim.SetFloat("velx", _inputTurn);
         anim.SetFloat("velz", _inputForward);
         anim.SetFloat("vely", normalizedVerticalSpeed);
         anim.SetBool("isFalling", !isGrounded);
         // anim.SetBool("doButtonPress", doButtonPress);
         // anim.SetBool("matchToButtonPress", doMatchToButtonPress);
+
+        // Handle jump
+        if (multiJump)
+        {
+            _inputJump = hasJumped ? false : _inputJump;
+        } else {
+            _inputJump = hasJumped || !isGrounded ? false : _inputJump; // If multi-jump is not enabled, then player must be grounded before jump
+        }
+
+        if(_inputJump)
+        {
+            anim.SetBool("startJump", true);
+            anim.SetBool("isJumping", true);
+            hasJumped = true;
+            if(jumpRoutine != null)
+            {
+                StopCoroutine(jumpRoutine);
+            }
+            jumpRoutine = StartCoroutine(Jump());
+
+        } else {
+            anim.SetBool("startJump", false);
+        }
+    }
+
+    private void ResetJump()
+    {
+        hasJumped = false;
+    }
+
+    private IEnumerator JumpResetDelay()
+    {
+        yield return new WaitForSeconds(jumpCooldown);
+        ResetJump();
+    }
+    private IEnumerator Jump()
+    {
+        yield return new WaitForSeconds(0.2f); // Wait for the jump state animation to start before actual jump physics (sum of transition duration)
+        // reset y velocity before jump
+        rbody.velocity = new Vector3(rbody.velocity.x, 0f, rbody.velocity.z);
+        rbody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        StartCoroutine(JumpResetDelay());
     }
 
     //This is a physics callback
@@ -190,9 +241,11 @@ public class PlayerControlScript : MonoBehaviour
 
         Vector3 newRootPosition;
         Quaternion newRootRotation;
+        AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(0);
 
         if (isGrounded)
         {
+            Debug.Log("Root MOTION Control");
          	//use root motion as is if on the ground		
             newRootPosition = anim.rootPosition;    
             //use rotational root motion as is
@@ -207,6 +260,7 @@ public class PlayerControlScript : MonoBehaviour
         }
         else
         { 
+            Debug.Log("Kinematic Control");
             // If not grounded, still allow the player to be controlled in the air
             // Calculate the amount of rotation for this frame
             float turnAmount = _inputTurn * airTurnSpeed * Time.fixedDeltaTime;
@@ -217,22 +271,14 @@ public class PlayerControlScript : MonoBehaviour
             // Apply the rotation to the Rigidbody's current rotation
             rbody.MoveRotation(rbody.rotation * turnRotation);
 
-            // Map user inputs (x, z) to a unit direction
-            Vector3 moveDirection = transform.forward * _inputForward + transform.right * _inputTurn;
-            rbody.AddForce(moveDirection.normalized * airSpeedMultiplier, ForceMode.Force);
-        }
-        
-    }
+            // Allow the player to control forward and backward movement in air slightly
+            float inputForwardBlend = Mathf.Clamp(prev_inputForward + _inputForward, -1, 1);
+            // float xzMagnitude = Mathf.Sqrt(Mathf.Pow(localVelocity.x, 2) + Mathf.Pow(localVelocity.z, 2));
+            // float horizontalSpeed = Mathf.Sqrt(prevVelocity.x * prevVelocity.x + prevVelocity.z * prevVelocity.z);
+            Vector3 dir = transform.forward * inputForwardBlend  * airForwardSpeed;
+            rbody.MovePosition(rbody.position + dir * Time.fixedDeltaTime);
 
-    private void Jump()
-    {
-        // reset y velocity before jump
-        rbody.velocity = new Vector3(rbody.velocity.x, 0f, rbody.velocity.z);
-        rbody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-    }
-    private void ResetJump()
-    {
-        readyToJump = true;
+        }        
     }
 
     // void OnAnimatorIK(int layerIndex)

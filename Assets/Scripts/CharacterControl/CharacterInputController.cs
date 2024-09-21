@@ -99,11 +99,10 @@ public class CharacterInputController : MonoBehaviour {
         Forward = filteredForwardInput;
         Turn = filteredTurnInput;
 
-
         //Capture "fire" button for action event
         Action = Input.GetButtonDown("Fire1");
 
-        Jump = Input.GetButtonDown("Jump");
+        Jump = Input.GetButton("Jump");
 
 	}
 }
