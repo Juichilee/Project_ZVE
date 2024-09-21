@@ -76,7 +76,7 @@ public class BasicControlScript : MonoBehaviour
         if (cinput.enabled)
         {
             inputForward = cinput.Forward;
-            inputTurn = cinput.Turn;
+            inputTurn = cinput.Right;
         }
         
         //switch turn around if going backwards
@@ -86,7 +86,7 @@ public class BasicControlScript : MonoBehaviour
         //onCollisionXXX() doesn't always work for checking if the character is grounded from a playability perspective
         //Uneven terrain can cause the player to become technically airborne, but so close the player thinks they're touching ground.
         //Therefore, an additional raycast approach is used to check for close ground
-        bool isGrounded = IsGrounded || CharacterCommon.CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.1f, 1f, out closeToJumpableGround);
+        bool isGrounded = IsGrounded || CharacterCommon.CheckGroundNear(this.transform.position, jumpableGroundNormalMaxAngle, 0.1f, 1f, out closeToJumpableGround, LayerMask.NameToLayer("ground"));
 
         //We use rbody.MovePosition() as it's the most efficient and safest way to directly control position in Unity's Physics
         rbody.MovePosition(rbody.position +  this.transform.forward * inputForward * Time.deltaTime * forwardMaxSpeed);

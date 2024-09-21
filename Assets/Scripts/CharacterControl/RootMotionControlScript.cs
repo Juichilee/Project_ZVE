@@ -97,7 +97,7 @@ public class RootMotionControlScript : MonoBehaviour
         if (cinput.enabled)
         {
             _inputForward = cinput.Forward;
-            _inputTurn = cinput.Turn;
+            _inputTurn = cinput.Right;
 
             // Note that we don't overwrite a true value already stored
             // Is only cleared to false in FixedUpdate()

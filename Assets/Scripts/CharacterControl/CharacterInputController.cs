@@ -7,12 +7,12 @@ public class CharacterInputController : MonoBehaviour {
     public string Name = "Juichi Lee";
 
     private float filteredForwardInput = 0f;
-    private float filteredTurnInput = 0f;
+    private float filteredRightInput = 0f;
 
     public bool InputMapToCircular = true;
 
     public float forwardInputFilter = 5f;
-    public float turnInputFilter = 5f;
+    public float RightInputFilter = 5f;
 
     private float forwardSpeedLimit = 1f;
 
@@ -23,7 +23,7 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
-    public float Turn
+    public float Right
     {
         get;
         private set;
@@ -93,17 +93,16 @@ public class CharacterInputController : MonoBehaviour {
         filteredForwardInput = Mathf.Clamp(Mathf.Lerp(filteredForwardInput, v, 
             Time.deltaTime * forwardInputFilter), -forwardSpeedLimit, forwardSpeedLimit);
 
-        filteredTurnInput = Mathf.Lerp(filteredTurnInput, h, 
-            Time.deltaTime * turnInputFilter);
+        filteredRightInput = Mathf.Lerp(filteredRightInput, h, 
+            Time.deltaTime * RightInputFilter);
 
         Forward = filteredForwardInput;
-        Turn = filteredTurnInput;
-
+        Right = filteredRightInput;
 
         //Capture "fire" button for action event
         Action = Input.GetButtonDown("Fire1");
 
-        Jump = Input.GetButtonDown("Jump");
+        Jump = Input.GetButton("Jump");
 
 	}
 }
