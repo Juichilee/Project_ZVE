@@ -65,7 +65,7 @@ public class MinionBasicControlScript : MonoBehaviour
         if (cinput.enabled)
         {
             inputForward = cinput.Forward;
-            inputTurn = cinput.Turn;
+            inputTurn = cinput.Right;
         }
 
         //onCollisionXXX() doesn't always work for checking if the character is grounded from a playability perspective

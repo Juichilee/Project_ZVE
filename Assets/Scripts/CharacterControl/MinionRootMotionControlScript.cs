@@ -61,7 +61,7 @@ public class MinionRootMotionControlScript : MonoBehaviour
         if (cinput.enabled)
         {
             _inputForward = cinput.Forward;
-            _inputTurn = cinput.Turn;
+            _inputTurn = cinput.Right;
         }
     }
 

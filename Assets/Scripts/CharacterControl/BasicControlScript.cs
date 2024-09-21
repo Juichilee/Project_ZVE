@@ -76,7 +76,7 @@ public class BasicControlScript : MonoBehaviour
         if (cinput.enabled)
         {
             inputForward = cinput.Forward;
-            inputTurn = cinput.Turn;
+            inputTurn = cinput.Right;
         }
         
         //switch turn around if going backwards
