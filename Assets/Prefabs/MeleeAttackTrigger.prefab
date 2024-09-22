@@ -113,4 +113,4 @@ MonoBehaviour:
   attackDamage: 10
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128

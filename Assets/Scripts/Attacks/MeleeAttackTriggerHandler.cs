@@ -9,11 +9,21 @@ public class MeleeAttackTriggerHandler : MonoBehaviour
     public float attackDamage = 10f;
     public LayerMask enemyLayer;
     
-    void OnTriggerEnter(Collider collider){
-        Debug.Log("Trigger Entered");
+    void OnTriggerEnter(Collider other){
+        Debug.Log("Trigger Enter");
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+        if(other.gameObject.layer == enemyLayer)
+        {
+            other.gameObject.GetComponent<Status>().TakeDamage(1f);
+        }
     }
 
-    void OnTriggerStay(Collider collider){
+    void OnTriggerStay(Collider other){
         Debug.Log("Trigger Stayed");
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+        if(other.gameObject.layer == enemyLayer)
+        {
+            other.gameObject.GetComponent<Status>().TakeDamage(1f);
+        }
     }
 }
