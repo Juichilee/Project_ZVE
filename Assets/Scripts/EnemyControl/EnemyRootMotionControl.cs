@@ -15,13 +15,10 @@ public class EnemyRootMotionControl : MonoBehaviour
     private CapsuleCollider cc;
     public UnityEngine.AI.NavMeshAgent aiAgent;
     public GameObject player;
-    
-    // Feet
-    private Transform leftFoot;
-    private Transform rightFoot;
-    [SerializeField]
-    private Transform head;
 
+    // Script Reference
+    public RagdollOnDeath ragdollOnDeath;
+    
     // Animation Variables
     public float animationSpeed = 1f;
     public float rootMovementSpeed = 1f;
@@ -48,27 +45,16 @@ public class EnemyRootMotionControl : MonoBehaviour
     // Awake is To grab the components
     void Awake()
     {
+        // Components
         anim = GetComponent<Animator>();
-        if (!anim)
-            Debug.Log("Animator could not be found");
         anim.enabled = true;
-
         rb = GetComponent<Rigidbody>();
-        if (!rb)
-            Debug.Log("Rigidbody could not be found");
-
         cc = GetComponent<CapsuleCollider>();
-        if (!cc)
-            Debug.Log("Animator could not be found");
         cc.enabled = true;
-        
         player = GameObject.FindWithTag("Player");
-        if (!player)
-            Debug.Log("Animator could not be found");
-
         aiAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        if (!aiAgent) 
-            Debug.Log("NavMeshAgent could not be found");
+
+        ragdollOnDeath = GetComponent<RagdollOnDeath>();
     }
 
     // Start is called before the first frame update
@@ -112,11 +98,9 @@ public class EnemyRootMotionControl : MonoBehaviour
     private void Die() 
     {
         isDead = true;
-        // anim.enabled = false;
-        // cc.enabled = false;
-        // aiAgent.isStopped = true;
-        Destroy(this.gameObject);
-
+        anim.enabled = false;
+        cc.enabled = false;
+        aiAgent.isStopped = true;
     }
 
 
