@@ -60,6 +60,10 @@ public class EnemyRootMotionControl : MonoBehaviour
             Debug.Log("Animator could not be found");
         cc.enabled = true;
         
+        player = GameObject.FindWithTag("Player");
+        if (!player)
+            Debug.Log("Animator could not be found");
+
         aiAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         if (!aiAgent) 
             Debug.Log("NavMeshAgent could not be found");
