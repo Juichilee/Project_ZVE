@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Player
-  InputMapToCircular: 0
+  InputMapToCircular: 1
   forwardInputFilter: 5
   RightInputFilter: 10
 --- !u!114 &1186672266
