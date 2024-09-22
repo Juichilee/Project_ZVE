@@ -354,12 +354,11 @@ public class PlayerControlScript : MonoBehaviour
 
             // The floor for forward velocity is baseAirForwardSpeed. Negative base speed and max speed for backward jumps
             float forwardVelocity;
-            if (prevVelocity.z >= 0) {
+            if (prevVelocity.z > 0) {
                 forwardVelocity = Mathf.Min(Math.Max(baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), maxHorizontalSpeed); 
             } else {
-                forwardVelocity = Mathf.Max(Math.Min(-baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), -maxHorizontalSpeed); 
+                forwardVelocity = -Mathf.Max(Math.Min(-baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), -maxHorizontalSpeed); 
             }
-             
             Vector3 moveDir = transform.forward.normalized * inputForwardBlend * forwardVelocity;
             rbody.MovePosition(rbody.position + moveDir * Time.fixedDeltaTime);  
         }     
