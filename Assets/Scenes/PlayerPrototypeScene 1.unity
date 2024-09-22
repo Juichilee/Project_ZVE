@@ -1162,9 +1162,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Player
-  InputMapToCircular: 1
+  InputMapToCircular: 0
   forwardInputFilter: 5
-  RightInputFilter: 5
+  RightInputFilter: 10
 --- !u!114 &1186672266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1191,7 +1191,7 @@ MonoBehaviour:
   jumpableGroundNormalMaxAngle: 45
   closeToJumpableGround: 0
   airTurnSpeed: 270
-  rotationSpeed: 2
+  rotationSpeed: 180
   baseAirForwardSpeed: 1.5
   horizontalSpeed: 5
   jumpForce: 150

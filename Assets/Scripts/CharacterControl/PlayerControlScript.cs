@@ -49,7 +49,7 @@ public class PlayerControlScript : MonoBehaviour
     public bool closeToJumpableGround;
     private float prev_inputForward; // Used to preserve direction and momentum before jump
     public float airTurnSpeed = 270f; 
-    public float rotationSpeed = 30f;
+    public float rotationSpeed = 180f;
     // Base air forward speed allowing user to move while in air (i.e., how far the player is allowed to move in air after jumping in place)
     public float baseAirForwardSpeed = 1.5f; 
     public float horizontalSpeed = 5f;
@@ -119,7 +119,16 @@ public class PlayerControlScript : MonoBehaviour
         if (cinput.enabled)
         {
             _inputForward = cinput.Forward; // for translating forward and backward
-            _inputRight = cinput.Right; // For translating side to side
+            // Discrete right input reading for translating side to side 
+            _inputRight = cinput.Right;
+            // if(cinput.Right > 0.01f){
+            //     _inputRight = 1f;
+            // }else if(cinput.Right < -0.01f){
+            //     _inputRight = -1f;
+            // }else {
+            //     _inputRight = 0;
+            // }
+            
 
             // Note that we don't overwrite a true value already stored
             // Is only cleared to false in FixedUpdate()
@@ -129,11 +138,12 @@ public class PlayerControlScript : MonoBehaviour
         // Third Person Camera Based Directional Input
         Transform mainCameraTrans = mainCamera.transform;
         Vector3 viewDir = transform.position - new Vector3(mainCameraTrans.position.x, transform.position.y, mainCameraTrans.position.z);
-        if(_inputForward > 0){
-            orientation.forward = viewDir.normalized;
-        } else {
-            orientation.forward = -viewDir.normalized;
-        }
+        orientation.forward = viewDir.normalized;
+        // if(_inputForward > 0){
+        //     orientation.forward = viewDir.normalized;
+        // } else {
+        //     orientation.forward = -viewDir.normalized;
+        // }
 
 
         // Handle drag
@@ -183,7 +193,9 @@ public class PlayerControlScript : MonoBehaviour
         anim.SetFloat("vely", normalizedVerticalSpeed);
         anim.SetBool("isFalling", !isGrounded);
         anim.SetFloat("velStrafe", _inputRight);
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)){
+        anim.SetFloat("turnAmount", Mathf.Abs(_inputTurn)); // Used to determine blending between strafing and turning blend trees
+
+        if (_inputRight < -0.05f || _inputRight > 0.05f || _inputForward > 0.05f || _inputForward < -0.05f){
             anim.SetBool("isStrafing", true);
         } else {
             anim.SetBool("isStrafing", false);
@@ -220,28 +232,31 @@ public class PlayerControlScript : MonoBehaviour
         // Camera Turning Input
         Vector3 inputDir = orientation.forward * _inputForward;
 
-        if (cameraTurningPlayer) //  && inputDir != Vector3.zero  Turn on and off camera based player turning
+        if (cameraTurningPlayer)
         {
-            
-            Vector3 newForward = Vector3.Lerp(transform.forward, inputDir.normalized, Time.fixedDeltaTime * rotationSpeed);
 
             // Calculate the cross product to determine turn direction
             Vector3 crossProduct = Vector3.Cross(orientation.forward.normalized, transform.forward.normalized);
 
-            // Check the Y component of the cross product to determine if turning left or right
-            // if (crossProduct.y > 0)
-            // {
-            //     Debug.Log("Turning Right");
-            // }
-            // else if (crossProduct.y < 0)
-            // {
-            //     Debug.Log("Turning Left");
-            // }
-            // else
-            // {
-            //     Debug.Log("Not Turning (or very small angle)");
-            // }
-            _inputTurn = -Mathf.Clamp(crossProduct.y, -1f, 1f);
+            // Get the forward vectors of both the character and the camera
+            Vector3 characterForward = this.transform.forward;
+            Vector3 cameraForward = mainCamera.transform.forward;
+
+            // Calculate the dot product
+            float dotProduct = Vector3.Dot(characterForward.normalized, cameraForward.normalized);
+            // _inputTurn is set to always have character face forward in relation to the camera
+            if (dotProduct >= 0) {
+                _inputTurn = -Mathf.Clamp(crossProduct.y, -1f, 1f);
+            }
+            
+            // Calculate the rotation amount based on input and speed
+            float rotationAmount = _inputTurn * rotationSpeed * Time.fixedDeltaTime;
+
+            // Convert the rotation amount to a Quaternion
+            Quaternion turnRotation = Quaternion.Euler(0f, rotationAmount, 0f);
+
+            // Apply the rotation using Rigidbody.MoveRotation
+            rbody.MoveRotation(rbody.rotation * turnRotation);
         }
 
         if (_inputActionFired)
@@ -309,16 +324,12 @@ public class PlayerControlScript : MonoBehaviour
             //use rotational root motion as is
             newRootRotation = anim.rootRotation;
 
-            // Movement sideways (strafing)
-            // Vector3 sideMovement = transform.right * _inputRight * horizontalSpeed * Time.fixedDeltaTime;
-
             //TODO Here, you could scale the difference in position and rotation to make the character go faster or slower
             newRootPosition = Vector3.LerpUnclamped(this.transform.position, newRootPosition, rootMovementSpeed);
-            newRootRotation = Quaternion.LerpUnclamped(this.transform.rotation, newRootRotation, rootTurnSpeed);
-
+            // newRootRotation = Quaternion.LerpUnclamped(this.transform.rotation, newRootRotation, rootTurnSpeed);
             
             rbody.MovePosition(newRootPosition);
-            rbody.MoveRotation(newRootRotation);
+            // rbody.MoveRotation(newRootRotation);
         }
         else
         { 
@@ -331,15 +342,15 @@ public class PlayerControlScript : MonoBehaviour
             float inputForwardBlend = Mathf.Clamp(prev_inputForward + _inputForward, -1, 1);
             
             // Create a Quaternion for the turn (rotate around the Y-axis)
-            Quaternion turnRotation; 
-            if(inputForwardBlend > 0){
-                turnRotation = Quaternion.Euler(0f, turnAmount, 0f); // Forwards Turning
-            } else {
-                turnRotation = Quaternion.Euler(0f, -turnAmount, 0f); // Backwards Turning
-            }
+            // Quaternion turnRotation; 
+            // if(inputForwardBlend > 0){
+            //     turnRotation = Quaternion.Euler(0f, turnAmount, 0f); // Forwards Turning
+            // } else {
+            //     turnRotation = Quaternion.Euler(0f, -turnAmount, 0f); // Backwards Turning
+            // }
 
-            // Apply the rotation to the Rigidbody's current rotation
-            rbody.MoveRotation(rbody.rotation * turnRotation);
+            // // Apply the rotation to the Rigidbody's current rotation
+            // rbody.MoveRotation(rbody.rotation * turnRotation);
 
             float forwardVelocity = Mathf.Min(Math.Max(baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), maxHorizontalSpeed); //  // The floor for forward velocity is baseAirForwardSpeed
             Vector3 moveDir = transform.forward.normalized * inputForwardBlend * forwardVelocity;
