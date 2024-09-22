@@ -182,6 +182,12 @@ public class PlayerControlScript : MonoBehaviour
         anim.SetFloat("velz", _inputForward);
         anim.SetFloat("vely", normalizedVerticalSpeed);
         anim.SetBool("isFalling", !isGrounded);
+        anim.SetFloat("velStrafe", _inputRight);
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)){
+            anim.SetBool("isStrafing", true);
+        } else {
+            anim.SetBool("isStrafing", false);
+        }
         // anim.SetBool("doButtonPress", doButtonPress);
         // anim.SetBool("matchToButtonPress", doMatchToButtonPress);
 
