@@ -336,7 +336,7 @@ public class PlayerControlScript : MonoBehaviour
             Debug.Log("Kinematic Control");
             // If not grounded, still allow the player to be controlled in the air
             // Calculate the amount of rotation for this frame
-            float turnAmount = _inputTurn * (airTurnSpeed * speedMultiplier) * Time.fixedDeltaTime;
+            // float turnAmount = _inputTurn * (airTurnSpeed * speedMultiplier) * Time.fixedDeltaTime;
 
             // Allow the player to control forward and backward movement in air slightly
             float inputForwardBlend = Mathf.Clamp(prev_inputForward + _inputForward, -1, 1);
@@ -352,7 +352,14 @@ public class PlayerControlScript : MonoBehaviour
             // // Apply the rotation to the Rigidbody's current rotation
             // rbody.MoveRotation(rbody.rotation * turnRotation);
 
-            float forwardVelocity = Mathf.Min(Math.Max(baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), maxHorizontalSpeed); //  // The floor for forward velocity is baseAirForwardSpeed
+            // The floor for forward velocity is baseAirForwardSpeed. Negative base speed and max speed for backward jumps
+            float forwardVelocity;
+            if (prevVelocity.z >= 0) {
+                forwardVelocity = Mathf.Min(Math.Max(baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), maxHorizontalSpeed); 
+            } else {
+                forwardVelocity = Mathf.Max(Math.Min(-baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), -maxHorizontalSpeed); 
+            }
+             
             Vector3 moveDir = transform.forward.normalized * inputForwardBlend * forwardVelocity;
             rbody.MovePosition(rbody.position + moveDir * Time.fixedDeltaTime);  
         }     
