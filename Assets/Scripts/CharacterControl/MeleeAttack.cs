@@ -10,6 +10,7 @@ public class MeleeAttack : MonoBehaviour
     public LayerMask enemyLayer;         // Layer of enemies to check against
     private bool isAttacking = false;    // To check if an attack is in progress
     public GameObject attackTriggerPrefab; // Trigger Prefab 
+    public Transform MeleePos;
     public void startAttack(){
         if(!isAttacking){
             StartCoroutine(SpawnAttackTrigger());
@@ -21,9 +22,9 @@ public class MeleeAttack : MonoBehaviour
         isAttacking = true;
 
         // Create a trigger collider temporarily
-        GameObject attackTrigger = Instantiate(attackTriggerPrefab);
-        attackTrigger.transform.position = transform.position + transform.forward * attackRange / 2; // Slightly in front of the player
-        attackTrigger.transform.rotation = transform.rotation;
+        GameObject attackTrigger = Instantiate(attackTriggerPrefab, MeleePos);
+        attackTrigger.transform.position = MeleePos.position + transform.forward * attackRange / 2; // Slightly in front of the player
+        attackTrigger.transform.rotation = MeleePos.rotation;
 
         // Add the attack trigger component to handle enemy detection
         // attackHandler.attackDamage = attackDamage;
