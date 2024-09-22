@@ -19,6 +19,8 @@ public class EnemyRootMotionControl : MonoBehaviour
     // Feet
     private Transform leftFoot;
     private Transform rightFoot;
+    [SerializeField]
+    private Transform head;
 
     // Animation Variables
     public float animationSpeed = 1f;
@@ -60,6 +62,10 @@ public class EnemyRootMotionControl : MonoBehaviour
             Debug.Log("Animator could not be found");
         cc.enabled = true;
         
+        player = GameObject.FindWithTag("Player");
+        if (!player)
+            Debug.Log("Animator could not be found");
+
         aiAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         if (!aiAgent) 
             Debug.Log("NavMeshAgent could not be found");
@@ -99,6 +105,7 @@ public class EnemyRootMotionControl : MonoBehaviour
     {
         aiAgent.SetDestination(player.transform.position);
         Vector3 direction = player.transform.position - transform.position;
+        direction.y = 0;
         transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
     }
 
