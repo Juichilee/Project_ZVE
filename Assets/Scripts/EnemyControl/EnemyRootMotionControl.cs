@@ -42,6 +42,11 @@ public class EnemyRootMotionControl : MonoBehaviour
     public float maxHealth = 100f;
     public bool isDead = false;
 
+    // Pickup 
+    public Rigidbody pickupPrefab;
+    public Rigidbody currPickup;
+
+
     // Awake is To grab the components
     void Awake()
     {
@@ -66,10 +71,13 @@ public class EnemyRootMotionControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L) || health <= 0 && !isDead)
+        if (Input.GetKeyDown(KeyCode.L) || health <= 0 && !isDead) 
+        {
             Die();
-
-        MoveToPlayer();
+            SpawnPickUp();
+        }
+        if (!isDead)
+            MoveToPlayer();
     }
 
     void FixedUpdate()
@@ -87,6 +95,7 @@ public class EnemyRootMotionControl : MonoBehaviour
         anim.SetBool("isFalling", !isGrounded);
     }
 
+
     private void MoveToPlayer()
     {
         aiAgent.SetDestination(player.transform.position);
@@ -95,6 +104,7 @@ public class EnemyRootMotionControl : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
     }
 
+
     private void Die() 
     {
         Debug.Log("Zombie Dies");
@@ -102,6 +112,15 @@ public class EnemyRootMotionControl : MonoBehaviour
         isDead = true;
         aiAgent.isStopped = true;
     }
+
+
+
+    private void SpawnPickUp()
+    {
+        currPickup = Instantiate<Rigidbody>(pickupPrefab, transform);
+        currPickup.transform.localPosition = new Vector3(0f, 1f, 0f);
+        currPickup.isKinematic = true;
+    } 
 
 
     //This is a physics callback
