@@ -12,7 +12,7 @@ public class CharacterInputController : MonoBehaviour {
     public bool InputMapToCircular = true;
 
     public float forwardInputFilter = 5f;
-    public float RightInputFilter = 5f;
+    public float RightInputFilter = 10f;
 
     private float forwardSpeedLimit = 1f;
 

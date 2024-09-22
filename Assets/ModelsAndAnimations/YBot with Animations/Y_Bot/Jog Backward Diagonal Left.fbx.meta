@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8e1ba74395e13104eb183dfcd193b4c6
+guid: eae6d39c3ed13d14ca9bc06f80209bc4
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -36,15 +36,15 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Jog Strafe Right
+      name: Jog Backwards Diagonal Left
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 21
+      lastFrame: 22
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
-      cycleOffset: 0
+      cycleOffset: 0.5
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
