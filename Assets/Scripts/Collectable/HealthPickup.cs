@@ -18,6 +18,7 @@ public class HealthPickup : MonoBehaviour
         if (c.transform.gameObject.CompareTag("Player"))
         {
             // TODO: Add EventManger.TriggerEvent<>
+            c.gameObject.GetComponent<Status>().currHealth += 1;
             Destroy(this.gameObject);
             // TODO: status.health += 30 or status.gainHealth(30);
         }
