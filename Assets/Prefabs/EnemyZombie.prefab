@@ -1955,7 +1955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aiAgent: {fileID: 0}
   player: {fileID: 0}
-  head: {fileID: 0}
+  ragdollOnDeath: {fileID: 0}
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
@@ -1966,6 +1966,7 @@ MonoBehaviour:
   health: 0
   maxHealth: 100
   isDead: 0
+  pickupPrefab: {fileID: -1735077687078591743, guid: f65ce1c5f4721bf448a5064f1eb27a4d, type: 3}
 --- !u!195 &1092839236707248958
 NavMeshAgent:
   m_ObjectHideFlags: 0
