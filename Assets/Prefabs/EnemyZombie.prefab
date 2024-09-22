@@ -1853,6 +1853,7 @@ GameObject:
   - component: {fileID: 1092839236707248957}
   - component: {fileID: 1092839236707248958}
   - component: {fileID: 2832160226030545539}
+  - component: {fileID: 8844471337275818503}
   m_Layer: 7
   m_Name: EnemyZombie
   m_TagString: Enemy
@@ -1955,6 +1956,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aiAgent: {fileID: 0}
   player: {fileID: 0}
+  status: {fileID: 0}
   ragdollOnDeath: {fileID: 0}
   animationSpeed: 1
   rootMovementSpeed: 1
@@ -1963,10 +1965,9 @@ MonoBehaviour:
   prevVelocity: {x: 0, y: 0, z: 0}
   maxVerticalSpeed: 10
   isGrounded: 1
-  health: 0
-  maxHealth: 100
   isDead: 0
   pickupPrefab: {fileID: -1735077687078591743, guid: f65ce1c5f4721bf448a5064f1eb27a4d, type: 3}
+  currPickup: {fileID: 0}
 --- !u!195 &1092839236707248958
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2004,6 +2005,20 @@ MonoBehaviour:
   rdState: 0
   ragdollRoot: {fileID: 2728644249789562537}
   rbs: []
+--- !u!114 &8844471337275818503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3564349475260101633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103772d9e0219194c9621b95402c58d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 2
+  currHealth: 0
 --- !u!1 &3678995599980883088
 GameObject:
   m_ObjectHideFlags: 0

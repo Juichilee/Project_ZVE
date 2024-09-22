@@ -15,6 +15,7 @@ public class EnemyRootMotionControl : MonoBehaviour
     private CapsuleCollider cc;
     public UnityEngine.AI.NavMeshAgent aiAgent;
     public GameObject player;
+    public Status status;
 
     // Script Reference
     public RagdollOnDeath ragdollOnDeath;
@@ -37,9 +38,6 @@ public class EnemyRootMotionControl : MonoBehaviour
             return groundContactCount > 0;
         }
     }
-
-    public float health;
-    public float maxHealth = 100f;
     public bool isDead = false;
 
     // Pickup 
@@ -60,21 +58,22 @@ public class EnemyRootMotionControl : MonoBehaviour
         aiAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
         ragdollOnDeath = GetComponent<RagdollOnDeath>();
+        status = GetComponent<Status>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        health = maxHealth;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L) || health <= 0 && !isDead) 
+        if (Input.GetKeyDown(KeyCode.L) || status.currHealth <= 0 && !isDead) 
         {
-            Die();
             SpawnPickUp();
+            Die();
         }
         if (!isDead)
             MoveToPlayer();
@@ -117,7 +116,7 @@ public class EnemyRootMotionControl : MonoBehaviour
 
     private void SpawnPickUp()
     {
-        currPickup = Instantiate<Rigidbody>(pickupPrefab, transform);
+        currPickup = Instantiate(pickupPrefab, transform);
         currPickup.transform.localPosition = new Vector3(0f, 1f, 0f);
         currPickup.isKinematic = true;
     } 

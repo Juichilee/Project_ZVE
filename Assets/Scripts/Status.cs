@@ -22,10 +22,9 @@ public class Status : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currHealth -= damage;
-        if (currHealth <= 0) {
-            this.gameObject.SetActive(false);
-            OnDefeated();
-        }
+        // if (currHealth <= 0) {
+        //     OnDefeated();
+        // }
     }
 
     public void OnDefeated()
