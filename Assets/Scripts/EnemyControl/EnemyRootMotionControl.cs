@@ -15,11 +15,10 @@ public class EnemyRootMotionControl : MonoBehaviour
     private CapsuleCollider cc;
     public UnityEngine.AI.NavMeshAgent aiAgent;
     public GameObject player;
-    
-    // Feet
-    private Transform leftFoot;
-    private Transform rightFoot;
 
+    // Script Reference
+    public RagdollOnDeath ragdollOnDeath;
+    
     // Animation Variables
     public float animationSpeed = 1f;
     public float rootMovementSpeed = 1f;
@@ -43,26 +42,24 @@ public class EnemyRootMotionControl : MonoBehaviour
     public float maxHealth = 100f;
     public bool isDead = false;
 
+    // Pickup 
+    public Rigidbody pickupPrefab;
+    public Rigidbody currPickup;
+
+
     // Awake is To grab the components
     void Awake()
     {
+        // Components
         anim = GetComponent<Animator>();
-        if (!anim)
-            Debug.Log("Animator could not be found");
         anim.enabled = true;
-
         rb = GetComponent<Rigidbody>();
-        if (!rb)
-            Debug.Log("Rigidbody could not be found");
-
         cc = GetComponent<CapsuleCollider>();
-        if (!cc)
-            Debug.Log("Animator could not be found");
         cc.enabled = true;
-        
+        player = GameObject.FindWithTag("Player");
         aiAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        if (!aiAgent) 
-            Debug.Log("NavMeshAgent could not be found");
+
+        ragdollOnDeath = GetComponent<RagdollOnDeath>();
     }
 
     // Start is called before the first frame update
@@ -74,10 +71,13 @@ public class EnemyRootMotionControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (health <= 0 && !isDead)
+        if (Input.GetKeyDown(KeyCode.L) || health <= 0 && !isDead) 
+        {
             Die();
-
-        MoveToPlayer();
+            SpawnPickUp();
+        }
+        if (!isDead)
+            MoveToPlayer();
     }
 
     void FixedUpdate()
@@ -95,22 +95,32 @@ public class EnemyRootMotionControl : MonoBehaviour
         anim.SetBool("isFalling", !isGrounded);
     }
 
+
     private void MoveToPlayer()
     {
         aiAgent.SetDestination(player.transform.position);
         Vector3 direction = player.transform.position - transform.position;
+        direction.y = 0;
         transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
     }
 
+
     private void Die() 
     {
+        Debug.Log("Zombie Dies");
+        ragdollOnDeath.EnableRagdoll();
         isDead = true;
-        // anim.enabled = false;
-        // cc.enabled = false;
-        // aiAgent.isStopped = true;
-        Destroy(this.gameObject);
-
+        aiAgent.isStopped = true;
     }
+
+
+
+    private void SpawnPickUp()
+    {
+        currPickup = Instantiate<Rigidbody>(pickupPrefab, transform);
+        currPickup.transform.localPosition = new Vector3(0f, 1f, 0f);
+        currPickup.isKinematic = true;
+    } 
 
 
     //This is a physics callback
