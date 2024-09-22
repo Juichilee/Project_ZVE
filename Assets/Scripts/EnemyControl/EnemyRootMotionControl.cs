@@ -66,7 +66,7 @@ public class EnemyRootMotionControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (health <= 0 && !isDead)
+        if (Input.GetKeyDown(KeyCode.L) || health <= 0 && !isDead)
             Die();
 
         MoveToPlayer();
@@ -97,9 +97,9 @@ public class EnemyRootMotionControl : MonoBehaviour
 
     private void Die() 
     {
+        Debug.Log("Zombie Dies");
+        ragdollOnDeath.EnableRagdoll();
         isDead = true;
-        anim.enabled = false;
-        cc.enabled = false;
         aiAgent.isStopped = true;
     }
 

@@ -31,25 +31,6 @@ public class RagdollOnDeath : MonoBehaviour
         rdState = RagdollState.anim;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-
-            if (rdState == RagdollState.anim)
-            {
-                rdState = RagdollState.ragdoll;
-                EnableAnimator();    
-            }
-            else
-            {
-                rdState = RagdollState.anim;
-                EnableRagdoll();
-            }
-        }
-    }
-
     public void EnableAnimator() 
     {
         anim.enabled = true;
