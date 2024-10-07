@@ -11,10 +11,11 @@ public class CharacterInputController : MonoBehaviour {
 
     public bool InputMapToCircular = true;
 
-    public float forwardInputFilter = 5f;
+    public float forwardInputFilter = 10f;
     public float RightInputFilter = 10f;
 
     private float forwardSpeedLimit = 1f;
+    private float rightSpeedLimit = 1f;
 
 
     public float Forward
@@ -41,6 +42,12 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
+    public bool AimDown
+    {
+        get;
+        private set;
+    }
+
         
 
 	void Update () {
@@ -48,7 +55,6 @@ public class CharacterInputController : MonoBehaviour {
         //GetAxisRaw() so we can do filtering here instead of the InputManager
         float h = Input.GetAxisRaw("Horizontal");// setup h variable as our horizontal input axis
         float v = Input.GetAxisRaw("Vertical"); // setup v variables as our vertical input axis
-
 
         if (InputMapToCircular)
         {
@@ -93,8 +99,8 @@ public class CharacterInputController : MonoBehaviour {
         filteredForwardInput = Mathf.Clamp(Mathf.Lerp(filteredForwardInput, v, 
             Time.deltaTime * forwardInputFilter), -forwardSpeedLimit, forwardSpeedLimit);
 
-        filteredRightInput = Mathf.Lerp(filteredRightInput, h, 
-            Time.deltaTime * RightInputFilter);
+        filteredRightInput = Mathf.Clamp(Mathf.Lerp(filteredRightInput, h, 
+            Time.deltaTime * RightInputFilter), -rightSpeedLimit, rightSpeedLimit);
 
         Forward = filteredForwardInput;
         Right = filteredRightInput;
@@ -104,5 +110,13 @@ public class CharacterInputController : MonoBehaviour {
 
         Jump = Input.GetButton("Jump");
 
+        if (Input.GetMouseButtonDown(1))
+        {
+            AimDown = true; // Generalize later to allow controller aim down as well
+        } else if (Input.GetMouseButtonUp(1))
+        {
+            AimDown = false;
+        }
+        
 	}
 }
