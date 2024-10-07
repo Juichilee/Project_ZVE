@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
@@ -24,6 +23,12 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         Basic,
         Combat
+    }
+
+    void Awake()
+    {
+        thirdPersonCam.SetActive(true);
+        combatCam.SetActive(false);
     }
     
     private void SwitchCameraStyle(CameraStyle newStyle)
