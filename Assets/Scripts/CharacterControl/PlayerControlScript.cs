@@ -23,11 +23,6 @@ public class PlayerControlScript : MonoBehaviour
 
     #region Controller Input Reading & Caching
     private CharacterInputController cinput;
-        // classic input system only polls in Update()
-    // so must treat input events like discrete button presses as
-    // "triggered" until consumed by FixedUpdate()...
-    // ...however constant input measures like axes can just have most recent value
-    // cached.
     bool _inputActionFired = false;
     float _inputForward = 0f;
     float _inputRight = 0f;
@@ -42,24 +37,12 @@ public class PlayerControlScript : MonoBehaviour
     public float rootMovementSpeed = 1f;
     public float rootTurnSpeed = 1f;
     public float maxVerticalSpeed = 10f; // Maximum falling speed for falling animation blend
-    public float maxHorizontalSpeed = 20f;
     public float groundDrag = 0f;
     public float airDrag = 0.2f;
-    public float jumpableGroundNormalMaxAngle = 45;
-    public bool closeToJumpableGround;
-    private float prev_inputForward; // Used to preserve direction and momentum before jump
-    private float prev_inputRight;
-    public float airTurnSpeed = 270f; 
-    public float rotationSpeed = 180f;
-    // Base air forward speed allowing user to move while in air (i.e., how far the player is allowed to move in air after jumping in place)
-    public float baseAirForwardSpeed = 1.5f; 
-    public float horizontalSpeed = 5f;
-    public float jumpForce = 100f;
+    public float jumpForce = 10f;
     public float jumpCooldown = 1f;
     public bool hasJumped = false;
     public bool multiJump = false;
-    public bool cameraTurningPlayer = true;
-    public bool wasStanding = true;
     public bool isMoving = false;
     public Vector3 inputDir;
 
@@ -68,7 +51,9 @@ public class PlayerControlScript : MonoBehaviour
     public Vector3 localVelocity = new Vector3();
     private Vector3 prevWorldPosition;
     private Vector3 worldVelocity;
-    public Vector3 prevVelocity = new Vector3();
+    // public Vector3 prevVelocity = new Vector3();
+    public float maxMidairControlSpeed = 10f;
+    public float midairControlForce = 10f;
 
     [Header("Ground Check")]
     private int groundContactCount = 0;
@@ -109,9 +94,6 @@ public class PlayerControlScript : MonoBehaviour
 		//example of how to get access to certain limbs
         // leftFoot = this.transform.Find("mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot");
         // rightFoot = this.transform.Find("mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot");
-
-        // if (leftFoot == null || rightFoot == null)
-        //     Debug.Log("One of the feet could not be found");
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
     }
@@ -125,22 +107,23 @@ public class PlayerControlScript : MonoBehaviour
             _inputActionFired = _inputActionFired || cinput.Action;
             _inputAimDown = cinput.AimDown;
         }
-
         
         Transform mainCameraTrans = mainCamera.transform;
         Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
-        orientation.forward = viewDir.normalized;
+        viewDir = viewDir.normalized;
+        orientation.forward = viewDir;
+        inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
 
         if (!_inputAimDown) 
         {
             // Regular combat style (character forward is in direction of movement keys)
-            inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
             if (inputDir != Vector3.zero)
             {
                 this.transform.forward = Vector3.Slerp(this.transform.forward, inputDir, Time.deltaTime * 20f);
             }
         } else {
-            this.transform.forward = Vector3.Slerp(this.transform.forward, viewDir.normalized, Time.deltaTime * 5f);
+            Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
+            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 5f);
         }
         
         // Check if the player is moving based on input
@@ -149,8 +132,6 @@ public class PlayerControlScript : MonoBehaviour
         // Handle drag
         if (isGrounded){
             rbody.drag = groundDrag;
-            prev_inputForward = _inputForward; // Preserve previous inputForward momentum
-            prev_inputRight = _inputRight;
         }else{
             rbody.drag = airDrag;
         }
@@ -196,9 +177,8 @@ public class PlayerControlScript : MonoBehaviour
 
         float dotProduct = Vector3.Dot(characterForward.normalized, cameraForwardAdjusted.normalized);
 
-        // Apply smooth rotation using the camera's direction
         if (dotProduct >= 0) {
-            _inputTurn = -Mathf.Clamp(crossProduct.y, -1f, 1f);
+            _inputTurn = -crossProduct.y;
         }
 
         // Handle jump
@@ -211,12 +191,14 @@ public class PlayerControlScript : MonoBehaviour
 
         if (_inputJump)
         {
-            // Store prevVelocity for setting forward jump velocity in future frame
-            prevVelocity = localVelocity;
-
             anim.SetBool("startJump", true);
             hasJumped = true;
         } 
+
+        if (!isGrounded)
+        {
+            MidAirControl();
+        }
 
         if (_inputActionFired)
         {
@@ -229,8 +211,8 @@ public class PlayerControlScript : MonoBehaviour
         anim.SetFloat("vely", normalizedVerticalSpeed);
         anim.SetBool("isFalling", !isGrounded);
         anim.SetFloat("velStrafe", _inputRight);
-        anim.SetFloat("turnAmount", Mathf.Abs(_inputTurn)); // Used to determine blending between strafing and turning blend trees
         anim.SetBool("isMoving", isMoving);
+
         // Smooth transition speed, adjust this to control how fast it transitions
         float smoothSpeed = 5f;
 
@@ -263,7 +245,7 @@ public class PlayerControlScript : MonoBehaviour
     // PlayerJump() is called by animation event and executes during jump frame
     public void PlayerJump()
     {
-        Vector3 verticalForce = Vector3.up * 10f;
+        Vector3 verticalForce = Vector3.up * jumpForce;
         if(!_inputAimDown)
         {
             // reset y velocity before jump
@@ -272,10 +254,33 @@ public class PlayerControlScript : MonoBehaviour
             Vector3 totalForce = verticalForce + horizontalForce;
             rbody.AddForce(totalForce, ForceMode.VelocityChange);
         } else {
-
+            // reset y velocity before jump
+            rbody.velocity = new Vector3(rbody.velocity.x, 0f, rbody.velocity.z);
+            Vector3 horizontalForce = inputDir * 5f;
+            Vector3 totalForce = verticalForce + horizontalForce;
+            rbody.AddForce(totalForce, ForceMode.VelocityChange);
         }
 
         StartCoroutine(JumpResetDelay());
+    }
+
+    void MidAirControl()
+    {
+        if (isMoving)
+        {
+            Vector3 horizontalForce = inputDir * midairControlForce;
+            rbody.AddForce(horizontalForce, ForceMode.Impulse);
+
+            // Get horizontal velocity
+            Vector3 horizontalVelocity = new Vector3(rbody.velocity.x, 0f, rbody.velocity.z);
+
+            // Clamp horizontal speed using Vector3.ClampMagnitude
+            horizontalVelocity = Vector3.ClampMagnitude(horizontalVelocity, maxMidairControlSpeed);
+
+            // Update Rigidbody's velocity
+            rbody.velocity = new Vector3(horizontalVelocity.x, rbody.velocity.y, horizontalVelocity.z);
+        }
+
     }
 
     //This is a physics callback
@@ -305,71 +310,18 @@ public class PlayerControlScript : MonoBehaviour
     void OnAnimatorMove()
     {
         Vector3 newRootPosition;
-        Quaternion newRootRotation;
-        AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(0);
+        // AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(0);
 
         if (isGrounded)
         {
-            // Debug.Log("Root MOTION Control");
          	//use root motion as is if on the ground		
             newRootPosition = anim.rootPosition;    
-            //use rotational root motion as is
-            newRootRotation = anim.rootRotation;
 
             //TODO Here, you could scale the difference in position and rotation to make the character go faster or slower
             newRootPosition = Vector3.LerpUnclamped(this.transform.position, newRootPosition, rootMovementSpeed);
-            // newRootRotation = Quaternion.LerpUnclamped(this.transform.rotation, newRootRotation, rootTurnSpeed);
             
             rbody.MovePosition(newRootPosition);
-            // rbody.MoveRotation(newRootRotation);
         }
-        // else
-        // { 
-        //     // Debug.Log("Kinematic Control");
-        //     // If not grounded, still allow the player to be controlled in the air
-        //     // Calculate the amount of rotation for this frame
-        //     // float turnAmount = _inputTurn * (airTurnSpeed * speedMultiplier) * Time.fixedDeltaTime;
-
-        //     // Allow the player to control forward and backward movement in air slightly
-        //     float inputForwardBlend = Mathf.Clamp(prev_inputForward + _inputForward, -1, 1);
-        //     float inputRightBlend = Mathf.Clamp(prev_inputRight + _inputRight, -1, 1);
-            
-        //     // Create a Quaternion for the turn (rotate around the Y-axis)
-        //     // Quaternion turnRotation; 
-        //     // if(inputForwardBlend > 0){
-        //     //     turnRotation = Quaternion.Euler(0f, turnAmount, 0f); // Forwards Turning
-        //     // } else {
-        //     //     turnRotation = Quaternion.Euler(0f, -turnAmount, 0f); // Backwards Turning
-        //     // }
-
-        //     // // Apply the rotation to the Rigidbody's current rotation
-        //     // rbody.MoveRotation(rbody.rotation * turnRotation);
-
-        //     // The floor for forward velocity is baseAirForwardSpeed. Negative base speed and max speed for backward jumps
-        //     float forwardVelocity;
-        //     float rightVelocity;
-
-        //     // Calculate forward velocity (z-axis movement)
-        //     if (prevVelocity.z > 0) {
-        //         forwardVelocity = Mathf.Min(Mathf.Max(baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), maxHorizontalSpeed);
-        //     } else {
-        //         forwardVelocity = -Mathf.Max(Mathf.Min(-baseAirForwardSpeed * speedMultiplier, prevVelocity.z * speedMultiplier), -maxHorizontalSpeed);
-        //     }
-
-        //     // Calculate right velocity (x-axis movement)
-        //     if (prevVelocity.x > 0) {
-        //         rightVelocity = Mathf.Min(Mathf.Max(baseAirForwardSpeed * speedMultiplier, prevVelocity.x * speedMultiplier), maxHorizontalSpeed);
-        //     } else {
-        //         rightVelocity = -Mathf.Max(Mathf.Min(-baseAirForwardSpeed * speedMultiplier, prevVelocity.x * speedMultiplier), -maxHorizontalSpeed);
-        //     }
-            
-        //     Vector3 moveDir = (transform.forward.normalized * inputForwardBlend * forwardVelocity) +
-        //           (transform.right.normalized * inputRightBlend * rightVelocity);
-        //     rbody.MovePosition(rbody.position + moveDir * Time.fixedDeltaTime);  
-
-        //     // Update prevVelocity in air to localVelocity to preserve momentum
-        //     prevVelocity = localVelocity;
-        // }     
     }
 
     // void OnAnimatorIK(int layerIndex)
