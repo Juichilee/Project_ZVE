@@ -1,16 +1,18 @@
 using UnityEngine;
 using System.Collections;
+using Cinemachine;
+using Unity.VisualScripting;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
-	// public float positionSmoothTime = 1f;		// a public variable to adjust smoothing of camera motion
-    // public float rotationSmoothTime = 1f;
-    // public float positionMaxSpeed = 50f;        //max speed camera can move
-    // public float rotationMaxSpeed = 50f;
+    public float maxYAxisSpeed = 2f;
+    public float maxXAxisSpeed = 300f;
+	public float sensitivity = 0.0f;
+    public float aimSensitivity = 0.8f;
 	public GameObject thirdPersonCam;
+    private CinemachineFreeLook thirdPersonFreeLook;
     public GameObject combatCam;
-    // public Transform combatLookAt;
-    // public Transform target;
+    private CinemachineFreeLook combatFreeLook;
     public CameraStyle currStyle;
 
     // protected Vector3 currentPositionCorrectionVelocity;
@@ -29,6 +31,22 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         thirdPersonCam.SetActive(true);
         combatCam.SetActive(false);
+        thirdPersonFreeLook = thirdPersonCam.GetComponent<CinemachineFreeLook>();
+        combatFreeLook = combatCam.GetComponent<CinemachineFreeLook>();
+    }
+
+    void Start()
+    {
+        SetSensitivity();
+    }
+
+    public void SetSensitivity()
+    {
+        thirdPersonFreeLook.m_YAxis.m_MaxSpeed = maxYAxisSpeed * sensitivity;
+        thirdPersonFreeLook.m_XAxis.m_MaxSpeed = maxXAxisSpeed * sensitivity;
+
+        combatFreeLook.m_YAxis.m_MaxSpeed = maxYAxisSpeed * aimSensitivity;
+        combatFreeLook.m_XAxis.m_MaxSpeed = maxXAxisSpeed * aimSensitivity;
     }
     
     private void SwitchCameraStyle(CameraStyle newStyle)
