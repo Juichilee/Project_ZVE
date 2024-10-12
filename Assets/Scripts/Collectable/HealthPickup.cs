@@ -6,6 +6,7 @@ public class HealthPickup : MonoBehaviour
 {
     // TODO: Add Reference to the script
     // public Status status;     
+    public int HealAmt = 1;
 
     void Awake() {
 
@@ -13,13 +14,18 @@ public class HealthPickup : MonoBehaviour
         // status = GetComponent<Status>();
     }
 
+    private void FixedUpdate()
+    {
+        this.transform.Rotate(Vector3.up);
+    }
+
     void OnTriggerEnter(Collider c)
     {
         if (c.transform.gameObject.CompareTag("Player"))
         {
             // TODO: Add EventManger.TriggerEvent<>
-            c.gameObject.GetComponent<Status>().currHealth += 1;
-            Destroy(this.gameObject);
+            if (c.gameObject.GetComponent<Status>().Heal(HealAmt))
+                Destroy(this.gameObject);
             // TODO: status.health += 30 or status.gainHealth(30);
         }
     }
