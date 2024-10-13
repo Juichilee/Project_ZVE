@@ -48,6 +48,18 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
+    public bool Shoot
+    {
+        get;
+        private set;
+    }
+
+    public bool Melee
+    {
+        get;
+        private set;
+    }
+
         
 
 	void Update () {
@@ -110,12 +122,29 @@ public class CharacterInputController : MonoBehaviour {
 
         Jump = Input.GetButton("Jump");
 
+        // Aimdown sights
         if (Input.GetMouseButtonDown(1))
         {
             AimDown = true; // Generalize later to allow controller aim down as well
         } else if (Input.GetMouseButtonUp(1))
         {
             AimDown = false;
+        }
+
+        // Logic for shooting, must aim down sights before shoot
+        if (Input.GetMouseButtonDown(0) && AimDown == true)
+        {
+            Shoot = true;
+        } else {
+            Shoot = false;
+        }
+
+        // Melee
+        if (Input.GetMouseButtonDown(0) && AimDown == false)
+        {
+            Melee = true;
+        } else {
+            Melee = false;
         }
         
 	}

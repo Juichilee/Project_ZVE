@@ -3,22 +3,19 @@ using System.Collections;
 using Cinemachine;
 using Unity.VisualScripting;
 
+[RequireComponent(typeof(CharacterInputController))]
 public class ThirdPersonCamera : MonoBehaviour
 {
     public float maxYAxisSpeed = 2f;
     public float maxXAxisSpeed = 300f;
 	public float sensitivity = 0.0f;
     public float aimSensitivity = 0.8f;
+    public CharacterInputController characterInputController;
 	public GameObject thirdPersonCam;
     private CinemachineFreeLook thirdPersonFreeLook;
     public GameObject combatCam;
     private CinemachineFreeLook combatFreeLook;
     public CameraStyle currStyle;
-
-    // protected Vector3 currentPositionCorrectionVelocity;
-    //protected Vector3 currentFacingCorrectionVelocity;
-    //protected float currentFacingAngleCorrVel;
-    // protected Quaternion quaternionDeriv;
 
     protected float angle;
     public enum CameraStyle
@@ -70,16 +67,14 @@ public class ThirdPersonCamera : MonoBehaviour
     void Update()
     {
         // Check if the right mouse button is pressed down
-        if (Input.GetMouseButtonDown(1))
+        if (characterInputController.AimDown)
         {
             SwitchCameraStyle(CameraStyle.Combat);
-            Debug.Log("Combat Style");
         }
         // Check if the right mouse button is released
-        else if (Input.GetMouseButtonUp(1))
+        else
         {
             SwitchCameraStyle(CameraStyle.Basic);
-            Debug.Log("Basic Style");
         }
     }
 
