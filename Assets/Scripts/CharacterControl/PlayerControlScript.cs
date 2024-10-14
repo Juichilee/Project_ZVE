@@ -5,6 +5,8 @@ using UnityEngine;
 using System;
 using UnityEngine.EventSystems;
 using Microsoft.Unity.VisualStudio.Editor;
+using UnityEngine.Animations.Rigging;
+
 
 
 #if UNITY_EDITOR
@@ -23,6 +25,8 @@ public class PlayerControlScript : MonoBehaviour
     public MeleeAttack meleeAttack;
     public Transform shootPos;
     public GameObject projectileObj;
+    public Transform targetTrans;
+    public Rig aimRig;
 
     #region Controller Input Reading & Caching
     private CharacterInputController cinput;
@@ -153,25 +157,30 @@ public class PlayerControlScript : MonoBehaviour
         // Shooting logic
         if (_inputAimDown)
         {
+            aimRig.weight = Mathf.Lerp(aimRig.weight, 1f, Time.deltaTime * 2f);
+
             crossHair.SetActive(true);
 
+            Vector2 screenCenterPoint = new Vector2(Screen.width/2f, Screen.height/2f);
+            Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+            Vector3 mouseWorldPosition;
+            int fixedDistance = 99;
+            if(Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, aimColliderLayerMask))
+            {
+                mouseWorldPosition = raycastHit.point;
+            } else {
+                mouseWorldPosition = ray.origin + ray.direction * fixedDistance;
+            }
+            Vector3 aimDir = (mouseWorldPosition - shootPos.position).normalized;
+            targetTrans.position = mouseWorldPosition;
+
             if (_inputShoot){
-                Vector2 screenCenterPoint = new Vector2(Screen.width/2f, Screen.height/2f);
-                Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-                Vector3 mouseWorldPosition;
-                int fixedDistance = 99;
-                if(Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, aimColliderLayerMask))
-                {
-                    mouseWorldPosition = raycastHit.point;
-                } else {
-                    mouseWorldPosition = ray.origin + ray.direction * fixedDistance;
-                }
-                Vector3 aimDir = (mouseWorldPosition - shootPos.position).normalized;
                 GameObject projInst = Instantiate(projectileObj, shootPos.position, Quaternion.LookRotation(aimDir, Vector3.up));
                 projInst.GetComponent<Projectile>().Shooter(gameObject);
             }
             
         } else {
+            aimRig.weight = Mathf.Lerp(aimRig.weight, 0f, Time.deltaTime * 2f);
             crossHair.SetActive(false);
         }
     }
