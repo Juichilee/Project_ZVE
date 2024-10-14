@@ -19,7 +19,7 @@ public class Status : MonoBehaviour
         currHealth = maxHealth;
     }
 
-    public void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
         currHealth -= damage;
         // if (currHealth <= 0) {
@@ -38,7 +38,7 @@ public class Status : MonoBehaviour
         return true;
     }
 
-    public void OnDefeated()
+    public virtual void OnDefeated()
     {
         this.gameObject.SetActive(false);
     }
