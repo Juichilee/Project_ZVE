@@ -874,6 +874,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &592700421 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3564349475260101633, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+  m_PrefabInstance: {fileID: 1209617063}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &685738503
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,6 +915,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 516864122850936338, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
   m_PrefabInstance: {fileID: 1209617063}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &686313962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592700421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dc6785ec98c8504a9544b29f8de3d9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 20
+  currHealth: 0
+  ragdollOnDeath: {fileID: 0}
 --- !u!4 &753867836 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5227045033233735781, guid: ed23d8f2d5970094e9592e6d61c31ac8, type: 3}
@@ -1454,7 +1474,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyZombie
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8844471337275818503, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: maxHealth
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8844471337275818503, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: currHealth
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8844471337275818503, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
 --- !u!1 &1262388032
 GameObject:

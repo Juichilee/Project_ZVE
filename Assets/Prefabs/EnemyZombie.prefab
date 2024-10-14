@@ -2006,6 +2006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507ab5876f985f54d935f7bb7ba7d40a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugState: 
 --- !u!114 &686313955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2021,6 +2022,7 @@ MonoBehaviour:
   aiAgent: {fileID: 0}
   player: {fileID: 0}
   status: {fileID: 0}
+  ragdollOnDeath: {fileID: 0}
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
@@ -2032,7 +2034,7 @@ MonoBehaviour:
   patrolRange: 20
   attackRange: 1
   chaseRange: 10
-  pickupPrefab: {fileID: 0}
+  pickupPrefab: {fileID: 1677881876994486743, guid: 517b083583479c1478d06d7edfa6f4ee, type: 3}
   currPickup: {fileID: 0}
 --- !u!1 &3678995599980883088
 GameObject:

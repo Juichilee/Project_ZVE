@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using GameAI;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEditor.Build;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 public enum ZombieState 
@@ -22,6 +24,7 @@ public class ZombieStateMachine : MonoBehaviour
     public const string AttackStateName = "Attack";
     public const string DeathStateName = "Death";
     
+    [SerializeField]
     FiniteStateMachine<ZombieFSMData> fsm;
     public ZombieScript Zombie { get; private set; }
     struct ZombieFSMData
@@ -89,8 +92,10 @@ public class ZombieStateMachine : MonoBehaviour
     {
         public override string Name => PatrolStateName;
         // Waypoints
-        private int waypointCounter = 0;
-
+        private List<Vector3> waypoints;
+        private int currWaypointIndex = 0;
+        private int numWaypoints = 3;
+        private float patrolRange = 20f; 
 
         public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
         {
@@ -100,6 +105,9 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+
+            CreateWaypoints();
+            GoToWaypoint();
         }
 
         public override void Exit()
@@ -112,7 +120,33 @@ public class ZombieStateMachine : MonoBehaviour
             if (Zombie.IsChaseRange())
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
+            if (Zombie.ReachedTarget())
+            {
+                currWaypointIndex = (currWaypointIndex + 1) % numWaypoints;
+                GoToWaypoint();   
+            }
+
             return null;
+        }
+
+        private void CreateWaypoints()
+        {
+            waypoints = new List<Vector3>();
+            for (int i = 0; i < numWaypoints; i++)
+            {
+                Vector3 randomDirection = Random.insideUnitSphere * patrolRange; 
+                randomDirection += Zombie.transform.position;
+
+                if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRange, NavMesh.AllAreas))
+                    waypoints.Add(hit.position);
+            } 
+
+        }
+
+        private void GoToWaypoint()
+        {
+            if (waypoints.Count > 0)
+                Zombie.GoTo(waypoints[currWaypointIndex]);
         }
     }
 
@@ -188,7 +222,6 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
-
             // TODO: Spawn Collectable and Enable Ragdoll
             Zombie.Die();
             Zombie.SpawnPickUp();
@@ -257,9 +290,13 @@ public class ZombieStateMachine : MonoBehaviour
         fsm.AddState(new DeathState());
     }
 
+
+    public string debugState;
+    
     protected void Update()
     {
         fsm.Update();
+        debugState = fsm.CurrentState.Name;
     }
 
 

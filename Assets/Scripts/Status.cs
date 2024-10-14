@@ -8,8 +8,9 @@ using UnityEngine.Events;
 public class Status : MonoBehaviour
 {
 
-    public float maxHealth = 2f;
+    public float maxHealth = 20f;
     public float currHealth;
+    // TODO: public float iframes;
 
     // public UnityEvent onDefeated;
 

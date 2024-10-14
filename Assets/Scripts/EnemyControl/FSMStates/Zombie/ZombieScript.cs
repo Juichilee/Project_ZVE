@@ -11,12 +11,13 @@ using UnityEngine.AI;
 public class ZombieScript : MonoBehaviour
 {
     // Component Reference
-    private Animator anim;
-    private Rigidbody rb;
-    private CapsuleCollider cc;
-    public UnityEngine.AI.NavMeshAgent aiAgent;
-    public GameObject player;
-    public Status status;
+    public Animator anim { get; private set; }
+    public Rigidbody rb { get; private set; }
+    public CapsuleCollider cc { get; private set; }
+    public NavMeshAgent aiAgent { get; private set; }
+    public GameObject player { get; private set; }
+    public ZombieStatus status;
+    public RagdollOnDeath ragdollOnDeath { get; private set; }
 
     // Animation Variables
     public float animationSpeed = 1f;
@@ -32,7 +33,7 @@ public class ZombieScript : MonoBehaviour
     public bool isDead = false;
 
     public float patrolRange = 20f;
-    public float attackRange = 1f;
+    public float attackRange = 2f;
     public float chaseRange = 10f;
 
 
@@ -50,8 +51,9 @@ public class ZombieScript : MonoBehaviour
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         player = GameObject.FindWithTag("Player");
-        aiAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        status = GetComponent<Status>();
+        aiAgent = GetComponent<NavMeshAgent>();
+        status = GetComponent<ZombieStatus>();
+        ragdollOnDeath = GetComponent<RagdollOnDeath>();
     }
 
     void FixedUpdate()
@@ -130,6 +132,7 @@ public class ZombieScript : MonoBehaviour
     {
         isDead = true;
         Stop();
+        ragdollOnDeath.EnableRagdoll(); 
     }
 
 
