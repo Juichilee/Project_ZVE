@@ -1850,10 +1850,11 @@ GameObject:
   - component: {fileID: 7612850215811820392}
   - component: {fileID: 1092839236707248952}
   - component: {fileID: 1092839236707248959}
-  - component: {fileID: 1092839236707248957}
   - component: {fileID: 1092839236707248958}
   - component: {fileID: 2832160226030545539}
   - component: {fileID: 8844471337275818503}
+  - component: {fileID: 686313954}
+  - component: {fileID: 686313955}
   m_Layer: 7
   m_Name: EnemyZombie
   m_TagString: Enemy
@@ -1868,7 +1869,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3564349475260101633}
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000029504295}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: -3.9140189, y: 0.0000019073486, z: 10.565679}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1942,32 +1943,6 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1092839236707248957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3564349475260101633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6804926004071da4b813aa0bb233f8f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aiAgent: {fileID: 0}
-  player: {fileID: 0}
-  status: {fileID: 0}
-  ragdollOnDeath: {fileID: 0}
-  animationSpeed: 1
-  rootMovementSpeed: 1
-  rootTurnSpeed: 1
-  curVelocity: {x: 0, y: 0, z: 0}
-  prevVelocity: {x: 0, y: 0, z: 0}
-  maxVerticalSpeed: 10
-  isGrounded: 1
-  isDead: 0
-  pickupPrefab: {fileID: -1735077687078591743, guid: f65ce1c5f4721bf448a5064f1eb27a4d, type: 3}
-  currPickup: {fileID: 0}
 --- !u!195 &1092839236707248958
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2018,7 +1993,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  currHealth: 0
+  currHealth: 2
+--- !u!114 &686313954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3564349475260101633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 507ab5876f985f54d935f7bb7ba7d40a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &686313955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3564349475260101633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aiAgent: {fileID: 0}
+  player: {fileID: 0}
+  status: {fileID: 0}
+  animationSpeed: 1
+  rootMovementSpeed: 1
+  rootTurnSpeed: 1
+  curVelocity: {x: 0, y: 0, z: 0}
+  prevVelocity: {x: 0, y: 0, z: 0}
+  maxVerticalSpeed: 10
+  isGrounded: 1
+  isDead: 0
+  patrolRange: 20
+  attackRange: 1
+  chaseRange: 10
+  pickupPrefab: {fileID: 0}
+  currPickup: {fileID: 0}
 --- !u!1 &3678995599980883088
 GameObject:
   m_ObjectHideFlags: 0
