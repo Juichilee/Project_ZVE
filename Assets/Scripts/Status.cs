@@ -26,6 +26,17 @@ public class Status : MonoBehaviour
         // }
     }
 
+    public Boolean Heal(float healAmt)
+    {
+        if (currHealth == maxHealth)
+            return false;
+        else if (currHealth + healAmt >= maxHealth)
+            currHealth = maxHealth;
+        else
+            currHealth += healAmt;
+        return true;
+    }
+
     public void OnDefeated()
     {
         this.gameObject.SetActive(false);
