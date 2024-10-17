@@ -10,7 +10,7 @@ public class Projectile : MonoBehaviour
     const int despawnTime = 10; // in seconds
     public GameObject shooter;
 
-    public void Shooter(GameObject setShooter)
+    public void SetShooter(GameObject setShooter)
     {
         shooter = setShooter;
     }
@@ -31,7 +31,9 @@ public class Projectile : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // Ignore colliding with projectile layer and the shooter's layer
-        if(other.gameObject.layer != gameObject.layer && other.gameObject.layer != shooter.layer){
+        if(shooter != null && other.gameObject.transform.root.gameObject != shooter && other.gameObject.layer != gameObject.layer){
+            // Debug.Log("Shooter: " + shooter.name);
+            // Debug.Log("Collided with: " + other.gameObject.name);
             Destroy(gameObject);
         }
     }

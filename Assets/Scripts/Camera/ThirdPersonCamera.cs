@@ -3,26 +3,31 @@ using System.Collections;
 using Cinemachine;
 using Unity.VisualScripting;
 
-[RequireComponent(typeof(CharacterInputController))]
+// [RequireComponent(typeof(CharacterInputController))]
 public class ThirdPersonCamera : MonoBehaviour
 {
     public float maxYAxisSpeed = 2f;
     public float maxXAxisSpeed = 300f;
-	public float sensitivity = 0.0f;
+	public float sensitivity = 1.0f;
     public float aimSensitivity = 0.8f;
-    public CharacterInputController characterInputController;
 	public GameObject thirdPersonCam;
     private CinemachineFreeLook thirdPersonFreeLook;
     public GameObject combatCam;
     private CinemachineFreeLook combatFreeLook;
-    public CameraStyle currStyle;
-
-    protected float angle;
+    public CinemachineFreeLook currFreeLook;
+    public CameraStyle currCamStyle;
+    public CameraStyle prevCamStyle;
+    public CharacterInputController cinput;
+    public bool _inputAimDown;
     public enum CameraStyle
     {
         Basic,
         Combat
     }
+
+    // Store the axis values from the current camera
+    float currentXAxisValue;
+    float currentYAxisValue;
 
     void Awake()
     {
@@ -30,6 +35,7 @@ public class ThirdPersonCamera : MonoBehaviour
         combatCam.SetActive(false);
         thirdPersonFreeLook = thirdPersonCam.GetComponent<CinemachineFreeLook>();
         combatFreeLook = combatCam.GetComponent<CinemachineFreeLook>();
+        cinput = GetComponent<CharacterInputController>();
     }
 
     void Start()
@@ -46,28 +52,58 @@ public class ThirdPersonCamera : MonoBehaviour
         combatFreeLook.m_XAxis.m_MaxSpeed = maxXAxisSpeed * aimSensitivity;
     }
     
-    private void SwitchCameraStyle(CameraStyle newStyle)
+    public void SwitchCameraStyle(CameraStyle newStyle)
     {
-        combatCam.SetActive(false);
-        thirdPersonCam.SetActive(false);
-        
-        switch(newStyle)
+        currCamStyle = newStyle;
+        // Activate the new camera and deactivate the current camera
+        switch (newStyle)
         {
             case CameraStyle.Basic:
                 thirdPersonCam.SetActive(true);
-            break;
+                combatCam.SetActive(false);
+                currFreeLook = thirdPersonFreeLook;
+                break;
             case CameraStyle.Combat:
                 combatCam.SetActive(true);
-            break;
+                thirdPersonCam.SetActive(false);
+                currFreeLook = combatFreeLook;
+                break;
+            default:
+                thirdPersonCam.SetActive(true);
+                combatCam.SetActive(false);
+                currFreeLook = thirdPersonFreeLook;
+                break;
         }
-        currStyle = newStyle;
 
+        // Store the axis values from the current camera before switching
+        if (currCamStyle != prevCamStyle)
+        {
+            Debug.Log("Assigning old Axis Values:");
+            // Assign the stored axis values to the new camera after it's been activated
+            currFreeLook.m_XAxis.Value = currentXAxisValue;
+            currFreeLook.m_YAxis.Value = currentYAxisValue;
+        }
+
+        currentXAxisValue = currFreeLook.m_XAxis.Value;
+        currentYAxisValue = currFreeLook.m_YAxis.Value;
+
+        prevCamStyle = currCamStyle;
+        // Debug.Log("Curr X Axis Val: " + currFreeLook.m_XAxis.Value);
+        // Debug.Log("Curr Y Axis Val: " + currFreeLook.m_YAxis.Value);
+        // Ensure the new camera recognizes the previous state as valid
+        // currFreeLook.PreviousStateIsValid = true;
     }
 
     void Update()
     {
+
+        if (cinput.enabled)
+        {
+            _inputAimDown = cinput.AimDown;
+        }
+
         // Check if the right mouse button is pressed down
-        if (characterInputController.AimDown)
+        if (_inputAimDown)
         {
             SwitchCameraStyle(CameraStyle.Combat);
         }

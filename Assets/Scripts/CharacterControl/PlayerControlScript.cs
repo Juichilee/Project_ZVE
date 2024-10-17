@@ -22,22 +22,16 @@ public class PlayerControlScript : MonoBehaviour
     private Rigidbody rbody;
     public Camera mainCamera;
     public Transform orientation;
-    public MeleeAttack meleeAttack;
-    public Transform shootPos;
-    public GameObject projectileObj;
-    public Transform targetTrans;
-    public Rig aimRig;
 
     #region Controller Input Reading & Caching
     private CharacterInputController cinput;
-    bool _inputActionFired = false;
+    // bool _inputActionFired = false;
     float _inputForward = 0f;
     float _inputRight = 0f;
-    float _inputTurn = 0f;
+    // float _inputTurn = 0f;
     bool _inputJump = false;
     bool _inputAimDown = false;
-    bool _inputShoot = false;
-    bool _inputMelee = false;
+    public Vector3 inputDir;
     #endregion
 
     [Header("Movement & Animation")]
@@ -53,22 +47,20 @@ public class PlayerControlScript : MonoBehaviour
     public bool hasJumped = false;
     public bool multiJump = false;
     public bool isMoving = false;
-    public Vector3 inputDir;
+    public float aimDownSpeed = 5f;
 
     [Header("Physics")]
     // Variables to store calculated character's directional velocity
     public Vector3 localVelocity = new Vector3();
     private Vector3 prevWorldPosition;
-    private Vector3 worldVelocity;
-    public Vector3 prevVelocity = new Vector3();
     public float maxMidairControlSpeed = 10f;
     public float midairControlForce = 10f;
 
     [Header("Ground Check")]
     private int groundContactCount = 0;
     public bool isGrounded = true;
-    public float playerHeight;
-    public LayerMask whatIsGround;
+    // public float playerHeight;
+    // public LayerMask whatIsGround;
 
     public bool GetGrounded
     {
@@ -78,10 +70,10 @@ public class PlayerControlScript : MonoBehaviour
         }
     }
 
-    [Header("Shooting")]
-    public LayerMask aimColliderLayerMask  = new LayerMask();
-    public Transform debugTrans;
-    public GameObject crossHair;
+    // [Header("Shooting")]
+    // public LayerMask aimColliderLayerMask  = new LayerMask();
+    // public Transform debugTrans;
+    // public GameObject crossHair;
 
     void Awake()
     {
@@ -118,10 +110,8 @@ public class PlayerControlScript : MonoBehaviour
         {
             _inputForward = cinput.Forward;
             _inputRight = cinput.Right;
-            _inputActionFired = _inputActionFired || cinput.Action;
+            // _inputActionFired = _inputActionFired || cinput.Action;
             _inputAimDown = cinput.AimDown;
-            _inputShoot = cinput.Shoot;
-            _inputMelee = _inputMelee || cinput.Melee;
         }
         
         Transform mainCameraTrans = mainCamera.transform;
@@ -153,42 +143,12 @@ public class PlayerControlScript : MonoBehaviour
         }
 
         _inputJump = cinput.Jump;
-        
-        // Shooting logic
-        if (_inputAimDown)
-        {
-            aimRig.weight = Mathf.Lerp(aimRig.weight, 1f, Time.deltaTime * 2f);
-
-            crossHair.SetActive(true);
-
-            Vector2 screenCenterPoint = new Vector2(Screen.width/2f, Screen.height/2f);
-            Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-            Vector3 mouseWorldPosition;
-            int fixedDistance = 99;
-            if(Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, aimColliderLayerMask))
-            {
-                mouseWorldPosition = raycastHit.point;
-            } else {
-                mouseWorldPosition = ray.origin + ray.direction * fixedDistance;
-            }
-            Vector3 aimDir = (mouseWorldPosition - shootPos.position).normalized;
-            targetTrans.position = mouseWorldPosition;
-
-            if (_inputShoot){
-                GameObject projInst = Instantiate(projectileObj, shootPos.position, Quaternion.LookRotation(aimDir, Vector3.up));
-                projInst.GetComponent<Projectile>().Shooter(gameObject);
-            }
-            
-        } else {
-            aimRig.weight = Mathf.Lerp(aimRig.weight, 0f, Time.deltaTime * 2f);
-            crossHair.SetActive(false);
-        }
     }
 
     void FixedUpdate()
     {
         // Physics calculations for rigidbody because animator velocity is inaccurate
-        worldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
+        Vector3 worldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
         prevWorldPosition = transform.position;
 
         // Project the world velocity onto the character's local axes
@@ -217,15 +177,15 @@ public class PlayerControlScript : MonoBehaviour
         isGrounded = GetGrounded || Physics.CheckSphere(pos, radius, groundLayer);
 
         // Smooth turning based on camera direction while moving
-        Vector3 crossProduct = Vector3.Cross(orientation.forward.normalized, transform.forward.normalized);
-        Vector3 characterForward = this.transform.forward;
-        Vector3 cameraForwardAdjusted = mainCamera.transform.forward;
+        // Vector3 crossProduct = Vector3.Cross(orientation.forward.normalized, transform.forward.normalized);
+        // Vector3 characterForward = this.transform.forward;
+        // Vector3 cameraForwardAdjusted = mainCamera.transform.forward;
 
-        float dotProduct = Vector3.Dot(characterForward.normalized, cameraForwardAdjusted.normalized);
+        // float dotProduct = Vector3.Dot(characterForward.normalized, cameraForwardAdjusted.normalized);
 
-        if (dotProduct >= 0) {
-            _inputTurn = -crossProduct.y;
-        }
+        // if (dotProduct >= 0) {
+        //     _inputTurn = -crossProduct.y;
+        // }
 
         // Handle jump
         if (!multiJump)
@@ -246,23 +206,13 @@ public class PlayerControlScript : MonoBehaviour
             MidAirControl();
         }
 
-        if (_inputMelee)
-        {
-            _inputMelee = false;
-            meleeAttack.startAttack();
-        }
-
         // anim.SetFloat("velx", _inputTurn);
         anim.SetFloat("velz", _inputForward);
         anim.SetFloat("vely", normalizedVerticalSpeed);
         anim.SetBool("isFalling", !isGrounded);
         anim.SetFloat("velStrafe", _inputRight);
         anim.SetBool("isMoving", isMoving);
-
         anim.SetBool("aimDown", _inputAimDown);
-
-        // Smooth transition speed, adjust this to control how fast it transitions
-        float smoothSpeed = 5f;
 
         // Set the target value (1 if aiming down, 0 if not)
         float targetAimDown = _inputAimDown ? 1f : 0f;
@@ -271,7 +221,7 @@ public class PlayerControlScript : MonoBehaviour
         float currentAimDown = anim.GetFloat("aimDownLerp");
 
         // Smoothly transition the value
-        float newAimDownValue = Mathf.Lerp(currentAimDown, targetAimDown, Time.deltaTime * smoothSpeed);
+        float newAimDownValue = Mathf.Lerp(currentAimDown, targetAimDown, Time.deltaTime * aimDownSpeed);
 
         // Set the new value to the animator
         anim.SetFloat("aimDownLerp", newAimDownValue);
