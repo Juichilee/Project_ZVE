@@ -18,8 +18,8 @@ TagManager:
   - ground
   - Enemy
   - Pickup
-  - 
-  - 
+  - Player
+  - Projectile
   - 
   - 
   - 
