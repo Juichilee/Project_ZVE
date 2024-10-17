@@ -6,6 +6,8 @@ TagManager:
   tags:
   - ground
   - Enemy
+  - health
+  - floor
   layers:
   - Default
   - TransparentFX
@@ -16,8 +18,8 @@ TagManager:
   - ground
   - Enemy
   - Pickup
-  - 
-  - 
+  - Player
+  - Projectile
   - 
   - 
   - 
