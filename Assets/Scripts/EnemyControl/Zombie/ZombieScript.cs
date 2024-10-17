@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,19 +12,23 @@ using UnityEngine.AI;
 public class ZombieScript : MonoBehaviour
 {
     // Component Reference
-    public Animator anim { get; private set; }
-    public Rigidbody rb { get; private set; }
-    public CapsuleCollider cc { get; private set; }
-    public NavMeshAgent aiAgent { get; private set; }
+    private Animator anim; 
+    private Rigidbody rb; 
+    private CapsuleCollider cc;
+    private NavMeshAgent aiAgent; 
     public GameObject player { get; private set; }
-    public ZombieStatus status;
-    public RagdollOnDeath ragdollOnDeath { get; private set; }
+    public ZombieStatus status { get; private set; }
+    
+    // Pickup Prefabs 
+    public Rigidbody pickupPrefab;
+    public Rigidbody currPickup;
 
-    // Animation Variables
-    public float animationSpeed = 1f;
-    public float rootMovementSpeed = 1f;
-    public float rootTurnSpeed = 1f;
+    // Animation Speed Variables
+    public float animationSpeed;
+    public float rootMovementSpeed;
+    public float rootTurnSpeed;
 
+    // Animation Properties 
     public Vector3 curVelocity;
     public Vector3 prevVelocity;
     public float maxVerticalSpeed = 10f; // Set the maximum expected speed in both direction
@@ -32,14 +37,13 @@ public class ZombieScript : MonoBehaviour
     public bool IsGrounded { get { return groundContactCount > 0; } }
     public bool isDead = false;
 
-    public float patrolRange = 20f;
-    public float attackRange = 2f;
-    public float chaseRange = 10f;
+    private float timeOfLastAttack = 0;
+    private bool hasReachedAttackDist = false;
 
+    // Range Variables
+    public float chaseRange;
+    public float attackRange;
 
-    // Pickup 
-    public Rigidbody pickupPrefab;
-    public Rigidbody currPickup;
 
     // Awake is To grab the components
     void Awake()
@@ -53,12 +57,20 @@ public class ZombieScript : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         aiAgent = GetComponent<NavMeshAgent>();
         status = GetComponent<ZombieStatus>();
-        ragdollOnDeath = GetComponent<RagdollOnDeath>();
+    }
+
+    void Start() {
+        animationSpeed = 1f;
+        rootMovementSpeed = 1f;
+        rootTurnSpeed = 1f;
+        chaseRange = 10f;
+        attackRange = 2f;
     }
 
     void FixedUpdate()
     {
         anim.speed = animationSpeed;
+        DEBUGdistance = Vector3.Distance(this.transform.position, player.transform.position); 
         
         // Check Is Grounded
         float radius = GetComponent<CapsuleCollider>().radius * 0.9f;
@@ -76,10 +88,17 @@ public class ZombieScript : MonoBehaviour
         return Vector3.Distance(this.transform.position, player.transform.position) <= chaseRange;
     }
 
+    public float DEBUGdistance; 
+
+
     public bool IsAttackRange()
     {
         return Vector3.Distance(this.transform.position, player.transform.position) <= attackRange;
     }
+
+    /* ======================================================================================================
+    ______________________________________________.Movement._________________________________________________
+    ====================================================================================================== */
 
     private bool targetSet = false;
     private Vector3 goToTarget;
@@ -132,9 +151,7 @@ public class ZombieScript : MonoBehaviour
     {
         isDead = true;
         Stop();
-        ragdollOnDeath.EnableRagdoll(); 
     }
-
 
     public void SpawnPickUp()
     {
@@ -144,6 +161,49 @@ public class ZombieScript : MonoBehaviour
     } 
 
 
+    /* ======================================================================================================
+    ______________________________________________.Attack.___________________________________________________
+    ====================================================================================================== */
+    public void ResetTimeOfLastAttack()
+    {
+        timeOfLastAttack = Time.time;
+    }
+
+    public void LoseAgro()
+    {
+        anim.SetBool("isAttacking", false);
+        if (hasReachedAttackDist)
+            hasReachedAttackDist = false;
+    }
+
+    public bool isCooldown()
+    {
+        return Time.time <= timeOfLastAttack + status.AttackSpeed;
+    }
+
+    public void AttackTarget()
+    {
+        anim.SetBool("isAttacking", true);
+        
+        if (!hasReachedAttackDist)
+        {
+            hasReachedAttackDist = true;
+            timeOfLastAttack = Time.time;
+        }
+
+        if (Time.time >= timeOfLastAttack + status.AttackSpeed)
+        {
+            Status playerStatus = player.GetComponent<Status>();
+            status.DealDamage(playerStatus);
+            timeOfLastAttack = Time.time;
+        }
+
+    }
+
+
+    /* ======================================================================================================
+    ______________________________________________.On Collision._____________________________________________
+    ====================================================================================================== */
     //This is a physics callback
     void OnCollisionEnter(Collision collision)
     {

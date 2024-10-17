@@ -1852,9 +1852,9 @@ GameObject:
   - component: {fileID: 1092839236707248959}
   - component: {fileID: 1092839236707248958}
   - component: {fileID: 2832160226030545539}
-  - component: {fileID: 8844471337275818503}
   - component: {fileID: 686313954}
   - component: {fileID: 686313955}
+  - component: {fileID: 686313962}
   m_Layer: 7
   m_Name: EnemyZombie
   m_TagString: Enemy
@@ -1904,7 +1904,7 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: 8f7380da49034cd488ddff94b1ac35d1, type: 3}
   m_Controller: {fileID: 9100000, guid: c77b1bb45d1dfbb4192ec0530da92663, type: 2}
   m_CullingMode: 1
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -1957,7 +1957,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 2
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1980,20 +1980,6 @@ MonoBehaviour:
   rdState: 0
   ragdollRoot: {fileID: 2728644249789562537}
   rbs: []
---- !u!114 &8844471337275818503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3564349475260101633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 103772d9e0219194c9621b95402c58d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 2
-  currHealth: 2
 --- !u!114 &686313954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2019,10 +2005,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiAgent: {fileID: 0}
-  player: {fileID: 0}
-  status: {fileID: 0}
-  ragdollOnDeath: {fileID: 0}
+  pickupPrefab: {fileID: 1677881876994486743, guid: 517b083583479c1478d06d7edfa6f4ee, type: 3}
+  currPickup: {fileID: 0}
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
@@ -2031,11 +2015,24 @@ MonoBehaviour:
   maxVerticalSpeed: 10
   isGrounded: 1
   isDead: 0
-  patrolRange: 20
-  attackRange: 1
   chaseRange: 10
-  pickupPrefab: {fileID: 1677881876994486743, guid: 517b083583479c1478d06d7edfa6f4ee, type: 3}
-  currPickup: {fileID: 0}
+  attackRange: 0
+  DEBUGdistance: 0
+--- !u!114 &686313962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3564349475260101633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dc6785ec98c8504a9544b29f8de3d9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 20
+  currHealth: 0
+  ragdollOnDeath: {fileID: 0}
 --- !u!1 &3678995599980883088
 GameObject:
   m_ObjectHideFlags: 0

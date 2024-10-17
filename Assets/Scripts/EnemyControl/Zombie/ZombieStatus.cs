@@ -8,14 +8,22 @@ public class ZombieStatus : Status
     // Script Reference
     public RagdollOnDeath ragdollOnDeath;
 
-    private float attackDamage= 10f;
-    private float attackSpeed = 1f;
-
-    private bool canAttack;
+    public float AttackDamage { get; private set; } 
+    public float AttackSpeed { get; private set; } 
+    public bool CanAttack { get; private set; } 
 
     void Awake()
     {
         ragdollOnDeath = GetComponent<RagdollOnDeath>();
+    }
+
+    void Start()
+    {
+        maxHealth = 20f;
+        currHealth = maxHealth;
+        AttackDamage = 10f;
+        AttackSpeed = 3f;
+        CanAttack = false;
     }
 
     public override void TakeDamage(float damage)
@@ -33,7 +41,7 @@ public class ZombieStatus : Status
 
     public void DealDamage(Status receiverStatus) 
     {
-        receiverStatus.TakeDamage(attackDamage);
+        receiverStatus.TakeDamage(AttackDamage);
     }
 
 }

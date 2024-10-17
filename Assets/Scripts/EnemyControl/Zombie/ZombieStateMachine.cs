@@ -41,7 +41,7 @@ public class ZombieStateMachine : MonoBehaviour
 
 
     /* ======================================================================================================
-    _______________________________________________Zombie State Bases________________________________________
+    ______________________________________________.Zombie State Bases._______________________________________
     ====================================================================================================== */
     abstract class ZombieStateBase
     {
@@ -85,7 +85,7 @@ public class ZombieStateMachine : MonoBehaviour
 
 
     /* ======================================================================================================
-    _______________________________________________Zombie States_____________________________________________
+    ______________________________________________.Zombie States.____________________________________________
     ====================================================================================================== */
 
     class PatrolState : ZombieState
@@ -195,6 +195,8 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            
+            Zombie.GoToPlayer();
         }
 
         public override void Exit()
@@ -204,8 +206,16 @@ public class ZombieStateMachine : MonoBehaviour
 
         public override StateTransitionBase<ZombieFSMData> Update()
         {
+            Zombie.GoToPlayer();
+
             if (!Zombie.IsAttackRange())
+            {
+                Zombie.LoseAgro();
                 return ParentFSM.CreateStateTransition(ChaseStateName);
+            }
+
+            Zombie.AttackTarget();
+
             return null;
         }
     }
@@ -268,7 +278,7 @@ public class ZombieStateMachine : MonoBehaviour
 
 
     /* ======================================================================================================
-    _______________________________________________FSM_______________________________________________________
+    ______________________________________________.FSM.______________________________________________________
     ====================================================================================================== */
 
     private void Awake()

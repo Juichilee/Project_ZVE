@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1677881876994486743}
   m_Layer: 0
   m_Name: Medkit
-  m_TagString: Untagged
+  m_TagString: health
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
