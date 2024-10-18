@@ -1,17 +1,6 @@
 ﻿
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
-using UnityEngine.EventSystems;
-using Microsoft.Unity.VisualStudio.Editor;
-using UnityEngine.Animations.Rigging;
-
-
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 //require some things the bot control needs
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
