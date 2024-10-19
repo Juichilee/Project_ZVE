@@ -62,6 +62,7 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
+        DNA.SetPoints(0);
         SceneManager.LoadScene("Main Menu");
     }
 
