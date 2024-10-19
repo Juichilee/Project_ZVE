@@ -8,6 +8,7 @@ public class EnemyHealthUI : MonoBehaviour
     public Slider hp;
     GameObject enemy;
     ZombieStatus enemyStatus;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -21,5 +22,7 @@ public class EnemyHealthUI : MonoBehaviour
     void FixedUpdate()
     {
         hp.value = enemyStatus.currHealth;
+        this.transform.LookAt(GameObject.FindGameObjectsWithTag("MainCamera")[0].transform);
+        
     }
 }
