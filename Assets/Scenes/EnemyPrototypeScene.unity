@@ -461,6 +461,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1092839236707248952, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1092839236707248958, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: m_AngularSpeed
+      value: 540
+      objectReference: {fileID: 0}
+    - target: {fileID: 1092839236707248958, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 1.4
+      objectReference: {fileID: 0}
     - target: {fileID: 3564349475260101633, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_Name
       value: EnemyZombie
