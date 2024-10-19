@@ -10,6 +10,7 @@ public class DeadMenu : MonoBehaviour
     public GameObject Menu;
     PauseMenu pause;
     Status playerStatus;
+    public GameObject dna;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +35,7 @@ public class DeadMenu : MonoBehaviour
 
     public void RestartLevel()
     {
+        dna.GetComponent<DNA>().ResetPoints();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
