@@ -29,9 +29,7 @@ public class ZombieScript : MonoBehaviour
     public float rootTurnSpeed;
 
     // Animation Properties 
-    public Vector3 curVelocity;
-    public Vector3 prevVelocity;
-    public float maxVerticalSpeed = 10f; // Set the maximum expected speed in both direction
+    public float ZombieMaxSpeed { get; private set; }
     private int groundContactCount = 0;
     public bool isGrounded = true;
     public bool IsGrounded { get { return groundContactCount > 0; } }
@@ -51,11 +49,16 @@ public class ZombieScript : MonoBehaviour
         // Components
         anim = GetComponent<Animator>();
         anim.enabled = true;
+        anim.applyRootMotion = true;
+        
+        aiAgent = GetComponent<NavMeshAgent>();
+        aiAgent.updatePosition = false;
+        aiAgent.updateRotation = true;
+
         rb = GetComponent<Rigidbody>();
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         player = GameObject.FindWithTag("Player");
-        aiAgent = GetComponent<NavMeshAgent>();
         status = GetComponent<ZombieStatus>();
     }
 
@@ -79,7 +82,8 @@ public class ZombieScript : MonoBehaviour
         isGrounded = IsGrounded || Physics.CheckSphere(pos, radius, groundLayer);
 
         // Update Animation
-        anim.SetFloat("vely", aiAgent.velocity.magnitude / aiAgent.speed);
+        ZombieMaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
+        anim.SetFloat("vely", ZombieMaxSpeed);
         anim.SetBool("isFalling", !isGrounded);
     }
 
@@ -104,11 +108,13 @@ public class ZombieScript : MonoBehaviour
     private Vector3 goToTarget;
     private float maxTargetDistDiff = 0.1f;
     
-    public bool GoTo(Vector3 target) 
-    {
+    public bool GoTo(Vector3 target, float speed = 0f) 
+    {   
+        // anim.SetFloat("vely", speed);
+        
         Vector3 direction = player.transform.position - transform.position;
         direction.y = 0;
-        transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+        // transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
 
         if (targetSet && aiAgent.hasPath && !aiAgent.isPathStale) 
         {
@@ -130,7 +136,7 @@ public class ZombieScript : MonoBehaviour
 
     public void GoToPlayer()
     {
-        GoTo(player.transform.position);
+        GoTo(player.transform.position, ZombieMaxSpeed);
     }
 
     public bool ReachedTarget()
@@ -222,6 +228,10 @@ public class ZombieScript : MonoBehaviour
 
     void OnAnimatorMove()
     {
+
+
+
+
         Vector3 newRootPosition;
         Quaternion newRootRotation;
 
@@ -229,6 +239,8 @@ public class ZombieScript : MonoBehaviour
             newRootPosition = anim.rootPosition;        
         else
             newRootPosition = new Vector3(anim.rootPosition.x, this.transform.position.y, anim.rootPosition.z);
+        
+        newRootPosition.y = aiAgent.nextPosition.y;
 
         // Here, scale the difference in position and rotation to make the character go faster or slower
         newRootRotation = anim.rootRotation;
@@ -237,6 +249,7 @@ public class ZombieScript : MonoBehaviour
 
         rb.MovePosition(newRootPosition);
         rb.MoveRotation(newRootRotation);
+        aiAgent.nextPosition = newRootPosition;
     }
 
 }
