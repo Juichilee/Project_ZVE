@@ -79,31 +79,31 @@ public class CharacterInputController : MonoBehaviour {
 
 
         //BEGIN ANALOG ON KEYBOARD DEMO CODE
-        if (Input.GetKey(KeyCode.Q))
-            h = -0.5f;
-        else if (Input.GetKey(KeyCode.E))
-            h = 0.5f;
+        // if (Input.GetKey(KeyCode.Q))
+        //     h = -0.5f;
+        // else if (Input.GetKey(KeyCode.E))
+        //     h = 0.5f;
 
-        if (Input.GetKeyUp(KeyCode.Alpha1))
-            forwardSpeedLimit = 0.1f;
-        else if (Input.GetKeyUp(KeyCode.Alpha2))
-            forwardSpeedLimit = 0.2f;
-        else if (Input.GetKeyUp(KeyCode.Alpha3))
-            forwardSpeedLimit = 0.3f;
-        else if (Input.GetKeyUp(KeyCode.Alpha4))
-            forwardSpeedLimit = 0.4f;
-        else if (Input.GetKeyUp(KeyCode.Alpha5))
-            forwardSpeedLimit = 0.5f;
-        else if (Input.GetKeyUp(KeyCode.Alpha6))
-            forwardSpeedLimit = 0.6f;
-        else if (Input.GetKeyUp(KeyCode.Alpha7))
-            forwardSpeedLimit = 0.7f;
-        else if (Input.GetKeyUp(KeyCode.Alpha8))
-            forwardSpeedLimit = 0.8f;
-        else if (Input.GetKeyUp(KeyCode.Alpha9))
-            forwardSpeedLimit = 0.9f;
-        else if (Input.GetKeyUp(KeyCode.Alpha0))
-            forwardSpeedLimit = 1.0f;
+        // if (Input.GetKeyUp(KeyCode.Alpha1))
+        //     forwardSpeedLimit = 0.1f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha2))
+        //     forwardSpeedLimit = 0.2f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha3))
+        //     forwardSpeedLimit = 0.3f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha4))
+        //     forwardSpeedLimit = 0.4f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha5))
+        //     forwardSpeedLimit = 0.5f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha6))
+        //     forwardSpeedLimit = 0.6f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha7))
+        //     forwardSpeedLimit = 0.7f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha8))
+        //     forwardSpeedLimit = 0.8f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha9))
+        //     forwardSpeedLimit = 0.9f;
+        // else if (Input.GetKeyUp(KeyCode.Alpha0))
+        //     forwardSpeedLimit = 1.0f;
         //END ANALOG ON KEYBOARD DEMO CODE  
 
 
@@ -145,7 +145,6 @@ public class CharacterInputController : MonoBehaviour {
             Melee = true;
         } else {
             Melee = false;
-        }
-        
+        }    
 	}
 }
