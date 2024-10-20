@@ -11,6 +11,9 @@ public class PlayerSounds : MonoBehaviour
     public AudioClip jumpGrunt;
     public AudioClip landingClip;
     public AudioClip gunshot;
+    public AudioClip gunClick;
+
+    private bool hasPlayedGunReady = false;
 
     void Start()
     {
@@ -62,5 +65,19 @@ public class PlayerSounds : MonoBehaviour
         {
             audioSource.PlayOneShot(gunshot);
         }
+    }
+
+    public void GunReady()
+    {
+        if (!hasPlayedGunReady && gunClick != null)
+        {
+            audioSource.PlayOneShot(gunClick);
+            hasPlayedGunReady = true;
+        }
+    }
+
+    public void ResetGunReadySound()
+    {
+        hasPlayedGunReady = false;
     }
 }

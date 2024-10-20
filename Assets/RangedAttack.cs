@@ -44,6 +44,7 @@ public class RangedAttack : MonoBehaviour
         // Shooting logic
         if (_inputAimDown)
         {
+            playerSounds.GunReady();
             aimRig.weight = Mathf.Lerp(aimRig.weight, 1f, Time.deltaTime * 2f);
 
             // crossHair.SetActive(true);

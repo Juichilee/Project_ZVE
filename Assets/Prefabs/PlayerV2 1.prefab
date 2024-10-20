@@ -442,6 +442,7 @@ MonoBehaviour:
   jumpGrunt: {fileID: 8300000, guid: 3991c710c0fd32c46830038e370feca5, type: 3}
   landingClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
   gunshot: {fileID: 8300000, guid: 7e85c811417efdf4ead0bb7703d45a55, type: 3}
+  gunClick: {fileID: 8300000, guid: 4087eea1541dd6146bd87756af6e9629, type: 3}
 --- !u!1 &289992280164462806
 GameObject:
   m_ObjectHideFlags: 0
