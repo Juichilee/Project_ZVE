@@ -1922,7 +1922,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3564349475260101633}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1957,8 +1957,8 @@ NavMeshAgent:
   m_Speed: 1.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_AngularSpeed: 540
+  m_StoppingDistance: 1.4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -2011,9 +2011,6 @@ MonoBehaviour:
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
-  curVelocity: {x: 0, y: 0, z: 0}
-  prevVelocity: {x: 0, y: 0, z: 0}
-  maxVerticalSpeed: 10
   isGrounded: 1
   isDead: 0
   chaseRange: 10
@@ -2034,6 +2031,7 @@ MonoBehaviour:
   maxHealth: 20
   currHealth: 0
   ragdollOnDeath: {fileID: 0}
+  deathSound: {fileID: 0}
 --- !u!1 &3678995599980883088
 GameObject:
   m_ObjectHideFlags: 0
