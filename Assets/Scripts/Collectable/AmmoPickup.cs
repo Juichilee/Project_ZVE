@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthPickup : MonoBehaviour
+public class AmmoPickup : MonoBehaviour
 {
     // TODO: Add Reference to the script
     // public Status status;     
-    public int HealAmt = 1; // Amount of health the player will gain
+    public int AmmoAmt = 12; // Amount of ammo the player will gain
     private AudioSource audioSource;
     public AudioClip pickupSound;  // The sound to play when picked up
 
@@ -35,8 +35,9 @@ public class HealthPickup : MonoBehaviour
     {
         if (c.transform.gameObject.CompareTag("Player"))
         {
-            // TODO: Add EventManger.TriggerEvent<>
-            if (c.gameObject.GetComponent<Status>().Heal(HealAmt)) {
+            if (true) {         //TODO: check if player can hold more ammo
+                //TODO: Give the player more ammo
+
                 // Play the pickup sound from the player's AudioSource
                 AudioSource playerAudio = c.gameObject.GetComponent<AudioSource>();
                 if (playerAudio != null && pickupSound != null)
