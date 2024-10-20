@@ -2011,9 +2011,6 @@ MonoBehaviour:
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
-  curVelocity: {x: 0, y: 0, z: 0}
-  prevVelocity: {x: 0, y: 0, z: 0}
-  maxVerticalSpeed: 10
   isGrounded: 1
   isDead: 0
   chaseRange: 10
@@ -2034,6 +2031,7 @@ MonoBehaviour:
   maxHealth: 20
   currHealth: 0
   ragdollOnDeath: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
 --- !u!1 &3678995599980883088
 GameObject:
   m_ObjectHideFlags: 0

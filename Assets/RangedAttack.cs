@@ -24,10 +24,12 @@ public class RangedAttack : MonoBehaviour
             Debug.Log("CharacterInput could not be found");
         crossHair.SetActive(true);
     }
+
+    private PlayerSounds playerSounds;
     // Start is called before the first frame update
     void Start()
     {
-        
+        playerSounds = GetComponent<PlayerSounds>();
     }
 
     // Update is called once per frame
@@ -52,6 +54,7 @@ public class RangedAttack : MonoBehaviour
 
             if (_inputShoot){
                 currProjectileWeapon.FireWeapon();
+                playerSounds.Shots();
             }
             
         } else {

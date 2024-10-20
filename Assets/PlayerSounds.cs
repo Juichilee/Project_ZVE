@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlayerSounds : MonoBehaviour
 {
-    public AudioClip runningClip; // Assign the footstep sound in the inspector
     private AudioSource audioSource;
 
+    public AudioClip runningClip;
     public AudioClip meleeSoundClip;
     public AudioClip jumpGrunt;
     public AudioClip landingClip;
+    public AudioClip gunshot;
 
     void Start()
     {
@@ -39,7 +40,7 @@ public class PlayerSounds : MonoBehaviour
         }
     }
 
-    public void grunt()
+    public void Grunt()
     {
         if (jumpGrunt != null)
         {
@@ -49,11 +50,17 @@ public class PlayerSounds : MonoBehaviour
 
     public void Landing()
     {
-        Debug.Log("Landing sound triggered!");
-
         if (landingClip != null)
         {
             audioSource.PlayOneShot(landingClip);
+        }
+    }
+
+    public void Shots()
+    {
+        if (gunshot != null)
+        {
+            audioSource.PlayOneShot(gunshot);
         }
     }
 }
