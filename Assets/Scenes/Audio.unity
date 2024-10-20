@@ -121,7 +121,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 414e66c49a4eafc4886c52b9e2186ce6, type: 2}
 --- !u!1 &228340890
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,11 +491,30 @@ Transform:
   m_Father: {fileID: 811377506}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &522422195 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3564349475260101633, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+  m_PrefabInstance: {fileID: 1415739713}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &673090534 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 516864122850936338, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
   m_PrefabInstance: {fileID: 1415739713}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &673090542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522422195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa4023753c269d24a89ec2ac1ef485a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
+  deathSoundClip: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
 --- !u!1 &674398882
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,7 +883,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6bd889336b0f993448ee73ab2ffcfb13, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 0f427c9346b1d58499b40293067ea75e, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -2955,6 +2974,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.3332159
       objectReference: {fileID: 0}
+    - target: {fileID: 8844471337275818503, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
     - target: {fileID: 9121643204171352875, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.13291728
@@ -3345,6 +3368,7 @@ GameObject:
   - component: {fileID: 1786880652}
   - component: {fileID: 1786880651}
   - component: {fileID: 1786880650}
+  - component: {fileID: 1786880654}
   m_Layer: 0
   m_Name: Health Pickup
   m_TagString: Untagged
@@ -3430,6 +3454,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1786880654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786880649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c35de65f9c4e8488869fe772877a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupSound: {fileID: 8300000, guid: 4e1de25b4f0493043a5db898b7ba366c, type: 3}
+  healthAmount: 30
 --- !u!1 &1870079389 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5227045033233513541, guid: ed23d8f2d5970094e9592e6d61c31ac8, type: 3}
@@ -3549,6 +3587,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runningClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
+  meleeSoundClip: {fileID: 8300000, guid: 09a2a530465bedd4b847ddf74392159a, type: 3}
+  jumpGrunt: {fileID: 8300000, guid: 3991c710c0fd32c46830038e370feca5, type: 3}
+  landingClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
 --- !u!1 &1974235893
 GameObject:
   m_ObjectHideFlags: 0
@@ -5335,6 +5376,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.3332159
       objectReference: {fileID: 0}
+    - target: {fileID: 8844471337275818503, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
     - target: {fileID: 9121643204171352875, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.13291728
