@@ -10,7 +10,7 @@ public class MeleeAttackTriggerHandler : MonoBehaviour
     public LayerMask enemyLayer;
     
     void OnTriggerEnter(Collider other){
-        Debug.Log("Trigger Enter");
+        // Debug.Log("Trigger Enter");
         int enemyLayer = LayerMask.NameToLayer("Enemy");
         if(other.gameObject.layer == enemyLayer)
         {
@@ -19,7 +19,7 @@ public class MeleeAttackTriggerHandler : MonoBehaviour
     }
 
     void OnTriggerStay(Collider other){
-        Debug.Log("Trigger Stayed");
+        // Debug.Log("Trigger Stayed");
         int enemyLayer = LayerMask.NameToLayer("Enemy");
         if(other.gameObject.layer == enemyLayer)
         {

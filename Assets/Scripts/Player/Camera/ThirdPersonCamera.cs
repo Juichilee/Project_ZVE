@@ -9,14 +9,14 @@ public class ThirdPersonCamera : MonoBehaviour
     public float maxYAxisSpeed = 2f;
     public float maxXAxisSpeed = 300f;
 	public float sensitivity = 1.0f;
-    public float aimSensitivity = 0.8f;
+    public float aimSensitivity = 0.5f;
 	public GameObject thirdPersonCam;
     private CinemachineFreeLook thirdPersonFreeLook;
     public GameObject combatCam;
     private CinemachineFreeLook combatFreeLook;
     public CinemachineFreeLook currFreeLook;
     public CameraStyle currCamStyle;
-    public CameraStyle prevCamStyle;
+    private CameraStyle prevCamStyle;
     public CharacterInputController cinput;
     public bool _inputAimDown;
     public enum CameraStyle
@@ -78,8 +78,7 @@ public class ThirdPersonCamera : MonoBehaviour
         // Store the axis values from the current camera before switching
         if (currCamStyle != prevCamStyle)
         {
-            Debug.Log("Assigning old Axis Values:");
-            // Assign the stored axis values to the new camera after it's been activated
+            // Assign the stored previous axis values to the new camera after it's been activated
             currFreeLook.m_XAxis.Value = currentXAxisValue;
             currFreeLook.m_YAxis.Value = currentYAxisValue;
         }
@@ -88,10 +87,6 @@ public class ThirdPersonCamera : MonoBehaviour
         currentYAxisValue = currFreeLook.m_YAxis.Value;
 
         prevCamStyle = currCamStyle;
-        // Debug.Log("Curr X Axis Val: " + currFreeLook.m_XAxis.Value);
-        // Debug.Log("Curr Y Axis Val: " + currFreeLook.m_YAxis.Value);
-        // Ensure the new camera recognizes the previous state as valid
-        // currFreeLook.PreviousStateIsValid = true;
     }
 
     void Update()
@@ -113,23 +108,4 @@ public class ThirdPersonCamera : MonoBehaviour
             SwitchCameraStyle(CameraStyle.Basic);
         }
     }
-
-	// void LateUpdate ()
-	// {
-
-    //     if (basicLookAt != null && currStyle == CameraStyle.Basic)
-    //     {
-            // transform.position = Vector3.SmoothDamp(transform.position, basicLookAt.position, ref currentPositionCorrectionVelocity, positionSmoothTime, positionMaxSpeed, Time.deltaTime);
-
-            // var targForward = basicLookAt.forward;
-            // //var targForward = (target.position - this.transform.position).normalized;
-
-            // transform.rotation = QuaternionUtil.SmoothDamp(transform.rotation,
-            //     Quaternion.LookRotation(targForward, Vector3.up), ref quaternionDeriv, rotationSmoothTime);
-
-
-        // } else if (combatLookAt != null && currStyle == CameraStyle.Combat){
-            
-        // }
-    // }
 }
