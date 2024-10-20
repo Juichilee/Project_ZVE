@@ -8,7 +8,6 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject settingsMenu;
     public GameObject pauseMenu;
-    public GameObject mainUI;
     private static bool isPaused;
 
     public static bool GetIsPaused()
@@ -19,7 +18,7 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Unpause();
+        
     }
 
     private void Update()
@@ -43,7 +42,6 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
         settingsMenu.SetActive(false);
-        mainUI.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         isPaused = true;
@@ -54,7 +52,6 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         pauseMenu.SetActive(false);
         settingsMenu.SetActive(false);
-        mainUI.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         isPaused = false;
@@ -62,7 +59,6 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        DNA.SetPoints(0);
         SceneManager.LoadScene("Main Menu");
     }
 

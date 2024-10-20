@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CompleteLevel1 : MonoBehaviour
 {
-    //private string nextSceneName = "Level1";
+    private string nextSceneName = "Level1";
     
     // Start is called before the first frame update
     void Start()

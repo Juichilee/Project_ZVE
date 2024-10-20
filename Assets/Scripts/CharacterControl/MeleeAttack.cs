@@ -10,15 +10,6 @@ public class MeleeAttack : MonoBehaviour
     private bool isAttacking = false;    // To check if an attack is in progress
     public GameObject attackTriggerPrefab; // Trigger Prefab 
     public Transform MeleePos;
-    public CharacterInputController cinput;
-    bool _inputMelee = false;
-
-    void Awake()
-    {
-        cinput = GetComponent<CharacterInputController>();
-        if (cinput == null)
-            Debug.Log("CharacterInput could not be found");
-    }
 
     private PlayerSounds playerSounds; // Reference to PlayerSounds
 
@@ -52,21 +43,5 @@ public class MeleeAttack : MonoBehaviour
         Destroy(attackTrigger);
 
         isAttacking = false;
-    }
-    void Update()
-    {
-        if (cinput.enabled)
-        {
-            _inputMelee = _inputMelee || cinput.Melee;
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (_inputMelee)
-        {
-            _inputMelee = false;
-            startAttack();
-        }
     }
 }
