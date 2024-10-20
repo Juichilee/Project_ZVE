@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using Unity.VisualScripting;
 
 public class MeleeAttack : MonoBehaviour
 {
@@ -21,11 +19,24 @@ public class MeleeAttack : MonoBehaviour
         if (cinput == null)
             Debug.Log("CharacterInput could not be found");
     }
-    public void StartAttack(){
-        if(!isAttacking){
+
+    private PlayerSounds playerSounds; // Reference to PlayerSounds
+
+    void Start()
+    {
+        // Get the PlayerSounds component from the same GameObject
+        playerSounds = GetComponent<PlayerSounds>();
+    }
+
+    public void startAttack()
+    {
+        if (!isAttacking)
+        {
             StartCoroutine(SpawnAttackTrigger());
+            playerSounds.PlayMeleeSound(); // Play melee sound when attacking
         }
     }
+
     // Coroutine to spawn the attack trigger for a short duration
     IEnumerator SpawnAttackTrigger()
     {
@@ -35,10 +46,6 @@ public class MeleeAttack : MonoBehaviour
         GameObject attackTrigger = Instantiate(attackTriggerPrefab, MeleePos);
         attackTrigger.transform.position = MeleePos.position + transform.forward * attackRange / 2; // Slightly in front of the player
         attackTrigger.transform.rotation = MeleePos.rotation;
-
-        // Add the attack trigger component to handle enemy detection
-        // attackHandler.attackDamage = attackDamage;
-        // attackHandler.enemyLayer = enemyLayer;
 
         // Destroy the attack trigger after the attack duration
         yield return new WaitForSeconds(attackDuration);
@@ -59,7 +66,7 @@ public class MeleeAttack : MonoBehaviour
         if (_inputMelee)
         {
             _inputMelee = false;
-            StartAttack();
+            startAttack();
         }
     }
 }

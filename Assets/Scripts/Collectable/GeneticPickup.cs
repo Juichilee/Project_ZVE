@@ -24,7 +24,7 @@ public class GeneticPickup : MonoBehaviour
         if (c.transform.gameObject.CompareTag("Player"))
         {
             // TODO: add point counter to player
-            // if (c.gameObject.GetComponent<Status>().Heal(PointAmt))
+            DNA.Addpoints(PointAmt);
             Destroy(this.gameObject);
         }
     }

@@ -7,6 +7,8 @@ public class ZombieStatus : Status
 {
     // Script Reference
     public RagdollOnDeath ragdollOnDeath;
+    public AudioClip deathSound;
+    private AudioSource audioSource;
 
     public float AttackDamage { get; private set; } 
     public float AttackSpeed { get; private set; } 
@@ -15,6 +17,12 @@ public class ZombieStatus : Status
     void Awake()
     {
         ragdollOnDeath = GetComponent<RagdollOnDeath>();
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     void Start()
@@ -37,6 +45,11 @@ public class ZombieStatus : Status
     public override void OnDefeated()
     {
         ragdollOnDeath.EnableRagdoll();
+        if (deathSound != null)
+        {
+            audioSource.PlayOneShot(deathSound);
+        }
+
     }
 
     public void DealDamage(Status receiverStatus) 

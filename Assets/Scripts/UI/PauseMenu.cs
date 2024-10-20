@@ -19,7 +19,7 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Unpause();
     }
 
     private void Update()
@@ -62,6 +62,7 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
+        DNA.SetPoints(0);
         SceneManager.LoadScene("Main Menu");
     }
 

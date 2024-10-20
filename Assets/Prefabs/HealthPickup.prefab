@@ -111,6 +111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c35de65f9c4e8488869fe772877a50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupSound: {fileID: 8300000, guid: 4e1de25b4f0493043a5db898b7ba366c, type: 3}
+  healthAmount: 30
 --- !u!54 &-1735077687078591743
 Rigidbody:
   m_ObjectHideFlags: 0
