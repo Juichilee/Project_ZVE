@@ -363,6 +363,16 @@ PrefabInstance:
       propertyPath: runningSound
       value: 
       objectReference: {fileID: 1870079399}
+    - target: {fileID: 5227045033224113679, guid: ed23d8f2d5970094e9592e6d61c31ac8, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
+        'mixamorig:LeftHandThumb2'\n\tTransform 'mixamorig:LeftHandIndex1'\n\tTransform
+        'mixamorig:LeftHandPinky2'\n\tTransform 'mixamorig:RightHandRing2'\n\tTransform
+        'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:RightArm'\n\tTransform
+        'mixamorig:LeftLeg'\n\tand more ...\n\tFrom animation clip 'Jump'"
+      objectReference: {fileID: 0}
     - target: {fileID: 5227045033233513541, guid: ed23d8f2d5970094e9592e6d61c31ac8, type: 3}
       propertyPath: m_Name
       value: PlayerV2
@@ -514,7 +524,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
-  deathSoundClip: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
 --- !u!1 &674398882
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,7 +894,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 0f427c9346b1d58499b40293067ea75e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1219,6 +1228,7 @@ MonoBehaviour:
     m_Bits: 128
   attackTriggerPrefab: {fileID: 636183346793117216, guid: eee284699e8bbca4e8efb394aa8a8434, type: 3}
   MeleePos: {fileID: 0}
+  cinput: {fileID: 0}
 --- !u!114 &957530477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1233,34 +1243,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
   orientation: {fileID: 1564182492}
-  meleeAttack: {fileID: 957530476}
+  inputDir: {x: 0, y: 0, z: 0}
   speedMultiplier: 1
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
   maxVerticalSpeed: 10
-  maxHorizontalSpeed: 20
   groundDrag: 0
   airDrag: 0.2
-  jumpableGroundNormalMaxAngle: 45
-  closeToJumpableGround: 0
-  airTurnSpeed: 270
-  rotationSpeed: 2
-  baseAirForwardSpeed: 1.5
-  horizontalSpeed: 5
   jumpForce: 150
   jumpCooldown: 1
-  isJumping: 0
   hasJumped: 0
   multiJump: 0
-  cameraTurningPlayer: 1
+  isMoving: 0
+  aimDownSpeed: 5
   localVelocity: {x: 0, y: 0, z: 0}
-  prevVelocity: {x: 0, y: 0, z: 0}
+  maxMidairControlSpeed: 10
+  midairControlForce: 10
   isGrounded: 1
-  playerHeight: 1.75
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!136 &957530478
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1522,6 +1522,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1974235894}
     m_Modifications:
+    - target: {fileID: 686313962, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
     - target: {fileID: 331659288387360918, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.23331164
@@ -2021,6 +2025,14 @@ PrefabInstance:
     - target: {fileID: 2888632972226045484, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.111890346
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910904435527195945, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910904435527195945, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3037941031471478967, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3119,12 +3131,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee943175f471c4ba7873f072774ded3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionSmoothTime: 0.5
-  rotationSmoothTime: 0.5
-  positionMaxSpeed: 200
-  rotationMaxSpeed: 200
-  desiredPose: {fileID: 0}
-  target: {fileID: 0}
+  maxYAxisSpeed: 2
+  maxXAxisSpeed: 300
+  sensitivity: 1
+  aimSensitivity: 0.8
+  thirdPersonCam: {fileID: 0}
+  combatCam: {fileID: 0}
+  currFreeLook: {fileID: 0}
+  currCamStyle: 0
+  prevCamStyle: 0
+  cinput: {fileID: 0}
+  _inputAimDown: 0
 --- !u!114 &1609043369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3466,6 +3483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c35de65f9c4e8488869fe772877a50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HealAmt: 1
   pickupSound: {fileID: 8300000, guid: 4e1de25b4f0493043a5db898b7ba366c, type: 3}
   healthAmount: 30
 --- !u!1 &1870079389 stripped
@@ -3932,6 +3950,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1974235894}
     m_Modifications:
+    - target: {fileID: 686313962, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
     - target: {fileID: 331659288387360918, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.23331164
@@ -4423,6 +4445,14 @@ PrefabInstance:
     - target: {fileID: 2888632972226045484, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.111890346
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910904435527195945, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910904435527195945, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3037941031471478967, guid: 44b49ab1f8071b2479784d113b4c9a9d, type: 3}
       propertyPath: m_LocalPosition.x
