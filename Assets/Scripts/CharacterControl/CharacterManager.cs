@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharacterManager : MonoBehaviour {
 
 
-    public CharacterInputController[] ControllableCharacters = {}; 
+    public CharacterInputController[] ControllableCharacters = {};
 
     public ThirdPersonCamera thirdPersonCamera;
 
@@ -21,7 +21,7 @@ public class CharacterManager : MonoBehaviour {
         {
             c.enabled = false;
         }
-            
+
     }
 
     protected void setCharacter(int charIndex) {
@@ -36,11 +36,11 @@ public class CharacterManager : MonoBehaviour {
 
         ControllableCharacters[charIndex].enabled = true;
 
-        thirdPersonCamera.desiredPose = ControllableCharacters[charIndex].transform.Find(CameraPositionMarkerName);
-        thirdPersonCamera.target = ControllableCharacters[charIndex].transform;
+        // thirdPersonCamera.desiredPose = ControllableCharacters[charIndex].transform.Find(CameraPositionMarkerName);
+        // thirdPersonCamera.target = ControllableCharacters[charIndex].transform;
 
         Debug.Log("Character " + ControllableCharacters[charIndex].Name + " was selected.");
-   
+
     }
 
     protected void incrementCharacterIndex() {
@@ -58,9 +58,9 @@ public class CharacterManager : MonoBehaviour {
         incrementCharacterIndex();
     }
 
-	
+
 	void Start () {
-		
+
         if (thirdPersonCamera == null)
             Debug.LogError("camera must be set");
 
@@ -68,7 +68,7 @@ public class CharacterManager : MonoBehaviour {
         incrementCharacterIndex();
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
@@ -78,6 +78,6 @@ public class CharacterManager : MonoBehaviour {
             toggleCharacter();
 
         }
-		
+
 	}
 }
