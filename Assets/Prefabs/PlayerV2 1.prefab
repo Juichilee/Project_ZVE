@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 103772d9e0219194c9621b95402c58d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 2
+  maxHealth: 20
   currHealth: 0
 --- !u!114 &5515910852075561496
 MonoBehaviour:
@@ -146,25 +146,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7688ae2a775f4c7baef8f572a0397f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 0}
+  rbody: {fileID: 0}
   mainCamera: {fileID: 5515910852102768966}
   orientation: {fileID: 5515910853977250627}
-  inputDir: {x: 0, y: 0, z: 0}
+  cinput: {fileID: 0}
+  _inputForward: 0
+  _inputRight: 0
+  _inputJump: 0
+  _inputAimDown: 0
+  _inputDir: {x: 0, y: 0, z: 0}
   speedMultiplier: 1
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
-  maxVerticalSpeed: 10
   groundDrag: 0
   airDrag: 0.2
-  jumpForce: 3
-  jumpCooldown: 1
-  hasJumped: 0
-  multiJump: 0
   isMoving: 0
   aimDownSpeed: 5
   localVelocity: {x: 0, y: 0, z: 0}
-  maxMidairControlSpeed: 3
-  midairControlForce: 3
   isGrounded: 1
 --- !u!114 &4238193392554949560
 MonoBehaviour:
@@ -227,7 +227,6 @@ MonoBehaviour:
   combatCam: {fileID: 5515910853915920753}
   currFreeLook: {fileID: 0}
   currCamStyle: 0
-  prevCamStyle: 0
   cinput: {fileID: 0}
   _inputAimDown: 0
 --- !u!114 &4238193392554949561

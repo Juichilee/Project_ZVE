@@ -20,8 +20,13 @@ public class ZombieScript : MonoBehaviour
     public ZombieStatus status { get; private set; }
     
     // Pickup Prefabs 
-    public Rigidbody pickupPrefab;
+    public Rigidbody healthPrefab;
+    public Rigidbody ammoPrefab;
+    public Rigidbody dnaPrefab;
     public Rigidbody currPickup;
+    public Rigidbody currPickup2;
+    public float pickupHealthProb = .5f;
+    public float pickupAmmoProb = .5f;
 
     // Animation Speed Variables
     public float animationSpeed;
@@ -161,9 +166,23 @@ public class ZombieScript : MonoBehaviour
 
     public void SpawnPickUp()
     {
-        currPickup = Instantiate(pickupPrefab, transform);
-        currPickup.transform.localPosition = new Vector3(0f, 1f, 0f);
-        currPickup.isKinematic = true;
+        float random = Random.value;
+        Debug.Log(random);
+        if (random <= pickupHealthProb)
+        {
+            currPickup = Instantiate(healthPrefab, transform);
+            currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
+            currPickup.isKinematic = true;
+        }
+        else if (random > pickupHealthProb && random <= pickupHealthProb + pickupAmmoProb)
+        {
+            currPickup = Instantiate(ammoPrefab, transform);
+            currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
+            currPickup.isKinematic = true;
+        }
+        currPickup2 = Instantiate(dnaPrefab, transform);
+        currPickup2.transform.localPosition = new Vector3(.25f, 1f, .25f);
+        currPickup2.isKinematic = true;
     } 
 
 
