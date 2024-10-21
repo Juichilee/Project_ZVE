@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterInputController))]
+[RequireComponent(typeof(Status))]
+
 public class PlayerControlScript : MonoBehaviour
 {
     #region Player Components & State Management
@@ -45,7 +47,10 @@ public class PlayerControlScript : MonoBehaviour
     public float airDrag = 0.2f;
     public bool isMoving = false;
     public float aimDownSpeed = 5f;
+    public float upgradeMult = .1f;
     #endregion
+
+    Status playerStatus;
 
     #region Environmental/Sensor Properties
     public Vector3 localVelocity = new Vector3();
@@ -64,6 +69,8 @@ public class PlayerControlScript : MonoBehaviour
 
     void Awake()
     {
+        playerStatus = GetComponent<Status>();
+
         // Get Required Player Components and Cache
         anim = GetComponent<Animator>();
         if (anim == null)
@@ -161,9 +168,9 @@ public class PlayerControlScript : MonoBehaviour
         localVelocity.x = Vector3.Dot(worldVelocity, transform.right);
 
         // Update all animation/root speed based on speed multiplier
-        animationSpeed = speedMultiplier;
-        rootMovementSpeed = speedMultiplier;
-        rootTurnSpeed = speedMultiplier;
+        animationSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
+        rootMovementSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
+        rootTurnSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
         anim.speed = animationSpeed;
 
         // Ground Check

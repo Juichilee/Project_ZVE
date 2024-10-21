@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Shop : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class Shop : MonoBehaviour
     public static int StrengthCost = 2;
     public int costIncrease = 2;
     Status playerStatus;
+    public TMP_Text HealthText;
+    public TMP_Text SpeedText;
+    public TMP_Text StrengthText;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +23,9 @@ public class Shop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        HealthText.text = HealthCost.ToString();
+        SpeedText.text = SpeedCost.ToString();
+        StrengthText.text = StrengthCost.ToString();
     }
 
     public void Health()
