@@ -9,7 +9,8 @@ public class Status : MonoBehaviour
 
     public float maxHealth = 20f;
     public float currHealth;
-
+    public int speedUpgrade = 0;
+    public int strengthUpgrade = 0;
     // TODO: public float iframes;
 
     private bool isDead = false;
