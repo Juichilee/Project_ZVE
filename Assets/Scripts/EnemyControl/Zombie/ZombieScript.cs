@@ -26,6 +26,7 @@ public class ZombieScript : MonoBehaviour
     public Rigidbody currPickup;
     public Rigidbody currPickup2;
     public float pickupHealthProb = .5f;
+    public float pickupAmmoProb = .5f;
 
     // Animation Speed Variables
     public float animationSpeed;
@@ -167,13 +168,13 @@ public class ZombieScript : MonoBehaviour
     {
         float random = Random.value;
         Debug.Log(random);
-        if (random < pickupHealthProb)
+        if (random <= pickupHealthProb)
         {
             currPickup = Instantiate(healthPrefab, transform);
             currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
             currPickup.isKinematic = true;
         }
-        else
+        else if (random > pickupHealthProb && random <= pickupHealthProb + pickupAmmoProb)
         {
             currPickup = Instantiate(ammoPrefab, transform);
             currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
