@@ -48,19 +48,12 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
-    public bool Shoot
+    public bool Attack
     {
         get;
         private set;
     }
 
-    public bool Melee
-    {
-        get;
-        private set;
-    }
-
-        
 
 	void Update () {
 		
@@ -131,20 +124,12 @@ public class CharacterInputController : MonoBehaviour {
             AimDown = false;
         }
 
-        // Logic for shooting, must aim down sights before shoot
-        if (Input.GetMouseButtonDown(0) && AimDown == true)
-        {
-            Shoot = true;
-        } else {
-            Shoot = false;
-        }
-
         // Melee
-        if (Input.GetMouseButtonDown(0) && AimDown == false)
+        if (Input.GetMouseButtonDown(0))
         {
-            Melee = true;
+            Attack = true;
         } else {
-            Melee = false;
+            Attack = false;
         }    
 	}
 }
