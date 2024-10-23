@@ -1,4 +1,5 @@
 using Cinemachine;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -13,6 +14,7 @@ public class WeaponHandler : MonoBehaviour
     private Collider currentPickupCollider;
     private PlayerControlScript playerControlScript;
     public Rig aimRig;
+    public TextMeshProUGUI ammoCountText;
 
     void Awake()
     {
@@ -25,6 +27,12 @@ public class WeaponHandler : MonoBehaviour
         HandleWeaponSwitching();
         HandleWeaponInput();
         HandleWeaponDrop();
+
+        if (GetCurrentWeapon() is RangedWeapon rangedWeapon)
+        {
+            string ammoString = $"{rangedWeapon.currentClip}/{rangedWeapon.maxClip}({rangedWeapon.currentAmmo})";
+            ammoCountText.text = ammoString;
+        }
     }
 
     BaseWeapon GetCurrentWeapon()
@@ -55,27 +63,42 @@ public class WeaponHandler : MonoBehaviour
 
     private void HandleWeaponInput()
     {
+        // Reset all combat layer weights
+        playerControlScript.anim.SetLayerWeight(2, 0); // Index 2 is ranged combat layer
+        playerControlScript.anim.SetLayerWeight(3, 0); // Index 3 is melee combat layer
+
         BaseWeapon currentWeapon = GetCurrentWeapon();
         if (currentWeapon == null)
         {
-            playerControlScript.anim.SetLayerWeight(2, 0); // Index 2 is combat layer
+            // Reset aimRig weight if no weapon equipped
             aimRig.weight = Mathf.Lerp(aimRig.weight, 0f, Time.deltaTime * 2f);
             return;
         }
 
-        playerControlScript.anim.SetLayerWeight(2, 1); // Index 2 is combat layer
-
         if (currentWeapon is RangedWeapon rangedWeapon){
+
+            playerControlScript.anim.SetLayerWeight(2, 1);
+
             if (playerControlScript._inputAimDown)
             {
                 aimRig.weight = Mathf.Lerp(aimRig.weight, 1f, Time.deltaTime * 2f);
             } else {
                 aimRig.weight = Mathf.Lerp(aimRig.weight, 0f, Time.deltaTime * 2f);
             }
+
+            if(playerControlScript._reload)
+            {
+                rangedWeapon.Reload();
+            }
             rangedWeapon.UpdateWeaponAim(ref aimTarget);
         }
 
-        if (playerControlScript._inputAttack)
+        if (currentWeapon is MeleeWeapon meleeWeapon){
+            aimRig.weight = 0f; // Reset aimRig weight immediately
+            playerControlScript.anim.SetLayerWeight(3, 1);
+        }
+
+        if (currentWeapon.isReady && playerControlScript._inputAttack)
         {
             currentWeapon.Attack();
         }
@@ -102,10 +125,12 @@ public class WeaponHandler : MonoBehaviour
             DeEquipWeapon(currentWeaponIndex);
         }
 
+        BaseWeapon nextWeapon = weaponSlots[index];
         // Activate the weapon at the new index
-        if (weaponSlots[index] != null)
+        if (nextWeapon != null)
         {
-            weaponSlots[index].gameObject.SetActive(true);
+            nextWeapon.gameObject.SetActive(true);
+            playerControlScript.anim.SetInteger("weaponAnimId", nextWeapon.weaponAnimId); // Update the animator's weaponAnimId to change weapon anim configs
         }
         currentWeaponIndex = index;
     }
@@ -152,10 +177,14 @@ public class WeaponHandler : MonoBehaviour
 
         GameObject weaponGameObject = weapon.gameObject;
         weaponSlots[currentWeaponIndex] = weapon;
+
+        // Update weapon references to current holder
         weapon.weaponHolder = gameObject;
+        weapon.weaponHolderAnim = playerControlScript.anim;
         weaponGameObject.transform.SetParent(holdWeaponParent);
         weaponGameObject.transform.localPosition = weapon.holdPosition;
         weaponGameObject.transform.localRotation = Quaternion.Euler(weapon.holdRotation);
+        weaponGameObject.transform.localScale = Vector3.one;
 
         Rigidbody rb = weaponGameObject.GetComponent<Rigidbody>();
         if (rb != null)
@@ -170,6 +199,7 @@ public class WeaponHandler : MonoBehaviour
             collider.enabled = false; // Turn off collider to prevent detection by triggers
         }
         currentPickupCollider = null;
+        EquipWeapon(currentWeaponIndex); // Used to update anim parameters
     }
 
     private void OnTriggerEnter(Collider other)

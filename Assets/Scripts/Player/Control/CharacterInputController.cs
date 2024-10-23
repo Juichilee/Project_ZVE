@@ -66,6 +66,12 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
+    public bool Reload
+    {
+        get;
+        private set;
+    }
+
 
 	void Update () {
 		
@@ -156,6 +162,13 @@ public class CharacterInputController : MonoBehaviour {
             Drop = true;
         } else {
             Drop = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Reload = true;
+        } else {
+            Reload = false;
         }
 	}
 }

@@ -36,6 +36,7 @@ public class PlayerControlScript : MonoBehaviour
     public bool _inputAttack = false;
     public bool _interact = false;
     public bool _drop = false;
+    public bool _reload = false;
     public Vector3 _inputDir;
     #endregion
 
@@ -134,6 +135,7 @@ public class PlayerControlScript : MonoBehaviour
             _inputJump = cinput.Jump;
             _interact = cinput.Interact;
             _drop = cinput.Drop;
+            _reload = cinput.Reload;
             // _inputJump is handled in FixedUpdate to sync with physics
         }
 
@@ -201,24 +203,26 @@ public class PlayerControlScript : MonoBehaviour
     private void HandleOrientation()
     {
         Transform mainCameraTrans = mainCamera.transform;
-        Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
-        viewDir = viewDir.normalized;
-        orientation.forward = viewDir;
-        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
 
-        if (!_inputAimDown)
+        if (_inputAimDown)
         {
+            // Strafing combat style (used for ranged attacks)
+            Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
+            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 5f);
+            orientation.forward = this.transform.forward;
+            _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+
+        } else {
+            Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
+            viewDir = viewDir.normalized;
+            orientation.forward = viewDir;
+            _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+
             // Regular combat style (character forward is in direction of movement keys)
             if (_inputDir != Vector3.zero)
             {
                 this.transform.forward = Vector3.Slerp(this.transform.forward, _inputDir, Time.deltaTime * 20f);
             }
-        }
-        else
-        {
-            // Strafing combat style (used for ranged attacks)
-            Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
-            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 5f);
         }
     }
 

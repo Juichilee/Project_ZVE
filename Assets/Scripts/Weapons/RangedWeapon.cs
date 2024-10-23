@@ -7,6 +7,7 @@ public class RangedWeapon : BaseWeapon
     public GameObject projectileObj;
     public Transform shootPos;
     public override WeaponType WeaponType => WeaponType.Ranged;
+    public override int weaponAnimId => 1;
 
     // References that need to be populated / updated on pickup
     // public GameObject weaponHolder;
@@ -20,7 +21,9 @@ public class RangedWeapon : BaseWeapon
     public override float coolDownTime => 1f;
     // public bool isReady;
     public int maxAmmo;
+    public int maxClip;
     public int currentAmmo;
+    public int currentClip;
     private float effectiveRange;
     private Vector3 targetPosition;
     private Vector3 aimDir;
@@ -32,19 +35,31 @@ public class RangedWeapon : BaseWeapon
     }
     public override void Attack()
     {
-        if (isReady && currentAmmo > 0)
+        if (currentClip > 0)
         {
             // Attack logic
             FireWeapon();
-            currentAmmo--;
+            currentClip--;
             StartCoroutine(AttackCooldown());
         }
     }
 
     public void Reload()
     {
+        if (currentAmmo <= 0)
+        {
+            return;
+        }
         Debug.Log($"Reloading {weaponName}");
-        currentAmmo = maxAmmo;
+
+        int spentClip = maxClip - currentClip; // How many bullets were spent in the clip
+        if (spentClip <= currentAmmo) // Full reload if enough ammo
+        {
+            currentAmmo -= spentClip;
+            currentClip += spentClip;
+        } else {
+            currentClip = currentAmmo;
+        }
     }
 
     private IEnumerator AttackCooldown()
