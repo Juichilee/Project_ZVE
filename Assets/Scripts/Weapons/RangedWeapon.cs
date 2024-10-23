@@ -26,12 +26,15 @@ public class RangedWeapon : BaseWeapon
     private Vector3 aimDir;
     public LayerMask aimColliderLayerMask;
 
+    void OnEnable()
+    {
+        isReady = true; // Reset isReady when re-enabled
+    }
     public override void Attack()
     {
         if (isReady && currentAmmo > 0)
         {
             // Attack logic
-            Debug.Log($"Ranged attack with {weaponName}");
             FireWeapon();
             currentAmmo--;
             StartCoroutine(AttackCooldown());
