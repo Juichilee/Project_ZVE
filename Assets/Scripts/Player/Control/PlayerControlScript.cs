@@ -33,6 +33,9 @@ public class PlayerControlScript : MonoBehaviour
     public float _inputRight = 0f;
     public bool _inputJump = false;
     public bool _inputAimDown = false;
+    public bool _inputAttack = false;
+    public bool _interact = false;
+    public bool _drop = false;
     public Vector3 _inputDir;
     #endregion
 
@@ -127,7 +130,10 @@ public class PlayerControlScript : MonoBehaviour
             _inputForward = cinput.Forward;
             _inputRight = cinput.Right;
             _inputAimDown = cinput.AimDown;
+            _inputAttack = cinput.Attack;
             _inputJump = cinput.Jump;
+            _interact = cinput.Interact;
+            _drop = cinput.Drop;
             // _inputJump is handled in FixedUpdate to sync with physics
         }
 

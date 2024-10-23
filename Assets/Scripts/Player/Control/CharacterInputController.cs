@@ -54,6 +54,18 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
+    public bool Interact
+    {
+        get;
+        private set;
+    }
+
+    public bool Drop
+    {
+        get;
+        private set;
+    }
+
 
 	void Update () {
 		
@@ -130,6 +142,20 @@ public class CharacterInputController : MonoBehaviour {
             Attack = true;
         } else {
             Attack = false;
-        }    
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Interact = true;
+        } else {
+            Interact = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Drop = true;
+        } else {
+            Drop = false;
+        }
 	}
 }
