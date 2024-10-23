@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NextLevelGateway : MonoBehaviour
+public class ExitLevel2 : MonoBehaviour
 {
-    private string nextLevelName = "Level2";
+    private string nextLevelName = "Level3";
 
     void OnTriggerEnter(Collider c)
     {
