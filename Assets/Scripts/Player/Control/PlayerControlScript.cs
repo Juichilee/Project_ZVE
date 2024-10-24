@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterInputController))]
+[RequireComponent(typeof(Status))]
+
 public class PlayerControlScript : MonoBehaviour
 {
     // Singleton instance of player
@@ -52,7 +54,10 @@ public class PlayerControlScript : MonoBehaviour
     public float airDrag = 0.2f;
     public bool isMoving = false;
     public float aimDownSpeed = 5f;
+    public float upgradeMult = .1f;
     #endregion
+
+    Status playerStatus;
 
     #region Environmental/Sensor Properties
     public Vector3 WorldVelocity { get; private set; }
@@ -85,6 +90,9 @@ public class PlayerControlScript : MonoBehaviour
             // Make this object persistent across scenes
             DontDestroyOnLoad(gameObject);
         }
+        
+        // Get player Status componenent
+        playerStatus = GetComponent<Status>();
 
         // Get Required Player Components and Cache
         anim = GetComponent<Animator>();
@@ -187,9 +195,9 @@ public class PlayerControlScript : MonoBehaviour
         localVelocity.x = Vector3.Dot(WorldVelocity, transform.right);
 
         // Update all animation/root speed based on speed multiplier
-        animationSpeed = speedMultiplier;
-        rootMovementSpeed = speedMultiplier;
-        rootTurnSpeed = speedMultiplier;
+        animationSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
+        rootMovementSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
+        rootTurnSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
         anim.speed = animationSpeed;
 
         // Ground Check

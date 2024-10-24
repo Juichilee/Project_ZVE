@@ -25,6 +25,7 @@ public class HealthUI : MonoBehaviour
 
     void FixedUpdate()
     {
+        hp.maxValue = playerStatus.maxHealth;
         hp.value = playerStatus.currHealth;
         Text.text = " " + playerStatus.currHealth + "/" + playerStatus.maxHealth;
     }

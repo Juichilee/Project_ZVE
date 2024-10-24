@@ -4,7 +4,9 @@ using System.Xml.Serialization;
 using GameAI;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
+#if UNITY__EDITOR
 using UnityEditor.Build;
+#endif
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
@@ -105,9 +107,7 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
-
             CreateWaypoints();
-            GoToWaypoint();
         }
 
         public override void Exit()
@@ -121,11 +121,8 @@ public class ZombieStateMachine : MonoBehaviour
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
             if (Zombie.ReachedTarget())
-            {
                 currWaypointIndex = (currWaypointIndex + 1) % numWaypoints;
-                GoToWaypoint();   
-            }
-
+            GoToWaypoint();   
             return null;
         }
 
@@ -145,8 +142,9 @@ public class ZombieStateMachine : MonoBehaviour
 
         private void GoToWaypoint()
         {
+            Debug.Log("Going to Waypoint " + currWaypointIndex);
             if (waypoints.Count > 0)
-                Zombie.GoTo(waypoints[currWaypointIndex], Zombie.ZombieMaxSpeed / 2);
+                Zombie.GoTo(waypoints[currWaypointIndex], Zombie.ZombieMaxSpeed * 2 / 3);
         }
     }
 
@@ -162,8 +160,6 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
-
-            Zombie.GoToPlayer();
         }
 
         public override void Exit()

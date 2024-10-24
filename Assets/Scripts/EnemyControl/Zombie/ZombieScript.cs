@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,8 +21,13 @@ public class ZombieScript : MonoBehaviour
     public ZombieStatus status { get; private set; }
     
     // Pickup Prefabs 
-    public Rigidbody pickupPrefab;
+    public Rigidbody healthPrefab;
+    public Rigidbody ammoPrefab;
+    public Rigidbody dnaPrefab;
     public Rigidbody currPickup;
+    public Rigidbody currPickup2;
+    public float pickupHealthProb = .5f;
+    public float pickupAmmoProb = .5f;
 
     // Animation Speed Variables
     public float animationSpeed;
@@ -83,7 +89,7 @@ public class ZombieScript : MonoBehaviour
 
         // Update Animation
         ZombieMaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
-        anim.SetFloat("vely", ZombieMaxSpeed);
+        // anim.SetFloat("vely", ZombieMaxSpeed);
         anim.SetBool("isFalling", !isGrounded);
     }
 
@@ -110,7 +116,7 @@ public class ZombieScript : MonoBehaviour
     
     public bool GoTo(Vector3 target, float speed = 0f) 
     {   
-        // anim.SetFloat("vely", speed);
+        anim.SetFloat("vely", speed);
         
         Vector3 direction = player.transform.position - transform.position;
         direction.y = 0;
@@ -134,9 +140,25 @@ public class ZombieScript : MonoBehaviour
         return false;
     }
 
+    public float maxLookAheadTime = 1f;
+    private NavMeshHit hit;
+
     public void GoToPlayer()
     {
-        GoTo(player.transform.position, ZombieMaxSpeed);
+        Vector3 currPos = this.transform.position;
+        Vector3 playerPos = player.transform.position;
+
+        float distance = Vector3.Distance(currPos, playerPos);
+        float speed = aiAgent.speed;
+        float lookAheadTime = Mathf.Clamp(distance / speed, 0 , maxLookAheadTime);
+
+        Vector3 velocity = player.GetComponent<PlayerControlScript>().localVelocity;
+        Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
+
+        if (NavMesh.Raycast(playerPos, predictedPosition, out hit, NavMesh.AllAreas))
+            predictedPosition = hit.position;
+
+        GoTo(predictedPosition, ZombieMaxSpeed);
     }
 
     public bool ReachedTarget()
@@ -161,9 +183,23 @@ public class ZombieScript : MonoBehaviour
 
     public void SpawnPickUp()
     {
-        currPickup = Instantiate(pickupPrefab, transform);
-        currPickup.transform.localPosition = new Vector3(0f, 1f, 0f);
-        currPickup.isKinematic = true;
+        float random = Random.value;
+        Debug.Log(random);
+        if (random <= pickupHealthProb)
+        {
+            currPickup = Instantiate(healthPrefab, transform);
+            currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
+            currPickup.isKinematic = true;
+        }
+        else if (random > pickupHealthProb && random <= pickupHealthProb + pickupAmmoProb)
+        {
+            currPickup = Instantiate(ammoPrefab, transform);
+            currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
+            currPickup.isKinematic = true;
+        }
+        currPickup2 = Instantiate(dnaPrefab, transform);
+        currPickup2.transform.localPosition = new Vector3(.25f, 1f, .25f);
+        currPickup2.isKinematic = true;
     } 
 
 
