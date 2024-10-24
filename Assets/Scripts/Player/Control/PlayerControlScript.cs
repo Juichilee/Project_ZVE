@@ -8,6 +8,9 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterInputController))]
 public class PlayerControlScript : MonoBehaviour
 {
+    // Singleton instance of player
+    public static PlayerControlScript PlayerInstance { get; private set;}
+
     #region Player Components & State Management
     public Animator anim;
     public Rigidbody rbody;
@@ -52,7 +55,8 @@ public class PlayerControlScript : MonoBehaviour
     #endregion
 
     #region Environmental/Sensor Properties
-    public Vector3 localVelocity = new Vector3();
+    public Vector3 WorldVelocity { get; private set; }
+    public Vector3 localVelocity;
     private Vector3 prevWorldPosition;
     private int groundContactCount = 0;
     public bool isGrounded = true;
@@ -68,6 +72,20 @@ public class PlayerControlScript : MonoBehaviour
 
     void Awake()
     {
+        if (PlayerInstance != null && PlayerInstance != this)
+        {
+            // If another instance exists, destroy this one to enforce the singleton pattern
+            Destroy(gameObject);
+        }
+        else
+        {
+            // Set the instance to this object
+            PlayerInstance = this;
+
+            // Make this object persistent across scenes
+            DontDestroyOnLoad(gameObject);
+        }
+
         // Get Required Player Components and Cache
         anim = GetComponent<Animator>();
         if (anim == null)
@@ -160,13 +178,13 @@ public class PlayerControlScript : MonoBehaviour
         rbody.drag = isGrounded ? groundDrag : airDrag;
 
         // Physics calculations for Rigidbody because animator velocity is inaccurate
-        Vector3 worldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
+        WorldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
         prevWorldPosition = transform.position;
 
         // Project the world velocity onto the character's local axes
-        localVelocity.z = Vector3.Dot(worldVelocity, transform.forward);
-        localVelocity.y = Vector3.Dot(worldVelocity, transform.up);
-        localVelocity.x = Vector3.Dot(worldVelocity, transform.right);
+        localVelocity.z = Vector3.Dot(WorldVelocity, transform.forward);
+        localVelocity.y = Vector3.Dot(WorldVelocity, transform.up);
+        localVelocity.x = Vector3.Dot(WorldVelocity, transform.right);
 
         // Update all animation/root speed based on speed multiplier
         animationSpeed = speedMultiplier;
