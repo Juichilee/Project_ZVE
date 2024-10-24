@@ -142,7 +142,6 @@ public class ZombieStateMachine : MonoBehaviour
 
         private void GoToWaypoint()
         {
-            Debug.Log("Going to Waypoint " + currWaypointIndex);
             if (waypoints.Count > 0)
                 Zombie.GoTo(waypoints[currWaypointIndex], Zombie.ZombieMaxSpeed * 2 / 3);
         }
