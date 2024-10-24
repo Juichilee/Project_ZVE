@@ -2359,7 +2359,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!114 &2832160226030545539
 MonoBehaviour:
@@ -2407,6 +2407,7 @@ MonoBehaviour:
   currPickup: {fileID: 0}
   currPickup2: {fileID: 0}
   pickupHealthProb: 0.5
+  pickupAmmoProb: 0.5
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
@@ -2429,6 +2430,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 20
   currHealth: 0
+  speedUpgrade: 0
+  strengthUpgrade: 0
   ragdollOnDeath: {fileID: 0}
   deathSound: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
 --- !u!1 &3678995599980883088
