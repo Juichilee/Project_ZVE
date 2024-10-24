@@ -4,7 +4,9 @@ using System.Xml.Serialization;
 using GameAI;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
+#if UNITY__EDITOR
 using UnityEditor.Build;
+#endif
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
