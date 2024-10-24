@@ -120,7 +120,6 @@ public class ZombieStateMachine : MonoBehaviour
 
             if (Zombie.ReachedTarget())
                 currWaypointIndex = (currWaypointIndex + 1) % numWaypoints;
-
             GoToWaypoint();   
             return null;
         }
@@ -159,8 +158,6 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
-
-            Zombie.GoToPlayer();
         }
 
         public override void Exit()
