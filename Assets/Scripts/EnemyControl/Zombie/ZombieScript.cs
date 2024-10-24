@@ -152,6 +152,7 @@ public class ZombieScript : MonoBehaviour
         float speed = aiAgent.speed;
         float lookAheadTime = Mathf.Clamp(distance / speed, 0 , maxLookAheadTime);
 
+        // TODO: Change to worldVelocity once change is in
         Vector3 velocity = player.GetComponent<PlayerControlScript>().localVelocity;
         Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
 
@@ -218,7 +219,7 @@ public class ZombieScript : MonoBehaviour
             hasReachedAttackDist = false;
     }
 
-    public bool isCooldown()
+    public bool IsCooldown()
     {
         return Time.time <= timeOfLastAttack + status.AttackSpeed;
     }
@@ -264,10 +265,6 @@ public class ZombieScript : MonoBehaviour
 
     void OnAnimatorMove()
     {
-
-
-
-
         Vector3 newRootPosition;
         Quaternion newRootRotation;
 
