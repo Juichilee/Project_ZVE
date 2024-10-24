@@ -48,19 +48,30 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
-    public bool Shoot
+    public bool Attack
     {
         get;
         private set;
     }
 
-    public bool Melee
+    public bool Interact
     {
         get;
         private set;
     }
 
-        
+    public bool Drop
+    {
+        get;
+        private set;
+    }
+
+    public bool Reload
+    {
+        get;
+        private set;
+    }
+
 
 	void Update () {
 		
@@ -131,20 +142,33 @@ public class CharacterInputController : MonoBehaviour {
             AimDown = false;
         }
 
-        // Logic for shooting, must aim down sights before shoot
-        if (Input.GetMouseButtonDown(0) && AimDown == true)
+        // Melee
+        if (Input.GetMouseButtonDown(0))
         {
-            Shoot = true;
+            Attack = true;
         } else {
-            Shoot = false;
+            Attack = false;
         }
 
-        // Melee
-        if (Input.GetMouseButtonDown(0) && AimDown == false)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Melee = true;
+            Interact = true;
         } else {
-            Melee = false;
-        }    
+            Interact = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Drop = true;
+        } else {
+            Drop = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Reload = true;
+        } else {
+            Reload = false;
+        }
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +10,9 @@ using UnityEngine;
 
 public class PlayerControlScript : MonoBehaviour
 {
+    // Singleton instance of player
+    public static PlayerControlScript PlayerInstance { get; private set;}
+
     #region Player Components & State Management
     public Animator anim;
     public Rigidbody rbody;
@@ -35,6 +38,10 @@ public class PlayerControlScript : MonoBehaviour
     public float _inputRight = 0f;
     public bool _inputJump = false;
     public bool _inputAimDown = false;
+    public bool _inputAttack = false;
+    public bool _interact = false;
+    public bool _drop = false;
+    public bool _reload = false;
     public Vector3 _inputDir;
     #endregion
 
@@ -53,7 +60,8 @@ public class PlayerControlScript : MonoBehaviour
     Status playerStatus;
 
     #region Environmental/Sensor Properties
-    public Vector3 localVelocity = new Vector3();
+    public Vector3 WorldVelocity { get; private set; }
+    public Vector3 localVelocity;
     private Vector3 prevWorldPosition;
     private int groundContactCount = 0;
     public bool isGrounded = true;
@@ -69,6 +77,21 @@ public class PlayerControlScript : MonoBehaviour
 
     void Awake()
     {
+        if (PlayerInstance != null && PlayerInstance != this)
+        {
+            // If another instance exists, destroy this one to enforce the singleton pattern
+            Destroy(gameObject);
+        }
+        else
+        {
+            // Set the instance to this object
+            PlayerInstance = this;
+
+            // Make this object persistent across scenes
+            DontDestroyOnLoad(gameObject);
+        }
+        
+        // Get player Status componenent
         playerStatus = GetComponent<Status>();
 
         // Get Required Player Components and Cache
@@ -134,7 +157,11 @@ public class PlayerControlScript : MonoBehaviour
             _inputForward = cinput.Forward;
             _inputRight = cinput.Right;
             _inputAimDown = cinput.AimDown;
+            _inputAttack = cinput.Attack;
             _inputJump = cinput.Jump;
+            _interact = cinput.Interact;
+            _drop = cinput.Drop;
+            _reload = cinput.Reload;
             // _inputJump is handled in FixedUpdate to sync with physics
         }
 
@@ -159,13 +186,13 @@ public class PlayerControlScript : MonoBehaviour
         rbody.drag = isGrounded ? groundDrag : airDrag;
 
         // Physics calculations for Rigidbody because animator velocity is inaccurate
-        Vector3 worldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
+        WorldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
         prevWorldPosition = transform.position;
 
         // Project the world velocity onto the character's local axes
-        localVelocity.z = Vector3.Dot(worldVelocity, transform.forward);
-        localVelocity.y = Vector3.Dot(worldVelocity, transform.up);
-        localVelocity.x = Vector3.Dot(worldVelocity, transform.right);
+        localVelocity.z = Vector3.Dot(WorldVelocity, transform.forward);
+        localVelocity.y = Vector3.Dot(WorldVelocity, transform.up);
+        localVelocity.x = Vector3.Dot(WorldVelocity, transform.right);
 
         // Update all animation/root speed based on speed multiplier
         animationSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
@@ -202,24 +229,26 @@ public class PlayerControlScript : MonoBehaviour
     private void HandleOrientation()
     {
         Transform mainCameraTrans = mainCamera.transform;
-        Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
-        viewDir = viewDir.normalized;
-        orientation.forward = viewDir;
-        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
 
-        if (!_inputAimDown)
+        if (_inputAimDown)
         {
+            // Strafing combat style (used for ranged attacks)
+            Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
+            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 5f);
+            orientation.forward = this.transform.forward;
+            _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+
+        } else {
+            Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
+            viewDir = viewDir.normalized;
+            orientation.forward = viewDir;
+            _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+
             // Regular combat style (character forward is in direction of movement keys)
             if (_inputDir != Vector3.zero)
             {
                 this.transform.forward = Vector3.Slerp(this.transform.forward, _inputDir, Time.deltaTime * 20f);
             }
-        }
-        else
-        {
-            // Strafing combat style (used for ranged attacks)
-            Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
-            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 5f);
         }
     }
 
