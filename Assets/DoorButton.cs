@@ -18,7 +18,7 @@ public class DoorButton : MonoBehaviour
         buttonRenderer = this.GetComponent<Renderer>();
     }
     
-    // When the player needs to use two buttons to open the door
+    // When the door is already opened
     void Update()
     {
         buttonHit = doorAnimator.GetBool("ButtonHit");
@@ -30,7 +30,9 @@ public class DoorButton : MonoBehaviour
 
     void OnCollisionEnter(Collision c)
     {
-        buttonRenderer.material = buttonColor;
-        doorAnimator.SetTrigger("ButtonHit");
+        if (c.transform.gameObject.tag == "Player") {
+            buttonRenderer.material = buttonColor;
+            doorAnimator.SetTrigger("ButtonHit");
+        }
     }
 }
