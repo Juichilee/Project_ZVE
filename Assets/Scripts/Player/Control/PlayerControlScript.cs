@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterInputController))]
-[RequireComponent(typeof(Status))]
+[RequireComponent(typeof(PlayerStatus))]
 
 public class PlayerControlScript : MonoBehaviour
 {
@@ -57,7 +57,7 @@ public class PlayerControlScript : MonoBehaviour
     public float upgradeMult = .1f;
     #endregion
 
-    Status playerStatus;
+    PlayerStatus playerStatus;
 
     #region Environmental/Sensor Properties
     public Vector3 WorldVelocity { get; private set; }
@@ -92,7 +92,7 @@ public class PlayerControlScript : MonoBehaviour
         }
         
         // Get player Status componenent
-        playerStatus = GetComponent<Status>();
+        playerStatus = GetComponent<PlayerStatus>();
 
         // Get Required Player Components and Cache
         anim = GetComponent<Animator>();
