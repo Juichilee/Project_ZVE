@@ -36,7 +36,7 @@ public class HealthPickup : MonoBehaviour
         if (c.transform.gameObject.CompareTag("Player"))
         {
             // TODO: Add EventManger.TriggerEvent<>
-            if (c.gameObject.GetComponent<Status>().Heal(HealAmt)) {
+            if (c.gameObject.GetComponent<PlayerStatus>().Heal(HealAmt)) {
                 // Play the pickup sound from the player's AudioSource
                 AudioSource playerAudio = c.gameObject.GetComponent<AudioSource>();
                 if (playerAudio != null && pickupSound != null)

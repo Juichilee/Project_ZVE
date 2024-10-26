@@ -18,7 +18,7 @@ public class ZombieScript : MonoBehaviour
     private CapsuleCollider cc;
     private NavMeshAgent aiAgent; 
     public GameObject player { get; private set; }
-    public ZombieStatus status { get; private set; }
+    public EnemyDamageable status { get; private set; }
     
     // Pickup Prefabs 
     public Rigidbody healthPrefab;
@@ -65,7 +65,7 @@ public class ZombieScript : MonoBehaviour
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         player = GameObject.FindWithTag("Player");
-        status = GetComponent<ZombieStatus>();
+        status = GetComponent<EnemyDamageable>();
     }
 
     void Start() {
@@ -235,7 +235,7 @@ public class ZombieScript : MonoBehaviour
 
         if (Time.time >= timeOfLastAttack + status.AttackSpeed)
         {
-            Status playerStatus = player.GetComponent<Status>();
+            PlayerStatus playerStatus = player.GetComponent<PlayerStatus>();
             status.DealDamage(playerStatus);
             timeOfLastAttack = Time.time;
         }

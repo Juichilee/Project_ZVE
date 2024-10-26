@@ -262,7 +262,7 @@ public class ZombieStateMachine : MonoBehaviour
         public override StateTransitionBase<ZombieFSMData> Update()
         {
             // Transition to DeathState
-            if (Zombie.status.currHealth <= 0 && !wasDead) 
+            if (Zombie.status.CurrentHealth <= 0 && !wasDead) 
             {
                 wasDead = true;
                 return ParentFSM.CreateStateTransition(DeathStateName);
