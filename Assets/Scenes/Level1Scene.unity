@@ -37108,6 +37108,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.x
       value: 0.03886918
       objectReference: {fileID: 0}
+    - target: {fileID: 2833230445222364595, guid: f078e44850ecb5e46ae44c1548a3253e, type: 3}
+      propertyPath: ammoCountText
+      value: 
+      objectReference: {fileID: 1535287519}
     - target: {fileID: 2833230446442792860, guid: f078e44850ecb5e46ae44c1548a3253e, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9980676
@@ -39251,6 +39255,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1135256880862621522, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1135256880862621522, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4552610217021358784, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -39369,6 +39381,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
+--- !u!114 &1535287519 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1135256880055425807, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
+  m_PrefabInstance: {fileID: 1535287518}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1536956711 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 428906, guid: a5cd29a93d7ae2d488fa0376d0d08462, type: 3}
