@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.SceneManagement;
 [RequireComponent(typeof(PlayerControlScript))]
-public class WeaponHandler : MonoBehaviour
+public class WeaponHandler : MonoBehaviour, IWeaponHolder
 {
     public Transform holdWeaponParent;
     public Transform aimTarget;
@@ -53,6 +53,11 @@ public class WeaponHandler : MonoBehaviour
             string ammoString = $"0/0(0)";
             ammoCountText.text = ammoString;
         }
+    }
+
+    public Transform GetWeaponHolderRootTransform()
+    {
+        return this.transform.root;
     }
 
     Weapon GetCurrentWeapon()

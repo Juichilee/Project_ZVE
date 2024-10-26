@@ -12,7 +12,7 @@ public class DamageObject : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Ignore the weapon holder and the weapon itself
-        if (weaponSource == null || other.gameObject.transform.root == weaponSource.WeaponHolder.gameObject.transform.root)
+        if (weaponSource == null || other.gameObject.transform.root == weaponSource.WeaponHolder.GetWeaponHolderRootTransform())
         {
             return;
         }

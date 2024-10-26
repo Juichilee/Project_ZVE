@@ -1,15 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.AI;
 
 //require some things the bot control needs
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
-public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
+public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeaponHolder
 {
     #region Component Reference
     private Animator anim; 
@@ -18,6 +13,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     private NavMeshAgent aiAgent; 
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor { get; private set; }
+    public Weapon handWeapon;
     #endregion
     
     #region Pickup Prefabs 
@@ -61,6 +57,15 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         cc.enabled = true;
         EnemyDamageable = GetComponent<EnemyDamageable>();
         aiSensor = GetComponent<AISensor>();
+        
+        handWeapon = GetComponentInChildren<Weapon>();
+        handWeapon.WeaponName = "Zombie Hand";
+        handWeapon.WeaponHolder = this;
+        handWeapon.WeaponHolderAnim = anim;
+        handWeapon.transform.localPosition = handWeapon.HoldPosition;
+        handWeapon.transform.localRotation = Quaternion.Euler(handWeapon.HoldRotation);
+        handWeapon.transform.localScale = Vector3.one;
+
     }
 
     void Start() 
@@ -69,7 +74,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         rootMovementSpeed = 1f;
         rootTurnSpeed = 1f;
         attackRange = 2f;
-        chaseRange = 10f;
     }
 
     void FixedUpdate()
@@ -171,16 +175,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     #endregion
     
     #region Attack
-    
-    #region Range Variables
-    public float attackRange;
-    public float chaseRange;
-    #endregion
-
-    #region Attack Variables
-    private float timeOfLastAttack = 0;
-    private bool hasReachedAttackDist = false;
-    #endregion
+    private float attackRange;
 
     public bool IsInAttackRange()
     {
@@ -188,60 +183,27 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         return Vector3.Distance(this.transform.position, playerPosition) <= attackRange;
     }
 
-    public bool IsInChaseRange()
-    {
-        Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
-        return Vector3.Distance(this.transform.position, playerPosition) <= chaseRange;
-    }
-
     public bool IsInSight()
     {
         return aiSensor.IsInSight(PlayerControlScript.PlayerInstance.gameObject);
     }
 
-    public void GainAgro()
-    {
-        anim.SetBool("isAttacking", true);
-    }
-
-    public void LoseAgro()
-    {
-        anim.SetBool("isAttacking", false);
-        if (hasReachedAttackDist)
-            hasReachedAttackDist = false;
-    }
-
-    public bool IsAttackCooldown()
-    {
-        return Time.time <= timeOfLastAttack + 3;
-    }
-
     public void AttackTarget()
     {
-        anim.SetBool("isAttacking", true);
-        
-        if (!hasReachedAttackDist)
-        {
-            hasReachedAttackDist = true;
-            timeOfLastAttack = Time.time;
-        }
 
-        if (!IsAttackCooldown())
-        {
-            PlayerStatus playerStatus = PlayerControlScript.PlayerInstance.GetComponent<PlayerStatus>();
-            EnemyDamageable.DealDamage(playerStatus);
-            timeOfLastAttack = Time.time;
-        }
 
-    }
 
-    public void ResetTimeOfLastAttack()
-    {
-        timeOfLastAttack = Time.time;
+        handWeapon.Attack();
     }
 
     #endregion
-
+    
+    #region WeaponHolder
+    public Transform GetWeaponHolderRootTransform()
+    {
+        return this.transform.root;
+    }
+    #endregion
     
     //This is a physics callback
     void OnCollisionEnter(Collision collision)
