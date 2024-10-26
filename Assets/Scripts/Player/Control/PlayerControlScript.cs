@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Require necessary components
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
@@ -18,6 +19,7 @@ public class PlayerControlScript : MonoBehaviour
     public Rigidbody rbody;
     public Camera mainCamera;
     public Transform orientation;
+    public Transform spawn;
 
     /* State Machines:
         PlayerControlScript handles 3 states machines that each store a separate state.
@@ -149,6 +151,16 @@ public class PlayerControlScript : MonoBehaviour
         Cursor.visible = false;
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        spawn = GameObject.FindGameObjectsWithTag("Respawn")[0].transform;
+        this.gameObject.transform.position = spawn.position;
+    }
     // Responsible for reading (and caching) input, updating certain global environment properties, and interrupting global states
     private void Update()
     {
@@ -195,9 +207,9 @@ public class PlayerControlScript : MonoBehaviour
         localVelocity.x = Vector3.Dot(WorldVelocity, transform.right);
 
         // Update all animation/root speed based on speed multiplier
-        animationSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
-        rootMovementSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
-        rootTurnSpeed = speedMultiplier + playerStatus.speedUpgrade * upgradeMult;
+        animationSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
+        rootMovementSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
+        rootTurnSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
         anim.speed = animationSpeed;
 
         // Ground Check

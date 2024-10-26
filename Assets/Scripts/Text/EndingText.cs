@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class EndingText : MonoBehaviour
 {
@@ -10,6 +11,13 @@ public class EndingText : MonoBehaviour
     private float pauseTime = 3f;
     private bool fadingIn = true;
     private bool fadedOut = false;
+
+    private void Start()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        SceneManager.MoveGameObjectToScene(player, SceneManager.GetActiveScene());
+        player.SetActive(false);   
+    }
 
     void FixedUpdate()
     {
@@ -40,6 +48,7 @@ public class EndingText : MonoBehaviour
         if (fadedOut == true)
         {
             Debug.Log("The game was completed");
+            SceneManager.LoadScene("Main Menu");
         }
     }
 }
