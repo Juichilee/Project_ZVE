@@ -24,6 +24,10 @@ public class Shop : MonoBehaviour
         playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerStatus>();
         MonsterLevel.maxValue = 5;
         MonsterLevel.minValue = 0;
+        HealthCost = 2 + costIncrease * playerStatus.hpUpgrade;
+        SpeedCost = 2 + costIncrease * playerStatus.speedUpgrade;
+        StrengthCost = 2 + costIncrease * playerStatus.strengthUpgrade;
+        UnstableCost = 2 + costIncrease * playerStatus.monsterPoints;
     }
 
     // Update is called once per frame

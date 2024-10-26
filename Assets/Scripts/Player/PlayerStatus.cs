@@ -8,6 +8,7 @@ public class PlayerStatus : BasicDamageable
 {
     public int speedUpgrade = 0;
     public int strengthUpgrade = 0;
+    public int hpUpgrade = 0;
     public int monsterPoints = 0;
     // TODO: public float iframes;
 
@@ -15,8 +16,13 @@ public class PlayerStatus : BasicDamageable
 
     void Awake()
     {
-        maxHealth = 200;
-        currentHealth = 200;
+        maxHealth = 200 + 20*hpUpgrade;
+        currentHealth = 200 + 20 * hpUpgrade;
+    }
+
+    private void FixedUpdate()
+    {
+        maxHealth = 200 + 20 * hpUpgrade;
     }
 
     public override void OnDamage(DamageData damageData)
