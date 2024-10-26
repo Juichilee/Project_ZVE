@@ -10,6 +10,9 @@ public class MeleeWeapon : Weapon
     [SerializeField] private Vector3 holdPosition;
     [SerializeField] private Vector3 holdRotation;
     [SerializeField] private DamageObject hitBoxInstance; // Should have DamageObject component
+    [SerializeField] private AudioSource audioSource;
+
+    public AudioClip meleeSoundClip;
 
     #region Accessors
     public override DamageData DamageAttributes { get => damageAttributes; protected set => damageAttributes = value; }
@@ -28,6 +31,12 @@ public class MeleeWeapon : Weapon
     void Start(){
         hitBoxInstance.SetDamageSource(this);
         hitBoxInstance.gameObject.SetActive(false);
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     public override void Attack()
@@ -36,6 +45,11 @@ public class MeleeWeapon : Weapon
         WeaponHolderAnim.SetTrigger("attack1");
         SpawnDamageObject();
         StartCoroutine(AttackCooldown());
+        
+        if (meleeSoundClip != null)
+        {
+            audioSource.PlayOneShot(meleeSoundClip);
+        }
     }
 
     private IEnumerator ActivateHitbox(DamageObject hitBoxInstance)

@@ -246,3 +246,5 @@ MonoBehaviour:
   holdPosition: {x: 0.0116, y: -0.0099, z: 0.026}
   holdRotation: {x: 0, y: 0, z: 76.501}
   hitBoxInstance: {fileID: 2247798695849639553}
+  audioSource: {fileID: 0}
+  meleeSoundClip: {fileID: 8300000, guid: 09a2a530465bedd4b847ddf74392159a, type: 3}

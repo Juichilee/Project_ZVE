@@ -4673,8 +4673,8 @@ GameObject:
   - component: {fileID: 5840269082855185431}
   - component: {fileID: 5840269082855185429}
   - component: {fileID: 5840269082855185426}
-  - component: {fileID: 5324718220201735280}
   - component: {fileID: 8920133875257608415}
+  - component: {fileID: 5324718220201735280}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -4784,6 +4784,7 @@ MonoBehaviour:
   invincibilityDuration: 1
   speedUpgrade: 0
   strengthUpgrade: 0
+  hpUpgrade: 0
   monsterPoints: 0
 --- !u!114 &2833230445222364595
 MonoBehaviour:
@@ -4837,6 +4838,7 @@ MonoBehaviour:
   rbody: {fileID: 0}
   mainCamera: {fileID: 2833230444993736426}
   orientation: {fileID: 2833230445803191535}
+  spawn: {fileID: 0}
   cinput: {fileID: 0}
   _inputForward: 0
   _inputRight: 0
@@ -4979,6 +4981,24 @@ MonoBehaviour:
   - {fileID: 8060205107178621660}
   - {fileID: 8060205107178621584}
   - {fileID: 8060205107178621586}
+--- !u!114 &8920133875257608415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8060205107178657656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6083204f2bb6ea47a3f9771c20f2f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runningClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
+  meleeSoundClip: {fileID: 8300000, guid: 09a2a530465bedd4b847ddf74392159a, type: 3}
+  jumpGrunt: {fileID: 8300000, guid: 3991c710c0fd32c46830038e370feca5, type: 3}
+  landingClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
+  gunshot: {fileID: 8300000, guid: 7e85c811417efdf4ead0bb7703d45a55, type: 3}
+  gunClick: {fileID: 8300000, guid: 4087eea1541dd6146bd87756af6e9629, type: 3}
 --- !u!82 &5324718220201735280
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5075,24 +5095,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &8920133875257608415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8060205107178657656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6083204f2bb6ea47a3f9771c20f2f45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  runningClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
-  meleeSoundClip: {fileID: 8300000, guid: 09a2a530465bedd4b847ddf74392159a, type: 3}
-  jumpGrunt: {fileID: 8300000, guid: 3991c710c0fd32c46830038e370feca5, type: 3}
-  landingClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
-  gunshot: {fileID: 8300000, guid: 7e85c811417efdf4ead0bb7703d45a55, type: 3}
-  gunClick: {fileID: 8300000, guid: 4087eea1541dd6146bd87756af6e9629, type: 3}
 --- !u!1 &8060205107178657658
 GameObject:
   m_ObjectHideFlags: 0
