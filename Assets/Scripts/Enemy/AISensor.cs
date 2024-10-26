@@ -1,19 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using Unity.PlasticSCM.Editor.WebApi;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 
 public class AISensor : MonoBehaviour
 {
-    public float distance = 10f;
+    public float sightRange= 20f;
+    public float chaseRange = 10f;
     public float angle = 30f;
-    public float height = 1f;
-    public Color meshColor = Color.red;
+    public float height = 2f;
     public int scanFrequency = 30;
+
     public LayerMask layers;
     public LayerMask occlusionLayers;
     public List<GameObject> Objects = new List<GameObject>();
@@ -39,9 +34,16 @@ public class AISensor : MonoBehaviour
         }
     }
 
+    void SetUpTriangleVertices(ref Vector3[] vertices, ref int index, Vector3 v1, Vector3 v2, Vector3 v3)
+    {
+        vertices[index++] = v1;
+        vertices[index++] = v2;
+        vertices[index++] = v3;
+    }
+
     Mesh CreateWedgeMesh() 
     {
-        Mesh mesh = new Mesh();
+        Mesh mesh = new();
 
         int segments = 10;
         int numTriangles = segments * 4 + 4;
@@ -51,70 +53,48 @@ public class AISensor : MonoBehaviour
         int[] triangles = new int[numVertices];
 
         Vector3 botCenter = Vector3.zero;
-        Vector3 botLeft = Quaternion.Euler(0, -angle, 0) * Vector3.forward * distance;
-        Vector3 botRight = Quaternion.Euler(0, angle, 0) * Vector3.forward * distance;
+        Vector3 botLeft = Quaternion.Euler(0, -angle, 0) * Vector3.forward * sightRange;
+        Vector3 botRight = Quaternion.Euler(0, angle, 0) * Vector3.forward * sightRange;
 
         Vector3 topCenter = botCenter + Vector3.up * height;
         Vector3 topLeft = botLeft + Vector3.up * height;
         Vector3 topRight = botRight + Vector3.up * height;
 
-        int vert = 0;
+        int vertices_index = 0;
 
-        // Left 
-        vertices[vert++] = botCenter;
-        vertices[vert++] = botLeft;
-        vertices[vert++] = topLeft;
+        // Left Rectangle
+        SetUpTriangleVertices(ref vertices, ref vertices_index, botCenter, botLeft, topLeft);
+        SetUpTriangleVertices(ref vertices, ref vertices_index, topLeft, topCenter, botCenter);
 
-        vertices[vert++] = topLeft;
-        vertices[vert++] = topCenter;
-        vertices[vert++] = botCenter;
-
-        // Right
-        vertices[vert++] = botCenter;
-        vertices[vert++] = topCenter;
-        vertices[vert++] = topRight;
-
-        vertices[vert++] = topRight;
-        vertices[vert++] = botRight;
-        vertices[vert++] = botCenter;
+        // Right Rectangle
+        SetUpTriangleVertices(ref vertices, ref vertices_index, botCenter, topCenter, topRight);
+        SetUpTriangleVertices(ref vertices, ref vertices_index, topRight, botCenter, botCenter);
 
         float currAngle = -angle;
         float deltaAngle = angle * 2 / segments;
 
+        // Creating Circular Edge
         for (int i = 0; i < segments; i++)
         {
-            botLeft = Quaternion.Euler(0, currAngle, 0) * Vector3.forward * distance;
-            botRight = Quaternion.Euler(0, currAngle + deltaAngle, 0) * Vector3.forward * distance;
+            botLeft = Quaternion.Euler(0, currAngle, 0) * Vector3.forward * sightRange;
+            botRight = Quaternion.Euler(0, currAngle + deltaAngle, 0) * Vector3.forward * sightRange;
 
             topLeft = botLeft + Vector3.up * height;
             topRight = botRight + Vector3.up * height;
 
             // Edge 
-            vertices[vert++] = botLeft;
-            vertices[vert++] = botRight;
-            vertices[vert++] = topRight;
+            SetUpTriangleVertices(ref vertices, ref vertices_index, botLeft, botRight, topRight);
+            SetUpTriangleVertices(ref vertices, ref vertices_index, topRight, topLeft, botLeft);
 
-            vertices[vert++] = topRight;
-            vertices[vert++] = topLeft;
-            vertices[vert++] = botLeft;
-
-            // Top
-            vertices[vert++] = topCenter;
-            vertices[vert++] = topLeft;
-            vertices[vert++] = topRight;
-
-            // Bot
-            vertices[vert++] = botCenter;
-            vertices[vert++] = botRight;
-            vertices[vert++] = botLeft;
+            // Top and Bot Triangles
+            SetUpTriangleVertices(ref vertices, ref vertices_index, topCenter, topLeft, topRight);
+            SetUpTriangleVertices(ref vertices, ref vertices_index, botCenter, botRight, botLeft);
 
             currAngle += deltaAngle;
         }
 
         for (int i = 0; i < numVertices; i++)
-        {
             triangles[i] = i;
-        }
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
@@ -126,7 +106,7 @@ public class AISensor : MonoBehaviour
     private void Scan()
     {
         count = Physics.OverlapSphereNonAlloc(this.transform.position,
-                                              distance,
+                                              sightRange,
                                               colliders,
                                               layers, 
                                               QueryTriggerInteraction.Collide);
@@ -140,25 +120,29 @@ public class AISensor : MonoBehaviour
         }
     }
 
-
     public bool IsInSight(GameObject obj) {
         Vector3 originPos = this.transform.position;
         Vector3 objPos = obj.transform.position;
-        Vector3 direction = objPos - originPos;
 
+        // Check if in Chase Range
+        if (Vector3.Distance(originPos, objPos) < chaseRange) 
+            return true;
+
+        // Check if Inside Height
+        Vector3 direction = objPos - originPos;
         if (direction.y < 0 || direction.y > height)
             return false;
+
+        // Check if Inside Angle Range
         direction.y = 0;
         float angleDiff = Vector3.Angle(this.transform.forward, direction);
         if (angleDiff > angle) 
             return false;
 
+        // See if anything is blocking view from player
         originPos.y += height / 2;
         objPos.y += originPos.y;
-        if (Physics.Linecast(originPos, objPos, occlusionLayers))
-            return false;
-        
-        return true;
+        return !Physics.Linecast(originPos, objPos, occlusionLayers);
     }
 
     private void OnValidate() 
@@ -168,25 +152,36 @@ public class AISensor : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        Color cyan = Color.cyan;
+        cyan.a = 0.5f;
+        Color red = Color.red;
+        red.a = 0.5f;
+        Color green = Color.green;
+        green.a = 0.5f;
+        // Draw Wedge
         if (mesh)
         {
-            Gizmos.color = meshColor;
+            Gizmos.color = red;
             Gizmos.DrawMesh(mesh, this.transform.position, this.transform.rotation);
         }
         
-        Gizmos.DrawWireSphere(this.transform.position, distance);
+        // Draw Range Sphere
+        Gizmos.DrawWireSphere(this.transform.position, sightRange);
+        
+        Gizmos.color = cyan;
+        Gizmos.DrawWireSphere(this.transform.position, chaseRange);
+        
+        // Make a red sphere on objects in range but not yet seen
+        Gizmos.color = red;
         foreach (var collider in colliders)
         {
             if (collider)
                 Gizmos.DrawSphere(collider.transform.position, 0.6f);
         }
 
-        Gizmos.color = Color.green;
+        // Make a green sphere on objects In Sense Range
+        Gizmos.color = green;
         foreach (var obj in Objects)
             Gizmos.DrawSphere(obj.transform.position, 0.6f);
-
-
-
-
     }
 }

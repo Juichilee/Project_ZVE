@@ -18,7 +18,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     private CapsuleCollider cc;
     private NavMeshAgent aiAgent; 
     public EnemyDamageable EnemyDamageable { get; private set; }
-    public AISensor sensor { get; private set; }
+    public AISensor aiSensor { get; private set; }
     #endregion
     
     #region Pickup Prefabs 
@@ -61,7 +61,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         EnemyDamageable = GetComponent<EnemyDamageable>();
-        sensor = GetComponent<AISensor>();
+        aiSensor = GetComponent<AISensor>();
     }
 
     void Start() 
@@ -69,11 +69,8 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         animationSpeed = 1f;
         rootMovementSpeed = 1f;
         rootTurnSpeed = 1f;
-        inSightRange = 15f;
         attackRange = 2f;
         chaseRange = 10f;
-        fovAngle = 120;
-
     }
 
     void FixedUpdate()
@@ -91,10 +88,9 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         anim.SetBool("isFalling", !isGrounded);
     }
 
-    /* ======================================================================================================
-    ______________________________________________.Movement._________________________________________________
-    ====================================================================================================== */
-    public float maxLookAheadTime = 1f;
+    #region Movement
+
+    public float maxLookAheadTime = 0.5f;
 
     public bool GoTo(Vector3 position, float speed = 0f)
     {   
@@ -119,7 +115,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         float speed = aiAgent.speed;
         float lookAheadTime = Mathf.Clamp(distance / speed, 0 , maxLookAheadTime);
 
-        // TODO: Change to worldVelocity once change is in
         Vector3 velocity = player.GetComponent<PlayerControlScript>().WorldVelocity;
         Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
         
@@ -142,14 +137,15 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         aiAgent.isStopped = true;
     }
 
-    /* ======================================================================================================
-    ______________________________________________.Movement._________________________________________________
-    ====================================================================================================== */
+    #endregion
+
+    #region Death
 
     public void Die() 
     {
         isDead = true;
         Stop();
+        aiSensor.enabled = false;
     }
 
     public void SpawnPickUp()
@@ -173,15 +169,13 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         currPickup2.isKinematic = true;
     } 
 
-    /* ======================================================================================================
-    ______________________________________________.Attack.___________________________________________________
-    ====================================================================================================== */
+    #endregion
+    
+    #region Attack
     
     #region Range Variables
-    public float inSightRange;
     public float attackRange;
     public float chaseRange;
-    public float fovAngle;
     #endregion
 
     #region Attack Variables
@@ -203,23 +197,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
 
     public bool IsInSight()
     {
-        Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
-        float distance = Vector3.Distance(this.transform.position, playerPosition);
-        
-        if (distance > inSightRange)
-            return false;
-
-        Vector3 direction = (playerPosition - this.transform.position).normalized; 
-        float angle = Vector3.Angle(this.transform.forward, direction);
-
-        if (angle > fovAngle * 0.5f)
-            return false;
-
-        if (Physics.Raycast(this.transform.position, direction, distance))
-            return false;
-
-        return true;
-
+        return aiSensor.IsInSight(PlayerControlScript.PlayerInstance.gameObject);
     }
 
     public void GainAgro()
@@ -263,10 +241,9 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         timeOfLastAttack = Time.time;
     }
 
+    #endregion
 
-    /* ======================================================================================================
-    ______________________________________________.On Collision._____________________________________________
-    ====================================================================================================== */
+    
     //This is a physics callback
     void OnCollisionEnter(Collision collision)
     {

@@ -20,11 +20,13 @@ public enum ZombieState
 
 public class ZombieStateMachine : MonoBehaviour
 {
+    #region Constant State Strings
     public const string GlobalTransitionStateName = "GlobalTransition";
     public const string PatrolStateName = "Patrol";
     public const string ChaseStateName = "Chase";
     public const string AttackStateName = "Attack";
     public const string DeathStateName = "Death";
+    #endregion
     
     [SerializeField]
     FiniteStateMachine<ZombieFSMData> fsm;
@@ -42,9 +44,11 @@ public class ZombieStateMachine : MonoBehaviour
     }
 
 
+    #region Zombie Base States
     /* ======================================================================================================
     ______________________________________________.Zombie State Bases._______________________________________
     ====================================================================================================== */
+    
     abstract class ZombieStateBase
     {
         public virtual string Name => "Zombie";
@@ -84,7 +88,7 @@ public class ZombieStateMachine : MonoBehaviour
     {
         public virtual void Enter(S0 s0, S1 s1) {}
     }
-
+    #endregion
 
     /* ======================================================================================================
     ______________________________________________.Zombie States.____________________________________________
