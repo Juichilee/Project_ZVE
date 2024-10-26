@@ -1,57 +1,63 @@
 using UnityEngine;
 using System.Collections;
 
-public class MeleeWeapon : BaseWeapon
+public class MeleeWeapon : Weapon
 {
-    // Weapon References
-    public override WeaponType WeaponType => WeaponType.Melee;
-    public override int weaponAnimId => 0;
+    [SerializeField] private DamageData damageAttributes;
+    [SerializeField] private float coolDownTime = 1f;
+    [SerializeField] private int weaponAnimId = 0;
+    [SerializeField] private WeaponType weaponType = WeaponType.Melee;
+    [SerializeField] private Vector3 holdPosition;
+    [SerializeField] private Vector3 holdRotation;
+    [SerializeField] private DamageObject hitBoxInstance; // Should have DamageObject component
 
-    // References that need to be populated / updated on pickup
-    // public GameObject weaponHolder;
-    // public Vector3 holdPosition;
-    // public Vector3 holdRotation;
-    // private PlayerSounds playerSounds;
-
-    // Weapon Attributes
-    // public string weaponName;
-    // public int damage;
-    public override float coolDownTime => 1f;
-    // public bool isReady;
-    // public GameObject attackTriggerPrefab; // Trigger Prefab 
-    // public Transform meleePos;
+    #region Accessors
+    public override DamageData DamageAttributes { get => damageAttributes; protected set => damageAttributes = value; }
+    public override float CoolDownTime { get => coolDownTime; protected set => coolDownTime = value; }
+    public override int WeaponAnimId { get => weaponAnimId; protected set => weaponAnimId = value; }
+    public override WeaponType WeaponType { get => weaponType; protected set => weaponType = value; }
+    public override Vector3 HoldPosition { get => holdPosition; }
+    public override Vector3 HoldRotation { get => holdRotation; } 
+    #endregion
 
     void OnEnable()
     {
-        isReady = true; // Reset isReady when re-enabled
+        IsReady = true; // Reset IsReady when re-enabled
     }
+
+    void Start(){
+        hitBoxInstance.SetDamageSource(this);
+        hitBoxInstance.gameObject.SetActive(false);
+    }
+
     public override void Attack()
     {
-        // Attack logic
-        Debug.Log($"Melee attack with {weaponName}");
-
-        // SpawnAttackTrigger();
-        weaponHolderAnim.SetTrigger("attack1");
-
+        Debug.Log($"Melee attack with {WeaponName}");
+        WeaponHolderAnim.SetTrigger("attack1");
+        SpawnDamageObject();
         StartCoroutine(AttackCooldown());
     }
 
-    // Coroutine to spawn the attack trigger for a short duration
-    void SpawnAttackTrigger()
+    private IEnumerator ActivateHitbox(DamageObject hitBoxInstance)
     {
-        // playerSounds.PlayMeleeSound(); // Play melee sound when attacking
+        // Activate the hitbox for a short duration to simulate an attack
+        // hitBoxInstance.transform.position = this.transform.position + transform.forward * 1.5f; // Adjust as needed
+        hitBoxInstance.gameObject.SetActive(true);
 
-        // Create a trigger collider temporarily
-        // GameObject attackTrigger = Instantiate(attackTriggerPrefab, meleePos);
-        // attackTrigger.transform.position = meleePos.position + transform.forward * 2; // Slightly in front of the player
-        // attackTrigger.transform.rotation = meleePos.rotation;
+        yield return new WaitForSeconds(1.0f); // Duration of the active hitbox
+
+        hitBoxInstance.gameObject.SetActive(false);
     }
 
     private IEnumerator AttackCooldown()
     {
-        isReady = false;
-        yield return new WaitForSeconds(coolDownTime);
-        // Destroy(attackTrigger);
-        isReady = true;
+        IsReady = false;
+        yield return new WaitForSeconds(CoolDownTime);
+        IsReady = true;
+    }
+
+    public override void SpawnDamageObject()
+    {
+        StartCoroutine(ActivateHitbox(hitBoxInstance));
     }
 }
