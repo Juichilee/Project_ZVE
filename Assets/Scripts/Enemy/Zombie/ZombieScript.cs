@@ -178,21 +178,11 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     public float chaseRange;
     #endregion
 
-    #region Attack Variables
-    private float timeOfLastAttack = 0;
-    private bool hasReachedAttackDist = false;
-    #endregion
 
     public bool IsInAttackRange()
     {
         Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
         return Vector3.Distance(this.transform.position, playerPosition) <= attackRange;
-    }
-
-    public bool IsInChaseRange()
-    {
-        Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
-        return Vector3.Distance(this.transform.position, playerPosition) <= chaseRange;
     }
 
     public bool IsInSight()
@@ -202,43 +192,13 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
 
     public void GainAgro()
     {
-        anim.SetBool("isAttacking", true);
-    }
-
-    public void LoseAgro()
-    {
-        anim.SetBool("isAttacking", false);
-        if (hasReachedAttackDist)
-            hasReachedAttackDist = false;
-    }
-
-    public bool IsAttackCooldown()
-    {
-        return Time.time <= timeOfLastAttack + 3;
+        anim.SetTrigger("isAttacking");
     }
 
     public void AttackTarget()
     {
-        anim.SetBool("isAttacking", true);
+        anim.SetTrigger("isAttacking");
         
-        if (!hasReachedAttackDist)
-        {
-            hasReachedAttackDist = true;
-            timeOfLastAttack = Time.time;
-        }
-
-        if (!IsAttackCooldown())
-        {
-            Status playerStatus = PlayerControlScript.PlayerInstance.GetComponent<Status>();
-            // status.DealDamage(playerStatus);
-            timeOfLastAttack = Time.time;
-        }
-
-    }
-
-    public void ResetTimeOfLastAttack()
-    {
-        timeOfLastAttack = Time.time;
     }
 
     #endregion
