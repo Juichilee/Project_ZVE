@@ -12,6 +12,7 @@ public class MainMenu : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        DNA.SetPoints(0);
     }
 
     public void StartGame()
