@@ -32,10 +32,13 @@ public class MeleeWeapon : Weapon
 
     public override void Attack()
     {
-        Debug.Log($"Melee attack with {WeaponName}");
-        WeaponHolderAnim.SetTrigger("attack1");
-        SpawnDamageObject();
-        StartCoroutine(AttackCooldown());
+        if (IsReady) 
+        {
+            Debug.Log($"Melee attack with {WeaponName}");
+            WeaponHolderAnim.SetTrigger("attack1");
+            SpawnDamageObject();
+            StartCoroutine(AttackCooldown());
+        }
     }
 
     private IEnumerator ActivateHitbox(DamageObject hitBoxInstance)

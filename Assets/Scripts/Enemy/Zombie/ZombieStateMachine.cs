@@ -172,7 +172,6 @@ public class ZombieStateMachine : MonoBehaviour
 
             if (Zombie.IsInAttackRange())
             {
-                Zombie.GainAgro();
                 return ParentFSM.CreateStateTransition(AttackStateName);
             }
             if (!Zombie.IsInSight())

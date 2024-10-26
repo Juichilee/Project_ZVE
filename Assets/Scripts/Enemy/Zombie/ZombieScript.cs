@@ -1,15 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.AI;
 
 //require some things the bot control needs
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
-public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
+public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeaponHolder
 {
     #region Component Reference
     private Animator anim; 
@@ -18,6 +13,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     private NavMeshAgent aiAgent; 
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor { get; private set; }
+    public Weapon handWeapon;
     #endregion
     
     #region Pickup Prefabs 
@@ -61,6 +57,15 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         cc.enabled = true;
         EnemyDamageable = GetComponent<EnemyDamageable>();
         aiSensor = GetComponent<AISensor>();
+        
+        handWeapon = GetComponentInChildren<Weapon>();
+        handWeapon.WeaponName = "Zombie Hand";
+        handWeapon.WeaponHolder = this;
+        handWeapon.WeaponHolderAnim = anim;
+        handWeapon.transform.localPosition = handWeapon.HoldPosition;
+        handWeapon.transform.localRotation = Quaternion.Euler(handWeapon.HoldRotation);
+        handWeapon.transform.localScale = Vector3.one;
+
     }
 
     void Start() 
@@ -69,7 +74,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         rootMovementSpeed = 1f;
         rootTurnSpeed = 1f;
         attackRange = 2f;
-        chaseRange = 10f;
     }
 
     void FixedUpdate()
@@ -171,12 +175,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     #endregion
     
     #region Attack
-    
-    #region Range Variables
-    public float attackRange;
-    public float chaseRange;
-    #endregion
-
+    private float attackRange;
 
     public bool IsInAttackRange()
     {
@@ -189,19 +188,22 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         return aiSensor.IsInSight(PlayerControlScript.PlayerInstance.gameObject);
     }
 
-    public void GainAgro()
-    {
-        anim.SetTrigger("isAttacking");
-    }
-
     public void AttackTarget()
     {
-        anim.SetTrigger("isAttacking");
-        
+
+
+
+        handWeapon.Attack();
     }
 
     #endregion
-
+    
+    #region WeaponHolder
+    public Transform GetWeaponHolderRootTransform()
+    {
+        return this.transform.root;
+    }
+    #endregion
     
     //This is a physics callback
     void OnCollisionEnter(Collision collision)
