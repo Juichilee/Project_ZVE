@@ -228,8 +228,8 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
 
         if (!IsAttackCooldown())
         {
-            Status playerStatus = PlayerControlScript.PlayerInstance.GetComponent<Status>();
-            // status.DealDamage(playerStatus);
+            PlayerStatus playerStatus = PlayerControlScript.PlayerInstance.GetComponent<PlayerStatus>();
+            EnemyDamageable.DealDamage(playerStatus);
             timeOfLastAttack = Time.time;
         }
 
