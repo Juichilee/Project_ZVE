@@ -11,6 +11,7 @@ public class Status : MonoBehaviour
     public float currHealth;
     public int speedUpgrade = 0;
     public int strengthUpgrade = 0;
+    public int monsterPoints = 0;
     // TODO: public float iframes;
 
     private bool isDead = false;

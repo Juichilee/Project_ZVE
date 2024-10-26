@@ -76,9 +76,13 @@ public class AerialDevice : MonoBehaviour
             case AerialDeviceState.DropState:
                 if (Random.Range(0f, 1f) >= 0.5f)
                 {
-                    Instantiate(DroppableObjectOne, this.transform.position - new Vector3(0, 5, 0), this.transform.rotation);
+                    if (DroppableObjectOne != null) {
+                        Instantiate(DroppableObjectOne, this.transform.position - new Vector3(0, 5, 0), this.transform.rotation);
+                    }
                 } else {
-                    Instantiate(DroppableObjectTwo, this.transform.position - new Vector3(0, 5, 0), this.transform.rotation);
+                    if (DroppableObjectTwo != null) {
+                        Instantiate(DroppableObjectTwo, this.transform.position - new Vector3(0, 5, 0), this.transform.rotation);
+                    }
                 }
                 break;
         }
