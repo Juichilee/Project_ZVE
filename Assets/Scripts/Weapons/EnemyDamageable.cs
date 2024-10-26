@@ -20,6 +20,11 @@ public class EnemyDamageable : BasicDamageable
     {
         //meshRenderer = GetComponent<MeshRenderer>();
         //origMaterial = meshRenderer.material;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     public override void OnDamage(DamageData damageData)

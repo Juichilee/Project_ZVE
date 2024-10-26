@@ -7,13 +7,8 @@ public class PlayerSounds : MonoBehaviour
     private AudioSource audioSource;
 
     public AudioClip runningClip;
-    public AudioClip meleeSoundClip;
     public AudioClip jumpGrunt;
     public AudioClip landingClip;
-    public AudioClip gunshot;
-    public AudioClip gunClick;
-
-    private bool hasPlayedGunReady = false;
 
     void Start()
     {
@@ -34,15 +29,6 @@ public class PlayerSounds : MonoBehaviour
         }
     }
 
-    // Method to play melee sound (called from MeleeAttack script)
-    public void PlayMeleeSound()
-    {
-        if (meleeSoundClip != null)
-        {
-            audioSource.PlayOneShot(meleeSoundClip);
-        }
-    }
-
     public void Grunt()
     {
         if (jumpGrunt != null)
@@ -57,27 +43,5 @@ public class PlayerSounds : MonoBehaviour
         {
             audioSource.PlayOneShot(landingClip);
         }
-    }
-
-    public void Shots()
-    {
-        if (gunshot != null)
-        {
-            audioSource.PlayOneShot(gunshot);
-        }
-    }
-
-    public void GunReady()
-    {
-        if (!hasPlayedGunReady && gunClick != null)
-        {
-            audioSource.PlayOneShot(gunClick);
-            hasPlayedGunReady = true;
-        }
-    }
-
-    public void ResetGunReadySound()
-    {
-        hasPlayedGunReady = false;
     }
 }

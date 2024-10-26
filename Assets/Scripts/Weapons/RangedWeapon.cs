@@ -17,9 +17,23 @@ public class RangedWeapon : Weapon
     [SerializeField] private LayerMask aimColliderLayerMask;
     [SerializeField] private Vector3 holdPosition;
     [SerializeField] private Vector3 holdRotation;
+    [SerializeField] private AudioSource audioSource;
 
     private Vector3 targetPosition;
     private Vector3 aimDir;
+
+    public AudioClip gunshot;
+    public AudioClip gunClick;
+    private bool hasPlayedGunReady = false;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    }
 
     #region Accessors
     public override DamageData DamageAttributes { get => damageAttributes; protected set => damageAttributes = value; }
@@ -71,6 +85,12 @@ public class RangedWeapon : Weapon
             CurrentClip = CurrentAmmo;
             CurrentAmmo = 0;
         }
+
+        if (!hasPlayedGunReady && gunClick != null)
+        {
+            audioSource.PlayOneShot(gunClick);
+            hasPlayedGunReady = true;
+        }
     }
 
     private IEnumerator AttackCooldown()
@@ -102,11 +122,21 @@ public class RangedWeapon : Weapon
     private void FireWeapon()
     {
         SpawnDamageObject();
+        
+        if (gunshot != null)
+        {
+            audioSource.PlayOneShot(gunshot);
+        }
     }
 
     public override void SpawnDamageObject()
     {
         GameObject projInst = Instantiate(ProjectileObj, ShootPos.position, Quaternion.LookRotation(aimDir, Vector3.up));
         projInst.GetComponent<DamageObject>().SetDamageSource(this);
+    }
+
+    public void ResetGunReadySound()
+    {
+        hasPlayedGunReady = false;
     }
 }
