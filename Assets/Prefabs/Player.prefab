@@ -4719,7 +4719,7 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: 11d723d356152494ea1f1dc10ed906ef, type: 3}
   m_Controller: {fileID: 9100000, guid: 3964edee805e94c2ca573fec3b058bbf, type: 2}
   m_CullingMode: 1
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -4784,6 +4784,7 @@ MonoBehaviour:
   invincibilityDuration: 1
   speedUpgrade: 0
   strengthUpgrade: 0
+  hpUpgrade: 0
   monsterPoints: 0
 --- !u!114 &2833230445222364595
 MonoBehaviour:
@@ -4837,6 +4838,7 @@ MonoBehaviour:
   rbody: {fileID: 0}
   mainCamera: {fileID: 2833230444993736426}
   orientation: {fileID: 2833230445803191535}
+  spawn: {fileID: 0}
   cinput: {fileID: 0}
   _inputForward: 0
   _inputRight: 0
