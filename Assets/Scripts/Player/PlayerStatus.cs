@@ -8,6 +8,7 @@ public class PlayerStatus : BasicDamageable
 {
     public int speedUpgrade = 0;
     public int strengthUpgrade = 0;
+    public int monsterPoints = 0;
     // TODO: public float iframes;
 
     private bool isDead = false;
@@ -17,7 +18,7 @@ public class PlayerStatus : BasicDamageable
         maxHealth = 200;
         currentHealth = 200;
     }
-    
+
     public override void OnDamage(DamageData damageData)
     {
         if (IsInvincible || !IsAlive) return;

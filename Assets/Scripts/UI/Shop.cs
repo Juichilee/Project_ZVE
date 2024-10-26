@@ -92,7 +92,7 @@ public class Shop : MonoBehaviour
                 SpeedCost += costIncrease;
                 break;
             case 2:
-                playerStatus.maxHealth += 20;
+                playerStatus.MaxHealth += 20;
                 HealthCost += costIncrease;
                 break;
             default:

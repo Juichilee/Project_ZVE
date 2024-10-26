@@ -35,7 +35,7 @@ public class EnemyDamageable : BasicDamageable
         }
     }
 
-    public new void Update(){
+    public void Update(){
         if (!IsInvincible){
             meshRenderer.material = origMaterial;
         }
