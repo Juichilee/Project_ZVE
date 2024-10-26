@@ -11,7 +11,7 @@ public class Shop : MonoBehaviour
     public static int StrengthCost = 2;
     public static int UnstableCost = 2;
     public int costIncrease = 2;
-    Status playerStatus;
+    PlayerStatus playerStatus;
     public TMP_Text HealthText;
     public TMP_Text SpeedText;
     public TMP_Text StrengthText;
@@ -21,7 +21,7 @@ public class Shop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Status>();
+        playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerStatus>();
         MonsterLevel.maxValue = 5;
         MonsterLevel.minValue = 0;
     }
@@ -41,7 +41,7 @@ public class Shop : MonoBehaviour
         if(DNA.GetPoints() >= HealthCost)
         {
             DNA.Addpoints(-1 * HealthCost);
-            playerStatus.maxHealth += 20;
+            playerStatus.MaxHealth += 20;
             HealthCost += costIncrease;
         }
     }

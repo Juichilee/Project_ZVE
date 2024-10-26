@@ -6,14 +6,14 @@ using TMPro;
 public class HealthUI : MonoBehaviour
 {
     public Slider hp;
-    Status playerStatus;
+    PlayerStatus playerStatus;
     public TMP_Text Text;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Status>();
-        hp.maxValue = playerStatus.maxHealth;
+        playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerStatus>();
+        hp.maxValue = playerStatus.MaxHealth;
         hp.minValue = 0;
     }
 
@@ -25,8 +25,8 @@ public class HealthUI : MonoBehaviour
 
     void FixedUpdate()
     {
-        hp.maxValue = playerStatus.maxHealth;
-        hp.value = playerStatus.currHealth;
-        Text.text = " " + playerStatus.currHealth + "/" + playerStatus.maxHealth;
+        hp.maxValue = playerStatus.MaxHealth;
+        hp.value = playerStatus.CurrentHealth;
+        Text.text = " " + playerStatus.CurrentHealth + "/" + playerStatus.MaxHealth;
     }
 }

@@ -1,84 +1,93 @@
 using UnityEngine;
 using System.Collections;
 
-public class RangedWeapon : BaseWeapon
+public class RangedWeapon : Weapon
 {
-    // Weapon References
-    public GameObject projectileObj;
-    public Transform shootPos;
-    public override WeaponType WeaponType => WeaponType.Ranged;
-    public override int weaponAnimId => 1;
+    [SerializeField] private DamageData damageAttributes;
+    [SerializeField] private float coolDownTime = 1f;
+    [SerializeField] private int weaponAnimId = 1;
+    [SerializeField] private WeaponType weaponType = WeaponType.Ranged;
+    [SerializeField] private GameObject projectileObj;
+    [SerializeField] private Transform shootPos;
+    [SerializeField] private int maxAmmo;
+    [SerializeField] private int maxClip;
+    [SerializeField] private int currentAmmo;
+    [SerializeField] private int currentClip;
+    [SerializeField] private float effectiveRange;
+    [SerializeField] private LayerMask aimColliderLayerMask;
+    [SerializeField] private Vector3 holdPosition;
+    [SerializeField] private Vector3 holdRotation;
 
-    // References that need to be populated / updated on pickup
-    // public GameObject weaponHolder;
-    // public Vector3 holdPosition;
-    // public Vector3 holdRotation;
-    // private PlayerSounds playerSounds;
-
-    // Weapon Attributes
-    // public string weaponName;
-    // public int damage;
-    public override float coolDownTime => 1f;
-    // public bool isReady;
-    public int maxAmmo;
-    public int maxClip;
-    public int currentAmmo;
-    public int currentClip;
-    private float effectiveRange;
     private Vector3 targetPosition;
     private Vector3 aimDir;
-    public LayerMask aimColliderLayerMask;
+
+    #region Accessors
+    public override DamageData DamageAttributes { get => damageAttributes; protected set => damageAttributes = value; }
+    public override float CoolDownTime { get => coolDownTime; protected set => coolDownTime = value; }
+    public override int WeaponAnimId { get => weaponAnimId; protected set => weaponAnimId = value; }
+    public override WeaponType WeaponType { get => weaponType; protected set => weaponType = value; }
+    public GameObject ProjectileObj { get => projectileObj; set => projectileObj = value; }
+    public Transform ShootPos { get => shootPos; set => shootPos = value; }
+    public int MaxAmmo { get => maxAmmo; set => maxAmmo = value; }
+    public int MaxClip { get => maxClip; set => maxClip = value; }
+    public int CurrentAmmo { get => currentAmmo; set => currentAmmo = value; }
+    public int CurrentClip { get => currentClip; set => currentClip = value; }
+    public LayerMask AimColliderLayerMask { get => aimColliderLayerMask; set => aimColliderLayerMask = value; }
+    public override Vector3 HoldPosition { get => holdPosition; }
+    public override Vector3 HoldRotation { get => holdRotation; } 
+    #endregion
 
     void OnEnable()
     {
-        isReady = true; // Reset isReady when re-enabled
+        IsReady = true; // Reset IsReady when re-enabled
     }
+
     public override void Attack()
     {
-        if (currentClip > 0)
+        if (CurrentClip > 0)
         {
-            // Attack logic
             FireWeapon();
-            currentClip--;
+            CurrentClip--;
             StartCoroutine(AttackCooldown());
         }
     }
 
     public void Reload()
     {
-        if (currentAmmo <= 0)
+        if (CurrentAmmo <= 0)
         {
             return;
         }
-        Debug.Log($"Reloading {weaponName}");
+        Debug.Log($"Reloading {WeaponName}");
 
-        int spentClip = maxClip - currentClip; // How many bullets were spent in the clip
-        if (spentClip <= currentAmmo) // Full reload if enough ammo
+        int spentClip = MaxClip - CurrentClip; // How many bullets were spent in the clip
+        if (spentClip <= CurrentAmmo) // Full reload if enough ammo
         {
-            currentAmmo -= spentClip;
-            currentClip += spentClip;
-        } else {
-            currentClip = currentAmmo;
+            CurrentAmmo -= spentClip;
+            CurrentClip += spentClip;
+        }
+        else
+        {
+            CurrentClip = CurrentAmmo;
+            CurrentAmmo = 0;
         }
     }
 
     private IEnumerator AttackCooldown()
     {
-        isReady = false;
-        yield return new WaitForSeconds(coolDownTime);
-        isReady = true;
+        IsReady = false;
+        yield return new WaitForSeconds(CoolDownTime);
+        IsReady = true;
     }
 
-    // Calculates where the ranged weapon is aiming using screen raycast
-    // aimTarget is a reference to AimTarget GameObject transform that the character rig uses to aim using procedural animation
     public void UpdateWeaponAim(ref Transform aimTarget)
     {
-        if (weaponHolder == null) return;
+        if (WeaponHolder == null) return;
 
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
         int fixedDistance = 99;
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, aimColliderLayerMask))
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, AimColliderLayerMask))
         {
             targetPosition = raycastHit.point;
         }
@@ -86,14 +95,18 @@ public class RangedWeapon : BaseWeapon
         {
             targetPosition = ray.origin + ray.direction * fixedDistance;
         }
-        aimDir = (targetPosition - shootPos.position).normalized;
+        aimDir = (targetPosition - ShootPos.position).normalized;
         aimTarget.position = targetPosition; // update aimTarget position
     }
 
     private void FireWeapon()
     {
-        // playerSounds.Shots();
-        GameObject projInst = Instantiate(projectileObj, shootPos.position, Quaternion.LookRotation(aimDir, Vector3.up));
-        projInst.GetComponent<Projectile>().SetShooter(weaponHolder);
+        SpawnDamageObject();
+    }
+
+    public override void SpawnDamageObject()
+    {
+        GameObject projInst = Instantiate(ProjectileObj, ShootPos.position, Quaternion.LookRotation(aimDir, Vector3.up));
+        projInst.GetComponent<DamageObject>().SetDamageSource(this);
     }
 }

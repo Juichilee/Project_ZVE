@@ -1,4 +1,3 @@
-using Cinemachine;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
@@ -9,7 +8,7 @@ public class WeaponHandler : MonoBehaviour
     public Transform holdWeaponParent;
     public Transform aimTarget;
     [SerializeField]
-    private BaseWeapon[] weaponSlots = new BaseWeapon[3]; // Fixed array to hold 3 weapons
+    private Weapon[] weaponSlots = new Weapon[3]; // Fixed array to hold 3 weapons
     private int currentWeaponIndex = 0;
     private Collider currentPickupCollider;
     private PlayerControlScript playerControlScript;
@@ -30,12 +29,12 @@ public class WeaponHandler : MonoBehaviour
 
         if (GetCurrentWeapon() is RangedWeapon rangedWeapon)
         {
-            string ammoString = $"{rangedWeapon.currentClip}/{rangedWeapon.maxClip}({rangedWeapon.currentAmmo})";
+            string ammoString = $"{rangedWeapon.CurrentClip}/{rangedWeapon.MaxClip}({rangedWeapon.CurrentAmmo})";
             ammoCountText.text = ammoString;
         }
     }
 
-    BaseWeapon GetCurrentWeapon()
+    Weapon GetCurrentWeapon()
     {
         return weaponSlots[currentWeaponIndex];
     }
@@ -44,7 +43,7 @@ public class WeaponHandler : MonoBehaviour
     {
         if (currentPickupCollider != null && playerControlScript._interact)
         {
-            BaseWeapon weapon = currentPickupCollider.GetComponent<BaseWeapon>();
+            Weapon weapon = currentPickupCollider.GetComponent<Weapon>();
             PickUpWeapon(weapon);
         }
     }
@@ -67,7 +66,7 @@ public class WeaponHandler : MonoBehaviour
         playerControlScript.anim.SetLayerWeight(2, 0); // Index 2 is ranged combat layer
         playerControlScript.anim.SetLayerWeight(3, 0); // Index 3 is melee combat layer
 
-        BaseWeapon currentWeapon = GetCurrentWeapon();
+        Weapon currentWeapon = GetCurrentWeapon();
         if (currentWeapon == null)
         {
             // Reset aimRig weight if no weapon equipped
@@ -98,7 +97,7 @@ public class WeaponHandler : MonoBehaviour
             playerControlScript.anim.SetLayerWeight(3, 1);
         }
 
-        if (currentWeapon.isReady && playerControlScript._inputAttack)
+        if (currentWeapon.IsReady && playerControlScript._inputAttack)
         {
             currentWeapon.Attack();
         }
@@ -106,7 +105,7 @@ public class WeaponHandler : MonoBehaviour
 
     private void HandleWeaponDrop()
     {
-        BaseWeapon currentWeapon = GetCurrentWeapon();
+        Weapon currentWeapon = GetCurrentWeapon();
         if (playerControlScript._drop && currentWeapon != null)
         {
             DropWeapon(currentWeaponIndex);
@@ -125,12 +124,12 @@ public class WeaponHandler : MonoBehaviour
             DeEquipWeapon(currentWeaponIndex);
         }
 
-        BaseWeapon nextWeapon = weaponSlots[index];
+        Weapon nextWeapon = weaponSlots[index];
         // Activate the weapon at the new index
         if (nextWeapon != null)
         {
             nextWeapon.gameObject.SetActive(true);
-            playerControlScript.anim.SetInteger("weaponAnimId", nextWeapon.weaponAnimId); // Update the animator's weaponAnimId to change weapon anim configs
+            playerControlScript.anim.SetInteger("weaponAnimId", nextWeapon.WeaponAnimId); // Update the animator's weaponAnimId to change weapon anim configs
         }
         currentWeaponIndex = index;
     }
@@ -147,8 +146,8 @@ public class WeaponHandler : MonoBehaviour
     {
         if (index >= 0 && index < weaponSlots.Length && weaponSlots[index] != null)
         {
-            BaseWeapon weapon = weaponSlots[index];
-            weapon.weaponHolder = null;
+            Weapon weapon = weaponSlots[index];
+            weapon.WeaponHolder = null;
             weapon.gameObject.transform.SetParent(null);
 
             Rigidbody rb = weapon.gameObject.GetComponent<Rigidbody>();
@@ -168,7 +167,7 @@ public class WeaponHandler : MonoBehaviour
         }
     }
 
-    private void PickUpWeapon(BaseWeapon weapon)
+    private void PickUpWeapon(Weapon weapon)
     {
         if (GetCurrentWeapon() != null)
         {
@@ -179,11 +178,11 @@ public class WeaponHandler : MonoBehaviour
         weaponSlots[currentWeaponIndex] = weapon;
 
         // Update weapon references to current holder
-        weapon.weaponHolder = gameObject;
-        weapon.weaponHolderAnim = playerControlScript.anim;
+        weapon.WeaponHolder = this;
+        weapon.WeaponHolderAnim = playerControlScript.anim;
         weaponGameObject.transform.SetParent(holdWeaponParent);
-        weaponGameObject.transform.localPosition = weapon.holdPosition;
-        weaponGameObject.transform.localRotation = Quaternion.Euler(weapon.holdRotation);
+        weaponGameObject.transform.localPosition = weapon.HoldPosition;
+        weaponGameObject.transform.localRotation = Quaternion.Euler(weapon.HoldRotation);
         weaponGameObject.transform.localScale = Vector3.one;
 
         Rigidbody rb = weaponGameObject.GetComponent<Rigidbody>();
@@ -204,7 +203,7 @@ public class WeaponHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<BaseWeapon>() != null)
+        if (other.GetComponent<Weapon>() != null)
         {
             currentPickupCollider = other;
         }

@@ -9,21 +9,21 @@ public class DeadMenu : MonoBehaviour
 
     public GameObject Menu;
     PauseMenu pause;
-    Status playerStatus;
+    PlayerStatus playerStatus;
     public GameObject dna;
 
     // Start is called before the first frame update
     void Start()
     {
         Menu.SetActive(false);
-        playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Status>();
+        playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerStatus>();
         pause = this.GetComponent<PauseMenu>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(playerStatus.currHealth <= 0)
+        if(playerStatus.CurrentHealth <= 0)
         {
             Menu.SetActive(true);
             pause.enabled = false;
