@@ -9,6 +9,7 @@ TagManager:
   - health
   - floor
   - PickupPanel
+  - AmmoCount
   layers:
   - Default
   - TransparentFX

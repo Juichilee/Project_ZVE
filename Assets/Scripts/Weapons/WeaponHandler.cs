@@ -42,6 +42,17 @@ public class WeaponHandler : MonoBehaviour
             string ammoString = $"{rangedWeapon.CurrentClip}/{rangedWeapon.MaxClip}({rangedWeapon.CurrentAmmo})";
             ammoCountText.text = ammoString;
         }
+        if (GetCurrentWeapon() is MeleeWeapon meleeWeapon)
+        {
+            string ammoString = $"1/1(1)";
+            ammoCountText.text = ammoString;
+        }
+
+        if (GetCurrentWeapon() is null)
+        {
+            string ammoString = $"0/0(0)";
+            ammoCountText.text = ammoString;
+        }
     }
 
     Weapon GetCurrentWeapon()
