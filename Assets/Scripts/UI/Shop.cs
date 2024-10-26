@@ -45,7 +45,7 @@ public class Shop : MonoBehaviour
         if(DNA.GetPoints() >= HealthCost)
         {
             DNA.Addpoints(-1 * HealthCost);
-            playerStatus.MaxHealth += 20;
+            playerStatus.hpUpgrade += 1;
             HealthCost += costIncrease;
         }
     }
