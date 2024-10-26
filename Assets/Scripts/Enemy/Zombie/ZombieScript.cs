@@ -10,17 +10,18 @@ using UnityEngine.AI;
 //require some things the bot control needs
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
-public class ZombieScript : MonoBehaviour
+public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
 {
-    // Component Reference
+    #region Component Reference
     private Animator anim; 
     private Rigidbody rb; 
     private CapsuleCollider cc;
     private NavMeshAgent aiAgent; 
-    public GameObject player { get; private set; }
-    public EnemyDamageable status { get; private set; }
+    public ZombieStatus status { get; private set; }
+    public AISensor aiSensor { get; private set; }
+    #endregion
     
-    // Pickup Prefabs 
+    #region Pickup Prefabs 
     public Rigidbody healthPrefab;
     public Rigidbody ammoPrefab;
     public Rigidbody dnaPrefab;
@@ -28,26 +29,21 @@ public class ZombieScript : MonoBehaviour
     public Rigidbody currPickup2;
     public float pickupHealthProb = .5f;
     public float pickupAmmoProb = .5f;
+    #endregion
 
-    // Animation Speed Variables
+    #region Animation Speed Variables
     public float animationSpeed;
     public float rootMovementSpeed;
     public float rootTurnSpeed;
+    #endregion
 
-    // Animation Properties 
+    #region Animation Properties 
     public float ZombieMaxSpeed { get; private set; }
     private int groundContactCount = 0;
     public bool isGrounded = true;
     public bool IsGrounded { get { return groundContactCount > 0; } }
     public bool isDead = false;
-
-    private float timeOfLastAttack = 0;
-    private bool hasReachedAttackDist = false;
-
-    // Range Variables
-    public float chaseRange;
-    public float attackRange;
-
+    #endregion
 
     // Awake is To grab the components
     void Awake()
@@ -64,22 +60,24 @@ public class ZombieScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
-        player = GameObject.FindWithTag("Player");
-        status = GetComponent<EnemyDamageable>();
+        status = GetComponent<ZombieStatus>();
     }
 
-    void Start() {
+    void Start() 
+    {
         animationSpeed = 1f;
         rootMovementSpeed = 1f;
         rootTurnSpeed = 1f;
-        chaseRange = 10f;
+        inSightRange = 15f;
         attackRange = 2f;
+        chaseRange = 10f;
+        fovAngle = 120;
+
     }
 
     void FixedUpdate()
     {
         anim.speed = animationSpeed;
-        DEBUGdistance = Vector3.Distance(this.transform.position, player.transform.position); 
         
         // Check Is Grounded
         float radius = GetComponent<CapsuleCollider>().radius * 0.9f;
@@ -93,58 +91,27 @@ public class ZombieScript : MonoBehaviour
         anim.SetBool("isFalling", !isGrounded);
     }
 
-    public bool IsChaseRange()
-    {
-        return Vector3.Distance(this.transform.position, player.transform.position) <= chaseRange;
-    }
-
-    public float DEBUGdistance; 
-
-
-    public bool IsAttackRange()
-    {
-        return Vector3.Distance(this.transform.position, player.transform.position) <= attackRange;
-    }
-
     /* ======================================================================================================
     ______________________________________________.Movement._________________________________________________
     ====================================================================================================== */
+    public float maxLookAheadTime = 1f;
 
-    private bool targetSet = false;
-    private Vector3 goToTarget;
-    private float maxTargetDistDiff = 0.1f;
-    
-    public bool GoTo(Vector3 target, float speed = 0f) 
+    public bool GoTo(Vector3 position, float speed = 0f)
     {   
         anim.SetFloat("vely", speed);
         
-        Vector3 direction = player.transform.position - transform.position;
-        direction.y = 0;
-        // transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
-
-        if (targetSet && aiAgent.hasPath && !aiAgent.isPathStale) 
-        {
-            if (Vector3.Distance(goToTarget, target) < maxTargetDistDiff)
-                return true;
-        }
-
-        if (NavMesh.SamplePosition(target, out NavMeshHit nmh, aiAgent.height * 3, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(position, out NavMeshHit nmh, aiAgent.height * 3, NavMesh.AllAreas))
         {
             if (aiAgent.SetDestination(nmh.position))
-            {
-                targetSet = true;
-                goToTarget = target;
                 return true;
-            }
         }
         return false;
     }
 
-    public float maxLookAheadTime = 1f;
-    private NavMeshHit hit;
-
-    public void GoToPlayer()
+    public bool GoToPlayer()
     {
+        PlayerControlScript player = PlayerControlScript.PlayerInstance;
+
         Vector3 currPos = this.transform.position;
         Vector3 playerPos = player.transform.position;
 
@@ -153,13 +120,13 @@ public class ZombieScript : MonoBehaviour
         float lookAheadTime = Mathf.Clamp(distance / speed, 0 , maxLookAheadTime);
 
         // TODO: Change to worldVelocity once change is in
-        Vector3 velocity = player.GetComponent<PlayerControlScript>().localVelocity;
+        Vector3 velocity = player.GetComponent<PlayerControlScript>().WorldVelocity;
         Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
-
-        if (NavMesh.Raycast(playerPos, predictedPosition, out hit, NavMesh.AllAreas))
+        
+        if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
             predictedPosition = hit.position;
 
-        GoTo(predictedPosition, ZombieMaxSpeed);
+        return GoTo(predictedPosition, ZombieMaxSpeed);
     }
 
     public bool ReachedTarget()
@@ -173,8 +140,11 @@ public class ZombieScript : MonoBehaviour
     {
         aiAgent.ResetPath();
         aiAgent.isStopped = true;
-        targetSet = false;
     }
+
+    /* ======================================================================================================
+    ______________________________________________.Movement._________________________________________________
+    ====================================================================================================== */
 
     public void Die() 
     {
@@ -203,13 +173,58 @@ public class ZombieScript : MonoBehaviour
         currPickup2.isKinematic = true;
     } 
 
-
     /* ======================================================================================================
     ______________________________________________.Attack.___________________________________________________
     ====================================================================================================== */
-    public void ResetTimeOfLastAttack()
+    
+    #region Range Variables
+    public float inSightRange;
+    public float attackRange;
+    public float chaseRange;
+    public float fovAngle;
+    #endregion
+
+    #region Attack Variables
+    private float timeOfLastAttack = 0;
+    private bool hasReachedAttackDist = false;
+    #endregion
+
+    public bool IsInAttackRange()
     {
-        timeOfLastAttack = Time.time;
+        Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
+        return Vector3.Distance(this.transform.position, playerPosition) <= attackRange;
+    }
+
+    public bool IsInChaseRange()
+    {
+        Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
+        return Vector3.Distance(this.transform.position, playerPosition) <= chaseRange;
+    }
+
+    public bool IsInSight()
+    {
+        Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
+        float distance = Vector3.Distance(this.transform.position, playerPosition);
+        
+        if (distance > inSightRange)
+            return false;
+
+        Vector3 direction = (playerPosition - this.transform.position).normalized; 
+        float angle = Vector3.Angle(this.transform.forward, direction);
+
+        if (angle > fovAngle * 0.5f)
+            return false;
+
+        if (Physics.Raycast(this.transform.position, direction, distance))
+            return false;
+
+        return true;
+
+    }
+
+    public void GainAgro()
+    {
+        anim.SetBool("isAttacking", true);
     }
 
     public void LoseAgro()
@@ -219,7 +234,7 @@ public class ZombieScript : MonoBehaviour
             hasReachedAttackDist = false;
     }
 
-    public bool IsCooldown()
+    public bool IsAttackCooldown()
     {
         return Time.time <= timeOfLastAttack + status.AttackSpeed;
     }
@@ -236,11 +251,16 @@ public class ZombieScript : MonoBehaviour
 
         if (Time.time >= timeOfLastAttack + status.AttackSpeed)
         {
-            PlayerStatus playerStatus = player.GetComponent<PlayerStatus>();
+            Status playerStatus = PlayerControlScript.PlayerInstance.GetComponent<Status>();
             status.DealDamage(playerStatus);
             timeOfLastAttack = Time.time;
         }
 
+    }
+
+    public void ResetTimeOfLastAttack()
+    {
+        timeOfLastAttack = Time.time;
     }
 
 

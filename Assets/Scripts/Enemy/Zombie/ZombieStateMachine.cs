@@ -117,7 +117,7 @@ public class ZombieStateMachine : MonoBehaviour
 
         public override StateTransitionBase<ZombieFSMData> Update()
         {
-            if (Zombie.IsChaseRange())
+            if (Zombie.IsInChaseRange() || Zombie.IsInSight())
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
             if (Zombie.ReachedTarget())
@@ -170,9 +170,12 @@ public class ZombieStateMachine : MonoBehaviour
         {
             Zombie.GoToPlayer();
 
-            if (Zombie.IsAttackRange())
+            if (Zombie.IsInAttackRange())
+            {
+                Zombie.GainAgro();
                 return ParentFSM.CreateStateTransition(AttackStateName);
-            if (!Zombie.IsChaseRange())
+            }
+            if (!Zombie.IsInChaseRange() && !Zombie.IsInSight())
                 return ParentFSM.CreateStateTransition(PatrolStateName);
             return null;
         }
@@ -203,7 +206,7 @@ public class ZombieStateMachine : MonoBehaviour
         {
             Zombie.GoToPlayer();
 
-            if (!Zombie.IsAttackRange())
+            if (!Zombie.IsInAttackRange())
             {
                 Zombie.LoseAgro();
                 return ParentFSM.CreateStateTransition(ChaseStateName);
