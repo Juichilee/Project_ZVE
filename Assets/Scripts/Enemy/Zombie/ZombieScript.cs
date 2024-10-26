@@ -17,8 +17,8 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     private Rigidbody rb; 
     private CapsuleCollider cc;
     private NavMeshAgent aiAgent; 
-    public ZombieStatus status { get; private set; }
-    public AISensor aiSensor { get; private set; }
+    public EnemyDamageable EnemyDamageable { get; private set; }
+    public AISensor sensor { get; private set; }
     #endregion
     
     #region Pickup Prefabs 
@@ -60,7 +60,8 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         rb = GetComponent<Rigidbody>();
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
-        status = GetComponent<ZombieStatus>();
+        EnemyDamageable = GetComponent<EnemyDamageable>();
+        sensor = GetComponent<AISensor>();
     }
 
     void Start() 
@@ -87,7 +88,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
 
         // Update Animation
         ZombieMaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
-        // anim.SetFloat("vely", ZombieMaxSpeed);
         anim.SetBool("isFalling", !isGrounded);
     }
 
@@ -236,7 +236,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
 
     public bool IsAttackCooldown()
     {
-        return Time.time <= timeOfLastAttack + status.AttackSpeed;
+        return Time.time <= timeOfLastAttack + 3;
     }
 
     public void AttackTarget()
@@ -249,10 +249,10 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
             timeOfLastAttack = Time.time;
         }
 
-        if (Time.time >= timeOfLastAttack + status.AttackSpeed)
+        if (!IsAttackCooldown())
         {
             Status playerStatus = PlayerControlScript.PlayerInstance.GetComponent<Status>();
-            status.DealDamage(playerStatus);
+            // status.DealDamage(playerStatus);
             timeOfLastAttack = Time.time;
         }
 
