@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemiesRemaining : MonoBehaviour
 {
-    public int enemiesRemaining = 0;
+    private int enemiesRemaining = 2;
 
     public int obtainEnemiesRemaining()
     {
