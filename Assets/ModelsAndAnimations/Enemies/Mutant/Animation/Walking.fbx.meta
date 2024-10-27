@@ -1,24 +1,9 @@
 fileFormatVersion: 2
-guid: 80fbbd92c95ed3646a074bd696a0d921
+guid: e7c6129324fef58408b8210c9091130e
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: PumpkinHulk_Material
-    second: {fileID: 2100000, guid: c81555323677eea45bdcfb7694c4e9a5, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: pumpkinHulk_diffuse
-    second: {fileID: 2800000, guid: b940949ce172c214abd24244243ca31c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: pumpkinHulk_normal
-    second: {fileID: 2800000, guid: ca2e1d48a20318c4ca8183d847e9ca30, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -873,11 +858,11 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 80fbbd92c95ed3646a074bd696a0d921, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
