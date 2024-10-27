@@ -156,10 +156,12 @@ public class PlayerControlScript : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    // Make sure to reset necessary player attributes to prevent bugs
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         spawn = GameObject.FindGameObjectsWithTag("Respawn")[0].transform;
         this.gameObject.transform.position = spawn.position;
+        groundContactCount = 0;
     }
     // Responsible for reading (and caching) input, updating certain global environment properties, and interrupting global states
     private void Update()
@@ -278,6 +280,8 @@ public class PlayerControlScript : MonoBehaviour
         if (collision.transform.CompareTag("ground"))
         {
             ++groundContactCount;
+            Debug.Log("COLLIDING WITH: " + collision.gameObject.name);
+            Debug.Log("GroundedContactCount: " + groundContactCount);
             // Trigger landing event if necessary
             // EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(collision.contacts[0].point, collision.impulse.magnitude);
         }
@@ -288,6 +292,8 @@ public class PlayerControlScript : MonoBehaviour
         if (collision.transform.CompareTag("ground"))
         {
             --groundContactCount;
+            Debug.Log("EXIT COLLIDING WITH: " + collision.gameObject.name);
+            Debug.Log("GroundedContactCount: " + groundContactCount);
         }
     }
 
