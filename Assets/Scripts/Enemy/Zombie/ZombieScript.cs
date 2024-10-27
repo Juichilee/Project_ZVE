@@ -67,7 +67,10 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         EnemyDamageable = GetComponent<EnemyDamageable>();
-        enemiesRemaining = GameObject.Find("EnemiesRemaining").GetComponent<EnemiesRemaining>();
+
+        GameObject enemiesRemainingGO = GameObject.Find("EnemiesRemaining");
+        if (enemiesRemainingGO)
+            enemiesRemaining = enemiesRemainingGO.GetComponent<EnemiesRemaining>();
         aiSensor = GetComponent<AISensor>();
         
         handWeapon = GetComponentInChildren<Weapon>();
@@ -106,7 +109,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
     {
         if (footstepClip != null && !zombieSound.isPlaying)
         {
-            zombieSound.PlayOneShot(footstepClip);
+            zombieSound.PlayOneShot(footstepClip, 0.5f); //temp drop to half volume b/c everything's loud
         }
     }
 
@@ -173,7 +176,8 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
         isDead = true;
         Stop();
         aiSensor.enabled = false;
-        enemiesRemaining.oneEnemyDefeated();
+        if (enemiesRemaining)
+            enemiesRemaining.oneEnemyDefeated();
     }
 
     public void SpawnPickUp()
