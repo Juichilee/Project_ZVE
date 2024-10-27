@@ -184,6 +184,7 @@ public class ZombieStateMachine : MonoBehaviour
     {
         public override string Name => AttackStateName;
 
+
         public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
         {
             base.Init(parentFSM, zombieFSMData);
