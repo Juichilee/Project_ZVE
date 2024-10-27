@@ -26,7 +26,12 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ammoCountText = GameObject.Find("AmmoCount").GetComponent<TextMeshProUGUI>();
+
+        GameObject ammoCountGameObject = GameObject.Find("AmmoCount");
+        if (ammoCountGameObject)
+        {
+            ammoCountText = ammoCountGameObject.GetComponent<TextMeshProUGUI>();
+        }
         pickupGuide = GameObject.FindGameObjectWithTag("PickupPanel");
     }
 
