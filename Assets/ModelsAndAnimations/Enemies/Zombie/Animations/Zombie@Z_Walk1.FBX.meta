@@ -73,14 +73,14 @@ ModelImporter:
       - time: 0.557069
         functionName: ZombieWalk
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.056379303
         functionName: ZombieWalk
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0

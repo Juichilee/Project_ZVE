@@ -6,7 +6,6 @@ using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.AI;
 
-//require some things the bot control needs
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
@@ -15,7 +14,8 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     private Animator anim; 
     private Rigidbody rb; 
     private CapsuleCollider cc;
-    private NavMeshAgent aiAgent; 
+    private NavMeshAgent aiAgent;
+    private AudioSource zombieSound;
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor { get; private set; }
     #endregion
@@ -44,10 +44,19 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     public bool isDead = false;
     #endregion
 
-    // Awake is To grab the components
+    #region Sound
+    public AudioClip footstepClip;
+    public AudioClip attackSound;
+    #endregion
+
     void Awake()
     {
-        // Components
+        zombieSound = GetComponent<AudioSource>();
+        if (zombieSound == null)
+        {
+            zombieSound = gameObject.AddComponent<AudioSource>();
+        }
+
         anim = GetComponent<Animator>();
         anim.enabled = true;
         anim.applyRootMotion = true;
@@ -75,33 +84,47 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     void FixedUpdate()
     {
         anim.speed = animationSpeed;
-        
-        // Check Is Grounded
+
         float radius = GetComponent<CapsuleCollider>().radius * 0.9f;
-        Vector3 pos = transform.position + Vector3.up*(radius*0.5f);
+        Vector3 pos = transform.position + Vector3.up * (radius * 0.5f);
         LayerMask groundLayer = LayerMask.GetMask("ground");
         isGrounded = IsGrounded || Physics.CheckSphere(pos, radius, groundLayer);
 
-        // Update Animation
         ZombieMaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
         anim.SetBool("isFalling", !isGrounded);
     }
 
-    #region Movement
+    // This method is called by the animation event 'ZombieWalk'
+    public void ZombieWalk()
+    {
+        if (footstepClip != null && !zombieSound.isPlaying)
+        {
+            zombieSound.PlayOneShot(footstepClip);
+        }
+    }
 
+    public void ZombieAttack()
+    {
+        if (attackSound != null && !zombieSound.isPlaying)
+        {
+            zombieSound.PlayOneShot(attackSound);
+        }
+    }
+
+    #region Movement
     public float maxLookAheadTime = 0.5f;
 
     public bool GoTo(Vector3 position, float speed = 0f)
     {   
         anim.SetFloat("vely", speed);
-        
+    
         if (NavMesh.SamplePosition(position, out NavMeshHit nmh, aiAgent.height * 3, NavMesh.AllAreas))
         {
             if (aiAgent.SetDestination(nmh.position))
                 return true;
         }
         return false;
-    }
+        }
 
     public bool GoToPlayer()
     {
@@ -135,11 +158,9 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         aiAgent.ResetPath();
         aiAgent.isStopped = true;
     }
-
     #endregion
 
     #region Death
-
     public void Die() 
     {
         isDead = true;
@@ -167,20 +188,14 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         currPickup2.transform.localPosition = new Vector3(.25f, 1f, .25f);
         currPickup2.isKinematic = true;
     } 
-
     #endregion
     
     #region Attack
-    
-    #region Range Variables
     public float attackRange;
     public float chaseRange;
-    #endregion
 
-    #region Attack Variables
     private float timeOfLastAttack = 0;
     private bool hasReachedAttackDist = false;
-    #endregion
 
     public bool IsInAttackRange()
     {
@@ -223,16 +238,15 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         if (!hasReachedAttackDist)
         {
             hasReachedAttackDist = true;
+            zombieSound.PlayOneShot(attackSound);
             timeOfLastAttack = Time.time;
         }
 
         if (!IsAttackCooldown())
         {
             Status playerStatus = PlayerControlScript.PlayerInstance.GetComponent<Status>();
-            // status.DealDamage(playerStatus);
             timeOfLastAttack = Time.time;
         }
-
     }
 
     public void ResetTimeOfLastAttack()
@@ -242,8 +256,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
 
     #endregion
 
-    
-    //This is a physics callback
     void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.gameObject.CompareTag("ground"))
@@ -271,7 +283,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         
         newRootPosition.y = aiAgent.nextPosition.y;
 
-        // Here, scale the difference in position and rotation to make the character go faster or slower
         newRootRotation = anim.rootRotation;
         newRootPosition = Vector3.LerpUnclamped(this.transform.position, newRootPosition, rootMovementSpeed);
         newRootRotation = Quaternion.LerpUnclamped(this.transform.rotation, newRootRotation, rootTurnSpeed);
@@ -280,5 +291,4 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         rb.MoveRotation(newRootRotation);
         aiAgent.nextPosition = newRootPosition;
     }
-
 }

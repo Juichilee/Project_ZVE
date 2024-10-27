@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 13528154}
   - component: {fileID: 8200493576187333898}
   - component: {fileID: 4936557824047205215}
+  - component: {fileID: -2290193506256424085}
   m_Layer: 0
   m_Name: BlastSphere
   m_TagString: Untagged
@@ -128,3 +129,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blastParticles: {fileID: 2631268156241179964, guid: 59df151cbcd813f42b29d33ecad51958, type: 3}
+  blowUp: {fileID: 8300000, guid: 16bccb1aa2d81004494a6b18f9f5ad93, type: 3}
+--- !u!114 &-2290193506256424085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e652de19ac68bc343a208f94c646fd82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blowUp: {fileID: 0}

@@ -2413,11 +2413,10 @@ MonoBehaviour:
   rootTurnSpeed: 1
   isGrounded: 1
   isDead: 0
+  footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
   maxLookAheadTime: 1
-  inSightRange: 0
   attackRange: 0
   chaseRange: 10
-  fovAngle: 0
 --- !u!114 &686313962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2434,6 +2433,7 @@ MonoBehaviour:
   currHealth: 0
   speedUpgrade: 0
   strengthUpgrade: 0
+  monsterPoints: 0
   ragdollOnDeath: {fileID: 0}
   deathSound: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
 --- !u!1 &3678995599980883088
