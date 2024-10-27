@@ -106,7 +106,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
     {
         if (footstepClip != null && !zombieSound.isPlaying)
         {
-            zombieSound.PlayOneShot(footstepClip);
+            zombieSound.PlayOneShot(footstepClip, 0.5f); //temp drop to half volume b/c everything's loud
         }
     }
 
