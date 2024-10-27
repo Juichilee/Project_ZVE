@@ -159,9 +159,14 @@ public class PlayerControlScript : MonoBehaviour
     // Make sure to reset necessary player attributes to prevent bugs
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        spawn = GameObject.FindGameObjectsWithTag("Respawn")[0].transform;
-        this.gameObject.transform.position = spawn.position;
-        groundContactCount = 0;
+        GameObject[] respawnObject = GameObject.FindGameObjectsWithTag("Respawn");
+
+        if (respawnObject.Length != 0)
+        {
+            spawn = GameObject.FindGameObjectsWithTag("Respawn")[0].transform;
+            this.gameObject.transform.position = spawn.position;
+            groundContactCount = 0;
+        }
     }
     // Responsible for reading (and caching) input, updating certain global environment properties, and interrupting global states
     private void Update()
