@@ -214,23 +214,24 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
 
     public bool IsInSight()
     {
+        return aiSensor.IsInSight(PlayerControlScript.PlayerInstance.gameObject);
+    }
+
+    public void AttackTarget()
+    {
         handWeapon.Attack();
+        ZombieAttack();
     }
 
     #endregion
-    
+
     #region WeaponHolder
     public Transform GetWeaponHolderRootTransform()
-        }
-
-    }
-
-    
-    //This is a physics callback
+    {
+        return this.transform.root;
     }
     #endregion
 
-    
     //This is a physics callback
     void OnCollisionEnter(Collision collision)
     {
