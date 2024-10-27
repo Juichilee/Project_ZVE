@@ -67,7 +67,10 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         EnemyDamageable = GetComponent<EnemyDamageable>();
-        enemiesRemaining = GameObject.Find("EnemiesRemaining").GetComponent<EnemiesRemaining>();
+
+        GameObject enemiesRemainingGO = GameObject.Find("EnemiesRemaining");
+        if (enemiesRemainingGO)
+            enemiesRemaining = enemiesRemainingGO.GetComponent<EnemiesRemaining>();
         aiSensor = GetComponent<AISensor>();
         
         handWeapon = GetComponentInChildren<Weapon>();
@@ -173,7 +176,8 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
         isDead = true;
         Stop();
         aiSensor.enabled = false;
-        enemiesRemaining.oneEnemyDefeated();
+        if (enemiesRemaining)
+            enemiesRemaining.oneEnemyDefeated();
     }
 
     public void SpawnPickUp()
