@@ -14,6 +14,8 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor { get; private set; }
     public Weapon handWeapon;
+    // TODO: Replace this once Enemy Factory is Implemented
+    public EnemiesRemaining enemiesRemaining;
     #endregion
     
     #region Pickup Prefabs 
@@ -56,6 +58,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         EnemyDamageable = GetComponent<EnemyDamageable>();
+        enemiesRemaining = GameObject.Find("EnemiesRemaining").GetComponent<EnemiesRemaining>();
         aiSensor = GetComponent<AISensor>();
         
         handWeapon = GetComponentInChildren<Weapon>();
@@ -149,6 +152,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
         isDead = true;
         Stop();
         aiSensor.enabled = false;
+        enemiesRemaining.oneEnemyDefeated();
     }
 
     public void SpawnPickUp()
@@ -190,9 +194,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
 
     public void AttackTarget()
     {
-
-
-
         handWeapon.Attack();
     }
 
