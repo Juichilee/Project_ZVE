@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum RagdollState {
@@ -11,7 +8,7 @@ public enum RagdollState {
 [RequireComponent(typeof(Animator), typeof(Rigidbody))]
 public class RagdollOnDeath : MonoBehaviour
 {
-    private Animator anim;
+    [SerializeField] private Animator anim;
     private CapsuleCollider animCollider;
     public RagdollState rdState; 
 
@@ -35,6 +32,7 @@ public class RagdollOnDeath : MonoBehaviour
     {
         anim.enabled = true;
         animCollider.enabled = true;
+        rdState = RagdollState.anim;
         foreach (CharacterJoint joint in joints)
             joint.enableCollision = false;
         foreach (Collider collider in ragdollColliders)
@@ -51,6 +49,7 @@ public class RagdollOnDeath : MonoBehaviour
     {
         anim.enabled = false;
         animCollider.enabled = false;
+        rdState = RagdollState.ragdoll;
         foreach (CharacterJoint joint in joints)
             joint.enableCollision = true;
         foreach (Collider collider in ragdollColliders)
