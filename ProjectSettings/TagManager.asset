@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - health
   - floor
+  - PickupPanel
+  - AmmoCount
   layers:
   - Default
   - TransparentFX
@@ -20,7 +22,7 @@ TagManager:
   - Pickup
   - Player
   - Projectile
-  - 
+  - DeadEnemy
   - 
   - 
   - 

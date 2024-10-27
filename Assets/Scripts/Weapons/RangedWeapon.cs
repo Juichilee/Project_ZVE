@@ -58,7 +58,7 @@ public class RangedWeapon : Weapon
 
     public override void Attack()
     {
-        if (CurrentClip > 0)
+        if (IsReady && CurrentClip > 0)
         {
             FireWeapon();
             CurrentClip--;

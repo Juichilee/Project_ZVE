@@ -45,10 +45,6 @@ public class ZombieStateMachine : MonoBehaviour
 
 
     #region Zombie Base States
-    /* ======================================================================================================
-    ______________________________________________.Zombie State Bases._______________________________________
-    ====================================================================================================== */
-    
     abstract class ZombieStateBase
     {
         public virtual string Name => "Zombie";
@@ -94,10 +90,10 @@ public class ZombieStateMachine : MonoBehaviour
     ______________________________________________.Zombie States.____________________________________________
     ====================================================================================================== */
 
+    #region Zombie States 
     class PatrolState : ZombieState
     {
         public override string Name => PatrolStateName;
-        // Waypoints
         private List<Vector3> waypoints;
         private int currWaypointIndex = 0;
         private int numWaypoints = 3;
@@ -121,7 +117,7 @@ public class ZombieStateMachine : MonoBehaviour
 
         public override StateTransitionBase<ZombieFSMData> Update()
         {
-            if (Zombie.IsInChaseRange() || Zombie.IsInSight())
+            if (Zombie.IsInSight())
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
             if (Zombie.ReachedTarget())
@@ -176,10 +172,9 @@ public class ZombieStateMachine : MonoBehaviour
 
             if (Zombie.IsInAttackRange())
             {
-                Zombie.GainAgro();
                 return ParentFSM.CreateStateTransition(AttackStateName);
             }
-            if (!Zombie.IsInChaseRange() && !Zombie.IsInSight())
+            if (!Zombie.IsInSight())
                 return ParentFSM.CreateStateTransition(PatrolStateName);
             return null;
         }
@@ -188,6 +183,7 @@ public class ZombieStateMachine : MonoBehaviour
     class AttackState : ZombieState
     {
         public override string Name => AttackStateName;
+
 
         public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
         {
@@ -212,7 +208,6 @@ public class ZombieStateMachine : MonoBehaviour
 
             if (!Zombie.IsInAttackRange())
             {
-                Zombie.LoseAgro();
                 return ParentFSM.CreateStateTransition(ChaseStateName);
             }
 
@@ -277,12 +272,9 @@ public class ZombieStateMachine : MonoBehaviour
             return null;
         }
     }
+    #endregion
 
-
-    /* ======================================================================================================
-    ______________________________________________.FSM.______________________________________________________
-    ====================================================================================================== */
-
+    #region FSM
     private void Awake()
     {
         Zombie = GetComponent<ZombieScript>();
@@ -310,6 +302,5 @@ public class ZombieStateMachine : MonoBehaviour
         fsm.Update();
         debugState = fsm.CurrentState.Name;
     }
-
-
+    #endregion
 }

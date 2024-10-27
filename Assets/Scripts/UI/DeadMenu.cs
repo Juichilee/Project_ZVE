@@ -27,7 +27,7 @@ public class DeadMenu : MonoBehaviour
         {
             Menu.SetActive(true);
             pause.enabled = false;
-            //Time.timeScale = 0f;
+            Time.timeScale = 0f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }

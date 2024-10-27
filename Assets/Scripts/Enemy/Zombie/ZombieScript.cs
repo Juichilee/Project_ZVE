@@ -1,14 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
-public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
+public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeaponHolder
 {
     #region Component Reference
     private Animator anim; 
@@ -18,6 +13,9 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     private AudioSource zombieSound;
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor { get; private set; }
+    public Weapon handWeapon;
+    // TODO: Replace this once Enemy Factory is Implemented
+    public EnemiesRemaining enemiesRemaining;
     #endregion
     
     #region Pickup Prefabs 
@@ -69,7 +67,17 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         EnemyDamageable = GetComponent<EnemyDamageable>();
+        enemiesRemaining = GameObject.Find("EnemiesRemaining").GetComponent<EnemiesRemaining>();
         aiSensor = GetComponent<AISensor>();
+        
+        handWeapon = GetComponentInChildren<Weapon>();
+        handWeapon.WeaponName = "Zombie Hand";
+        handWeapon.WeaponHolder = this;
+        handWeapon.WeaponHolderAnim = anim;
+        handWeapon.transform.localPosition = handWeapon.HoldPosition;
+        handWeapon.transform.localRotation = Quaternion.Euler(handWeapon.HoldRotation);
+        handWeapon.transform.localScale = Vector3.one;
+
     }
 
     void Start() 
@@ -78,7 +86,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         rootMovementSpeed = 1f;
         rootTurnSpeed = 1f;
         attackRange = 2f;
-        chaseRange = 10f;
     }
 
     void FixedUpdate()
@@ -166,6 +173,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         isDead = true;
         Stop();
         aiSensor.enabled = false;
+        enemiesRemaining.oneEnemyDefeated();
     }
 
     public void SpawnPickUp()
@@ -191,11 +199,12 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
     #endregion
     
     #region Attack
-    public float attackRange;
-    public float chaseRange;
+    private float attackRange;
 
+    #region Attack Variables
     private float timeOfLastAttack = 0;
     private bool hasReachedAttackDist = false;
+    #endregion
 
     public bool IsInAttackRange()
     {
@@ -203,59 +212,26 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker
         return Vector3.Distance(this.transform.position, playerPosition) <= attackRange;
     }
 
-    public bool IsInChaseRange()
-    {
-        Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
-        return Vector3.Distance(this.transform.position, playerPosition) <= chaseRange;
-    }
-
     public bool IsInSight()
     {
-        return aiSensor.IsInSight(PlayerControlScript.PlayerInstance.gameObject);
-    }
-
-    public void GainAgro()
-    {
-        anim.SetBool("isAttacking", true);
-    }
-
-    public void LoseAgro()
-    {
-        anim.SetBool("isAttacking", false);
-        if (hasReachedAttackDist)
-            hasReachedAttackDist = false;
-    }
-
-    public bool IsAttackCooldown()
-    {
-        return Time.time <= timeOfLastAttack + 3;
-    }
-
-    public void AttackTarget()
-    {
-        anim.SetBool("isAttacking", true);
-        
-        if (!hasReachedAttackDist)
-        {
-            hasReachedAttackDist = true;
-            zombieSound.PlayOneShot(attackSound);
-            timeOfLastAttack = Time.time;
-        }
-
-        if (!IsAttackCooldown())
-        {
-            Status playerStatus = PlayerControlScript.PlayerInstance.GetComponent<Status>();
-            timeOfLastAttack = Time.time;
-        }
-    }
-
-    public void ResetTimeOfLastAttack()
-    {
-        timeOfLastAttack = Time.time;
+        handWeapon.Attack();
     }
 
     #endregion
+    
+    #region WeaponHolder
+    public Transform GetWeaponHolderRootTransform()
+        }
 
+    }
+
+    
+    //This is a physics callback
+    }
+    #endregion
+
+    
+    //This is a physics callback
     void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.gameObject.CompareTag("ground"))

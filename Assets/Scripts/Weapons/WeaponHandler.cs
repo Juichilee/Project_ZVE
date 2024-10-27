@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-
+using UnityEngine.SceneManagement;
 [RequireComponent(typeof(PlayerControlScript))]
-public class WeaponHandler : MonoBehaviour
+public class WeaponHandler : MonoBehaviour, IWeaponHolder
 {
     public Transform holdWeaponParent;
     public Transform aimTarget;
@@ -14,10 +14,19 @@ public class WeaponHandler : MonoBehaviour
     private PlayerControlScript playerControlScript;
     public Rig aimRig;
     public TextMeshProUGUI ammoCountText;
-
+    private GameObject pickupGuide;
     void Awake()
     {
         playerControlScript = GetComponent<PlayerControlScript>();
+    }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        pickupGuide = GameObject.FindGameObjectWithTag("PickupPanel");
     }
 
     void Update()
@@ -26,12 +35,29 @@ public class WeaponHandler : MonoBehaviour
         HandleWeaponSwitching();
         HandleWeaponInput();
         HandleWeaponDrop();
+        pickupGuide.SetActive(currentPickupCollider != null);
 
         if (GetCurrentWeapon() is RangedWeapon rangedWeapon)
         {
             string ammoString = $"{rangedWeapon.CurrentClip}/{rangedWeapon.MaxClip}({rangedWeapon.CurrentAmmo})";
             ammoCountText.text = ammoString;
         }
+        if (GetCurrentWeapon() is MeleeWeapon meleeWeapon)
+        {
+            string ammoString = $"1/1(1)";
+            ammoCountText.text = ammoString;
+        }
+
+        if (GetCurrentWeapon() is null)
+        {
+            string ammoString = $"0/0(0)";
+            ammoCountText.text = ammoString;
+        }
+    }
+
+    public Transform GetWeaponHolderRootTransform()
+    {
+        return this.transform.root;
     }
 
     Weapon GetCurrentWeapon()
