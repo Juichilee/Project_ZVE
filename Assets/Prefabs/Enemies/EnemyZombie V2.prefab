@@ -1631,7 +1631,7 @@ MonoBehaviour:
   sightRange: 20
   chaseRange: 10
   angle: 30
-  height: 1
+  height: 1.7
   scanFrequency: 30
   layers:
     serializedVersion: 2
