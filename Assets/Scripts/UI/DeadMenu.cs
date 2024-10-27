@@ -36,6 +36,7 @@ public class DeadMenu : MonoBehaviour
     public void RestartLevel()
     {
         dna.GetComponent<DNA>().ResetPoints();
+        playerStatus.CurrentHealth = playerStatus.MaxHealth;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
