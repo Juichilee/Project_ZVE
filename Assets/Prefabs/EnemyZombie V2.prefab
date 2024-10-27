@@ -1582,6 +1582,8 @@ MonoBehaviour:
   rootTurnSpeed: 1
   isGrounded: 1
   isDead: 0
+  footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
+  attackSound: {fileID: 8300000, guid: 331fa6d65ee7aa04b9e22957061fead6, type: 3}
   maxLookAheadTime: 1
 --- !u!114 &3269064097985217135
 MonoBehaviour:

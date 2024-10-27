@@ -5,10 +5,18 @@ using UnityEngine;
 public class GeneticPickup : MonoBehaviour
 {
     // TODO: Add Reference to the script
-    // public Status status;     
+    // public Status status;
+    private AudioSource audioSource;
+    public AudioClip pickupSound;
+
     public int PointAmt = 1;
 
     void Awake() {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
 
         // TODO: Add Reference to the script
         // status = GetComponent<Status>();
@@ -26,6 +34,12 @@ public class GeneticPickup : MonoBehaviour
             // TODO: add point counter to player
             DNA.Addpoints(PointAmt);
             Destroy(this.gameObject);
+
+            AudioSource playerAudio = c.gameObject.GetComponent<AudioSource>();
+            if (playerAudio != null && pickupSound != null)
+            {
+                playerAudio.PlayOneShot(pickupSound);
+            }
         }
     }
 }

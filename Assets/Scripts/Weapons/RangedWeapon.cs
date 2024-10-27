@@ -91,6 +91,7 @@ public class RangedWeapon : Weapon
             audioSource.PlayOneShot(gunClick);
             hasPlayedGunReady = true;
         }
+        audioSource.PlayOneShot(gunClick);
     }
 
     private IEnumerator AttackCooldown()

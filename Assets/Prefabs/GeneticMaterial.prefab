@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fadfe1a6e9400d418133dccca759227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupSound: {fileID: 8300000, guid: 894c6d646a8c9e74b825e1cb5eb6ca1c, type: 3}
   PointAmt: 1
 --- !u!64 &5878903645381599398
 MeshCollider:

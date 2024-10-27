@@ -5,7 +5,7 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -6257440219318784398
-    second: Z_Attack
+    second: Z_AttackEvent
   externalObjects: {}
   materials:
     materialImportMode: 0
@@ -62,7 +62,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.16167223
+        functionName: ZombieAttack
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5819461
+        functionName: ZombieAttack
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

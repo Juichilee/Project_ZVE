@@ -5,7 +5,7 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -6257440219318784398
-    second: Z_Run
+    second: Z_RunEvent
   externalObjects: {}
   materials:
     materialImportMode: 0
@@ -53,7 +53,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Z_Run
+      name: Z_RunEvent
       takeName: ZombieFree@animation
       internalID: 0
       firstFrame: 0
@@ -78,30 +78,30 @@ ModelImporter:
       curves: []
       events:
       - time: 0.06487888
-        functionName: runningSound
+        functionName: ZombieWalk
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.31193772
-        functionName: runningSound
+        functionName: ZombieWalk
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.571907
-        functionName: runningSound
+        functionName: ZombieWalk
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.81228375
-        functionName: runningSound
+        functionName: ZombieWalk
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0

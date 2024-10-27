@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ZombieSounds : MonoBehaviour
 {
-    public AudioClip footstepClip;      // Assign the footstep sound in the inspector
+    private AudioClip thudSound;
+    private AudioClip attackSound;
     // public AudioClip deathSoundClip;    // Assign the death sound in the inspector
     private AudioSource audioSource;    // AudioSource for playing sounds
 
@@ -19,14 +20,23 @@ public class ZombieSounds : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
     }
-
-    // This method will be called by the animation event "ZombieWalk"
-    public void ZombieWalk()
+    
+    public void ZombieAttack()
     {
-        if (footstepClip != null && !audioSource.isPlaying)
+        if (attackSound != null && !audioSource.isPlaying)
         {
-            Debug.Log("ZombieWalk animation event triggered.");
-            audioSource.PlayOneShot(footstepClip);  // Play the footstep sound when the zombie walks
+            Debug.Log("ZombieAttack event triggered.");
+            audioSource.PlayOneShot(attackSound); 
+        }        
+    }
+
+
+    public void Thud()
+    {
+        if (thudSound != null)
+        {
+            Debug.Log("Thud event triggered.");
+            audioSource.PlayOneShot(thudSound);  // Play the footstep sound when the zombie walks
         }
     }
 
