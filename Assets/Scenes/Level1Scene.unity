@@ -248,8 +248,8 @@ MonoBehaviour:
   m_text: "How To Play: \n\n[WASD] : Move the player\r\n[Mouse] : Move the player
     camera\r\n[Space] : Jump\r\n[E] : Interact / Pick up\r\n[1, 2, 3] : Swap between
     weapon slots\r\n[Left Mouse Button] : Attack with equipped weapon / Select UI
-    option\r\n[Right Mouse Button] : Aim down sights (hold)\r\n[Q] : Access mutation
-    UI\r\n[Esc] : Access pause menu\r\n\n"
+    option\r\n[Right Mouse Button] : Aim down sights (hold)\r\n[R] : Reload weapon\n[Q]
+    : Access mutation UI\r\n[Esc] : Access pause menu\r\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -276,8 +276,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.3
-  m_fontSizeBase: 0.3
+  m_fontSize: 0.25
+  m_fontSizeBase: 0.25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
