@@ -12,12 +12,13 @@ public class RunMotionState : BaseState
         this.player = player;
     }
 
+    public override void Enter()
+    {
+        Debug.Log("Entering Run State");
+    }
+
     public override void Execute()
     {
-        // Run Motion Logic
-        player.anim.SetFloat("velz", player._inputForward);
-        player.anim.SetFloat("velStrafe", player._inputRight);
-
         // Transition to Idle if no longer moving
         if (!player.isMoving)
         {
@@ -30,6 +31,9 @@ public class RunMotionState : BaseState
             player.MotionStateMachine.ChangeState(MotionStateType.JumpAir);
         }
 
+        // Run Motion Logic
+        player.anim.SetFloat("velz", player._inputForward);
+        player.anim.SetFloat("velStrafe", player._inputRight);
         // Handle other motions like Dodge or Jump
         // if (player.cinput.Dodge)
         // {

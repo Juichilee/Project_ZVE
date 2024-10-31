@@ -11,6 +11,10 @@ public class IdleMotionState : BaseState
         this.player = player;
     }
 
+    public override void Enter()
+    {
+        Debug.Log("Entering Idle State");
+    }
     public override void Execute()
     {
         // Idle Motion Logic
