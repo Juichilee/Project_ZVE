@@ -71,6 +71,16 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         return weaponSlots[currentWeaponIndex];
     }
 
+    public Weapon GetWeapon(int index)
+    {
+        return weaponSlots[index];
+    }
+
+    public int GetCurrentWeaponIndex()
+    {
+        return currentWeaponIndex;
+    }
+
     private void HandlePickupTrigger()
     {
         if (currentPickupCollider != null && playerControlScript._interact)

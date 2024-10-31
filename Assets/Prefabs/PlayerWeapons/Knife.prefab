@@ -248,6 +248,7 @@ MonoBehaviour:
   holdRotation: {x: 0, y: 0, z: 76.501}
   hitBoxInstance: {fileID: 2247798695849639553}
   audioSource: {fileID: 0}
+  SetWeaponName: Knife
   meleeSoundClip: {fileID: 8300000, guid: 09a2a530465bedd4b847ddf74392159a, type: 3}
 --- !u!82 &3057083976559277498
 AudioSource:

@@ -22,6 +22,8 @@ public class RangedWeapon : Weapon
     private Vector3 targetPosition;
     private Vector3 aimDir;
 
+    public string SetWeaponName;
+
     public AudioClip gunshot;
     public AudioClip gunClick;
     private bool hasPlayedGunReady = false;
@@ -33,6 +35,9 @@ public class RangedWeapon : Weapon
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+
+        WeaponName = SetWeaponName;
+
     }
 
     #region Accessors
