@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4290847d725d822468988ca56e8ce4d2
+guid: df7b9dcf7e6c47948ad86164dfd58e56
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -24,7 +24,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -76,17 +76,7 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  referencedClips:
-  - 631762b9a30b33a42836730a6b37d13f
-  - 857241dcf6bb2ea45a0b3f46d78f44b5
-  - d870b4f0cba458640b29cda304d40186
-  - 0d6373858f853604b960cf84b7d3dfbf
-  - 55edd2c9d257d3f4481dfd16015bf8c1
-  - 79969b20b5ba62e499ee433a4dd38701
-  - 59dbfb66512f63c4eb6e1e30e0603198
-  - 1d31b4476a14a0246b2e0f023e8877fe
-  - 3fa7045af54b82c47852949257d136c7
-  - 165698eac7ca81041ad603fc5a3afa55
+  referencedClips: []
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
@@ -102,13 +92,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 1
+    hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 3
+  animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0

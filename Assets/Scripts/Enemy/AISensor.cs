@@ -182,6 +182,7 @@ public class AISensor : MonoBehaviour
         // Make a green sphere on objects In Sense Range
         Gizmos.color = green;
         foreach (var obj in Objects)
-            Gizmos.DrawSphere(obj.transform.position, 0.6f);
+            if (obj)
+                Gizmos.DrawSphere(obj.transform.position, 0.6f);
     }
 }

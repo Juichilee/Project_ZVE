@@ -1,21 +1,16 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
-[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
-public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeaponHolder
+[RequireComponent(typeof(EnemyDamageable), typeof(AISensor), typeof(Weapon))]
+public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHolder
 {
     #region Component Reference
-    private Animator anim; 
-    private Rigidbody rb; 
-    private CapsuleCollider cc;
-    private NavMeshAgent aiAgent;
     private AudioSource zombieSound;
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor { get; private set; }
-    public Weapon handWeapon;
+    public Weapon weapon;
     // TODO: Replace this once Enemy Factory is Implemented
-    public EnemiesRemaining enemiesRemaining;
+    protected EnemiesRemaining enemiesRemaining;
     #endregion
     
     #region Pickup Prefabs 
@@ -29,17 +24,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
     #endregion
 
     #region Animation Speed Variables
-    public float animationSpeed;
-    public float rootMovementSpeed;
-    public float rootTurnSpeed;
-    #endregion
-
-    #region Animation Properties 
-    public float ZombieMaxSpeed { get; private set; }
-    private int groundContactCount = 0;
-    public bool isGrounded = true;
-    public bool IsGrounded { get { return groundContactCount > 0; } }
-    public bool isDead = false;
+    public float MaxSpeed { get; private set; }
     #endregion
 
     #region Sound
@@ -49,45 +34,51 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
 
     void Awake()
     {
+        // Animator
+        anim = GetComponent<Animator>();
+        anim.enabled = true;
+        anim.applyRootMotion = true;
+        
+        // RigidBody
+        rb = GetComponent<Rigidbody>();
+
+        // Capsule Collider
+        cc = GetComponent<CapsuleCollider>();
+        cc.enabled = true;
+        
+        // NavMeshAgent
+        aiAgent = GetComponent<NavMeshAgent>();
+        aiAgent.updatePosition = false;
+        aiAgent.updateRotation = true;
+
+        // Enemy Damageable TODO: Remove Later
+        EnemyDamageable = GetComponent<EnemyDamageable>();
+        GameObject enemiesRemainingGO = GameObject.Find("EnemiesRemaining");
+        if (enemiesRemainingGO)
+            enemiesRemaining = enemiesRemainingGO.GetComponent<EnemiesRemaining>();
+        
+        // AI Sensor
+        aiSensor = GetComponent<AISensor>();
+        
+        // Weapon
+        weapon = GetComponentInChildren<Weapon>();
+        weapon.WeaponName = "Zombie Hand";
+        weapon.WeaponHolder = this;
+        weapon.WeaponHolderAnim = anim;
+        weapon.transform.SetLocalPositionAndRotation(weapon.HoldPosition, Quaternion.Euler(weapon.HoldRotation));
+        weapon.transform.localScale = Vector3.one;
+
+        // Sound
         zombieSound = GetComponent<AudioSource>();
         if (zombieSound == null)
         {
             zombieSound = gameObject.AddComponent<AudioSource>();
         }
-
-        anim = GetComponent<Animator>();
-        anim.enabled = true;
-        anim.applyRootMotion = true;
-        
-        aiAgent = GetComponent<NavMeshAgent>();
-        aiAgent.updatePosition = false;
-        aiAgent.updateRotation = true;
-
-        rb = GetComponent<Rigidbody>();
-        cc = GetComponent<CapsuleCollider>();
-        cc.enabled = true;
-        EnemyDamageable = GetComponent<EnemyDamageable>();
-
-        GameObject enemiesRemainingGO = GameObject.Find("EnemiesRemaining");
-        if (enemiesRemainingGO)
-            enemiesRemaining = enemiesRemainingGO.GetComponent<EnemiesRemaining>();
-        aiSensor = GetComponent<AISensor>();
-        
-        handWeapon = GetComponentInChildren<Weapon>();
-        handWeapon.WeaponName = "Zombie Hand";
-        handWeapon.WeaponHolder = this;
-        handWeapon.WeaponHolderAnim = anim;
-        handWeapon.transform.localPosition = handWeapon.HoldPosition;
-        handWeapon.transform.localRotation = Quaternion.Euler(handWeapon.HoldRotation);
-        handWeapon.transform.localScale = Vector3.one;
-
     }
 
-    void Start() 
+    protected override void Start() 
     {
-        animationSpeed = 1f;
-        rootMovementSpeed = 1f;
-        rootTurnSpeed = 1f;
+        base.Start();
         attackRange = 2f;
     }
 
@@ -99,9 +90,9 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
         Vector3 pos = transform.position + Vector3.up * (radius * 0.5f);
         LayerMask groundLayer = LayerMask.GetMask("ground");
         isGrounded = IsGrounded || Physics.CheckSphere(pos, radius, groundLayer);
-
-        ZombieMaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
         anim.SetBool("isFalling", !isGrounded);
+
+        MaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
     }
 
     // This method is called by the animation event 'ZombieWalk'
@@ -124,18 +115,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
     #region Movement
     public float maxLookAheadTime = 0.5f;
 
-    public bool GoTo(Vector3 position, float speed = 0f)
-    {   
-        anim.SetFloat("vely", speed);
-    
-        if (NavMesh.SamplePosition(position, out NavMeshHit nmh, aiAgent.height * 3, NavMesh.AllAreas))
-        {
-            if (aiAgent.SetDestination(nmh.position))
-                return true;
-        }
-        return false;
-        }
-
     public bool GoToPlayer()
     {
         PlayerControlScript player = PlayerControlScript.PlayerInstance;
@@ -153,34 +132,20 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
         if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
             predictedPosition = hit.position;
 
-        return GoTo(predictedPosition, ZombieMaxSpeed);
-    }
-
-    public bool ReachedTarget()
-    {
-        return !aiAgent.pathPending && 
-                aiAgent.pathStatus == NavMeshPathStatus.PathComplete && 
-                aiAgent.remainingDistance <= aiAgent.stoppingDistance;
-    }
-
-    public void Stop()
-    {
-        aiAgent.ResetPath();
-        aiAgent.isStopped = true;
+        return GoTo(predictedPosition, MaxSpeed);
     }
     #endregion
 
     #region Death
-    public void Die() 
+    public override void Die() 
     {
-        isDead = true;
-        Stop();
+        base.Die();
         aiSensor.enabled = false;
         if (enemiesRemaining)
             enemiesRemaining.oneEnemyDefeated();
     }
 
-    public void SpawnPickUp()
+    public override void SpawnPickUp()
     {
         float random = Random.value;
         Debug.Log(random);
@@ -205,11 +170,6 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
     #region Attack
     private float attackRange;
 
-    #region Attack Variables
-    private float timeOfLastAttack = 0;
-    private bool hasReachedAttackDist = false;
-    #endregion
-
     public bool IsInAttackRange()
     {
         Vector3 playerPosition = PlayerControlScript.PlayerInstance.transform.position;
@@ -223,7 +183,7 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
 
     public void AttackTarget()
     {
-        handWeapon.Attack();
+        weapon.Attack();
         ZombieAttack();
     }
 
@@ -236,40 +196,4 @@ public class ZombieScript : MonoBehaviour, IMovable, IKillable, IAttacker, IWeap
     }
     #endregion
 
-    //This is a physics callback
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.gameObject.CompareTag("ground"))
-        {
-            ++groundContactCount;
-            EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(collision.contacts[0].point, collision.impulse.magnitude);
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.transform.gameObject.CompareTag("ground"))
-            --groundContactCount;
-    }
-
-    void OnAnimatorMove()
-    {
-        Vector3 newRootPosition;
-        Quaternion newRootRotation;
-
-        if (isGrounded)
-            newRootPosition = anim.rootPosition;        
-        else
-            newRootPosition = new Vector3(anim.rootPosition.x, this.transform.position.y, anim.rootPosition.z);
-        
-        newRootPosition.y = aiAgent.nextPosition.y;
-
-        newRootRotation = anim.rootRotation;
-        newRootPosition = Vector3.LerpUnclamped(this.transform.position, newRootPosition, rootMovementSpeed);
-        newRootRotation = Quaternion.LerpUnclamped(this.transform.rotation, newRootRotation, rootTurnSpeed);
-
-        rb.MovePosition(newRootPosition);
-        rb.MoveRotation(newRootRotation);
-        aiAgent.nextPosition = newRootPosition;
-    }
 }
