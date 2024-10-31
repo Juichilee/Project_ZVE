@@ -7,7 +7,7 @@ public class JumpAirMotionState : BaseState
     private PlayerControlScript player;
 
     public float jumpForce = 10f;
-    public float jumpCooldown = 1f;
+    public float jumpCooldown = 0.1f;
     private bool hasJumped = false;
     public bool multiJump = false;
     private float maxVerticalSpeed = 10f; // Maximum falling speed for falling animation blend
@@ -19,10 +19,15 @@ public class JumpAirMotionState : BaseState
         this.player = player;
     }
 
+    public override void Enter()
+    {
+        Debug.Log("Entering Jump Air State");
+    }
+
     public override void Execute()
     {
-        // Map local velocity to a value between 0 and 1 (0.5 = rest or grounded)
-        float normalizedVerticalSpeed = (player.localVelocity.y + maxVerticalSpeed) / (2 * maxVerticalSpeed);
+        // Map local velocity to a value between -1 and 1 (0 = rest or grounded)
+        float normalizedVerticalSpeed = Mathf.Clamp(player.localVelocity.y / maxVerticalSpeed, -1, 1);
         player.anim.SetFloat("vely", normalizedVerticalSpeed);
 
         // Transition to other states only when player is grounded and hasn't started jump
@@ -35,16 +40,6 @@ public class JumpAirMotionState : BaseState
                 player.MotionStateMachine.ChangeState(MotionStateType.Run);
             }
         }
-
-        // if (player.isGrounded && player.isMoving)
-        // {
-        //     player.MotionStateMachine.ChangeState(MotionStateType.Run);
-        // }
-
-        // if (player.cinput.Dodge)
-        // {
-        //     player.MotionStateMachine.ChangeState(new DodgeMotionState(player));
-        // }
     }
 
     public override void FixedExecute()
@@ -52,22 +47,16 @@ public class JumpAirMotionState : BaseState
         HandleJumpInput();
     }
 
-    // public void Exit()
-    // {
-    //     // Cleanup Run Motion
-    //     // player.anim.SetBool("isRunning", false);
-    // }
-
     private void HandleJumpInput()
     {
         if (!multiJump)
         {
-            player._inputJump = !hasJumped && player.isGrounded && player._inputJump; // If multi-jump is not enabled, then player must be grounded before jump
+            player._inputJump = player.isGrounded && player._inputJump; // If multi-jump is not enabled, then player must be grounded before jump
         }
 
-        if (player._inputJump)
+        if (!hasJumped && player._inputJump)
         {
-            player.anim.SetBool("startJump", true);
+            player.anim.SetTrigger("startJump");
             hasJumped = true;
         }
 
@@ -77,16 +66,10 @@ public class JumpAirMotionState : BaseState
         }
     }
 
-    private void ResetJump()
-    {
-        hasJumped = false;
-        player.anim.SetBool("startJump", false);
-    }
-
     private IEnumerator JumpResetDelay()
     {
         yield return new WaitForSeconds(jumpCooldown);
-        ResetJump();
+        hasJumped = false;
     }
 
     // PlayerJump() is called by animation event from the jump animation

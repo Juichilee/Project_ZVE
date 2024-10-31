@@ -234,7 +234,7 @@ public class PlayerControlScript : MonoBehaviour
         }
 
         // Update Global Animator Parameters
-        anim.SetBool("isFalling", !isGrounded);
+        anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isMoving", isMoving);
         anim.SetBool("aimDown", _inputAimDown);
 
