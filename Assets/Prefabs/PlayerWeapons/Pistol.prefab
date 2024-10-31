@@ -462,6 +462,7 @@ MonoBehaviour:
   holdPosition: {x: 0.0071002813, y: -0.0065000504, z: 0.029000051}
   holdRotation: {x: 270, y: 0, z: 90}
   audioSource: {fileID: 0}
+  SetWeaponName: Pistol
   gunshot: {fileID: 8300000, guid: 7e85c811417efdf4ead0bb7703d45a55, type: 3}
   gunClick: {fileID: 8300000, guid: 4087eea1541dd6146bd87756af6e9629, type: 3}
 --- !u!82 &1347887267273607973
