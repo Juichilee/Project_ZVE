@@ -29,7 +29,6 @@ public class MeleeWeapon : Weapon
     }
 
     void Start(){
-        hitBoxInstance.SetDamageSource(this);
         hitBoxInstance.gameObject.SetActive(false);
 
         audioSource = GetComponent<AudioSource>();
@@ -75,6 +74,7 @@ public class MeleeWeapon : Weapon
 
     public override void SpawnDamageObject()
     {
+        hitBoxInstance.SetDamageSource(this);
         StartCoroutine(ActivateHitbox(hitBoxInstance));
     }
 }
