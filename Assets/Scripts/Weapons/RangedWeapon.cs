@@ -22,6 +22,7 @@ public class RangedWeapon : Weapon
     public AudioClip gunshot;
     public AudioClip gunClick;
     private bool hasPlayedGunReady = false;
+    public string SetWeaponName;
 
     void Start()
     {
