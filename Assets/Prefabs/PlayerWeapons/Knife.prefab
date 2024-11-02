@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSource: {fileID: 0}
+  attacker: {fileID: 0}
 --- !u!23 &2247798695849639559
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -240,6 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f037d5081b54750448c510c58e848999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponName: Knife
   damageAttributes: {fileID: 11400000, guid: 335236bc69e8c5c42ac74ae186d1dd16, type: 2}
   coolDownTime: 1
   weaponAnimId: 0
