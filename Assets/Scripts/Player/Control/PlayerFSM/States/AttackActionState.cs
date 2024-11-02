@@ -15,7 +15,7 @@ public class AttackActionState : BaseState
     public override void Enter()
     {
         // Initialize Attack Action
-        player.anim.SetTrigger("Attack");
+        // player.anim.SetTrigger("Attack");
     }
 
     public override void Execute()

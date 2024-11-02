@@ -16,14 +16,19 @@ public class PlayerControlScript : MonoBehaviour
     public static PlayerControlScript PlayerInstance { get; private set;}
 
     #region Player Components & State Management
-    public Animator anim;
-    public Rigidbody rbody;
+    public Animator Anim { get => anim; private set => anim = value;}
+    private Animator anim;
+    public Rigidbody Rbody { get => rbody; private set => rbody = value;}
+    private Rigidbody rbody;
+    // NOTE: Still need to figure out some way to find and set in awake the below references
     public Camera mainCamera;
     public Transform orientation;
     public Transform spawn;
-    public Transform aimTarget;
+    public Transform aimTarget; 
     public LayerMask aimColliderLayerMask;
-    public Rig headRig;
+    public Rig headRig; 
+    private MultiAimConstraint headAim;
+    private PlayerStatus playerStatus;
 
     /* State Machines:
         PlayerControlScript handles 3 states machines that each store a separate state.
@@ -39,39 +44,51 @@ public class PlayerControlScript : MonoBehaviour
 
     #region Controller Input Reading & Caching
     // Cached input readings to be used by player state and component classes
-    public CharacterInputController cinput;
-    public float _inputForward = 0f;
-    public float _inputRight = 0f;
-    public bool _inputJump = false;
-    public bool _inputAimDown = false;
-    public bool _inputAttack = false;
-    public bool _interact = false;
-    public bool _drop = false;
-    public bool _reload = false;
-    public Vector3 _inputDir;
-    public bool forceStrafe; // Can be set by outside components to force player to strafe
+    private CharacterInputController cinput;
+    public float InputForward { get => _inputForward; private set => _inputForward = value; }
+    private float _inputForward = 0f;
+    public float InputRight { get => _inputRight; private set => _inputRight = value; }
+    private float _inputRight = 0f;
+    public bool InputJump { get => _inputJump; private set => _inputJump = value; }
+    private bool _inputJump = false;
+    public bool InputAimDown { get => _inputAimDown; private set => _inputAimDown = value; }
+    private bool _inputAimDown = false;
+    public bool InputAttack { get => _inputAttack; private set => _inputAttack = value; }
+    private bool _inputAttack = false;
+    public bool Interact { get => _interact; private set => _interact = value; }
+    private bool _interact = false;
+    public bool Drop { get => _drop; private set => _drop = value; }
+    private bool _drop = false;
+    public bool Reload { get => _reload; private set => _reload = value; }
+    private bool _reload = false;
+    public Vector3 InputDir { get => _inputDir; private set => _inputDir = value; }
+    private Vector3 _inputDir;
+    public bool ForceStrafe { get => forceStrafe; set => forceStrafe = value;}
+    private bool forceStrafe; // Can be set by outside components to force player to strafe
     #endregion
 
     #region Movement & Animation Properties
     public float speedMultiplier = 1f; // Sets the animationSpeed, rootMovementSpeed, and rootTurnSpeed
-    public float animationSpeed = 1f;
-    public float rootMovementSpeed = 1f;
-    public float rootTurnSpeed = 1f;
-    public float groundDrag = 0f;
-    public float airDrag = 0.2f;
-    public bool isMoving = false;
-    public float turnStrafeSpeed = 10f;
+    private float animationSpeed = 1f;
+    public float RootMovementSpeed { get => rootMovementSpeed; private set => rootMovementSpeed = value;}
+    private float rootMovementSpeed = 1f;
+    private float groundDrag = 0f;
+    private float airDrag = 0.2f;
+    public bool IsMoving { get => isMoving; private set => isMoving = value; }
+    private bool isMoving = false;
+    private float turnStrafeSpeed = 10f;
     public float upgradeMult = .1f;
     #endregion
 
-    PlayerStatus playerStatus;
-
     #region Environmental/Sensor Properties
-    public Vector3 WorldVelocity { get; private set; }
-    public Vector3 localVelocity;
+    public Vector3 WorldVelocity { get => worldVelocity; private set => worldVelocity = value; }
+    private Vector3 worldVelocity;
+    public Vector3 LocalVelocity { get => localVelocity; private set => localVelocity = value; }
+    private Vector3 localVelocity = Vector3.zero;
     private Vector3 prevWorldPosition;
     private int groundContactCount = 0;
-    public bool isGrounded = true;
+    public bool IsGrounded { get => _isGrounded; private set => _isGrounded = value; }
+    private bool _isGrounded = true;
 
     public bool GetGrounded
     {
@@ -124,6 +141,7 @@ public class PlayerControlScript : MonoBehaviour
             Debug.LogError("Player Script requires an orientation transform");
         }
 
+        headAim = headRig.transform.Find("HeadAim").GetComponent<MultiAimConstraint>();
 
         // Initialize State Machines
         ActionStateMachine = new StateMachine<ActionStateType, BaseState>();
@@ -210,21 +228,20 @@ public class PlayerControlScript : MonoBehaviour
     void FixedUpdate()
     {
         // Handle drag based on grounded state
-        rbody.drag = isGrounded ? groundDrag : airDrag;
+        rbody.drag = _isGrounded ? groundDrag : airDrag;
 
         // Physics calculations for Rigidbody because animator velocity is inaccurate
-        WorldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
+        worldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
         prevWorldPosition = transform.position;
 
         // Project the world velocity onto the character's local axes
-        localVelocity.z = Vector3.Dot(WorldVelocity, transform.forward);
-        localVelocity.y = Vector3.Dot(WorldVelocity, transform.up);
-        localVelocity.x = Vector3.Dot(WorldVelocity, transform.right);
+        localVelocity.z = Vector3.Dot(worldVelocity, transform.forward);
+        localVelocity.y = Vector3.Dot(worldVelocity, transform.up);
+        localVelocity.x = Vector3.Dot(worldVelocity, transform.right);
 
         // Update all animation/root speed based on speed multiplier
         animationSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
         rootMovementSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
-        rootTurnSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
         anim.speed = animationSpeed;
 
         // Ground Check
@@ -242,7 +259,7 @@ public class PlayerControlScript : MonoBehaviour
         }
 
         // Update Global Animator Parameters
-        anim.SetBool("isGrounded", isGrounded);
+        anim.SetBool("isGrounded", _isGrounded);
         anim.SetBool("isMoving", isMoving);
         anim.SetBool("aimDown", _inputAimDown);
 
@@ -254,11 +271,6 @@ public class PlayerControlScript : MonoBehaviour
         float currentTurnStrafe = anim.GetFloat("TurnStrafeLerp");
         float newTurnStrafe = Mathf.Lerp(currentTurnStrafe, targetAimDown, Time.deltaTime * turnStrafeSpeed);
         anim.SetFloat("TurnStrafeLerp", newTurnStrafe);
-    }
-
-    public void SetForceStrafe(bool newForceStrafe)
-    {
-        forceStrafe = newForceStrafe;
     }
 
     private void HandleOrientation()
@@ -333,7 +345,7 @@ public class PlayerControlScript : MonoBehaviour
         float radius = GetComponent<CapsuleCollider>().radius * 0.9f;
         Vector3 pos = transform.position + Vector3.up * (radius * 0.5f);
         LayerMask groundLayer = LayerMask.GetMask("ground");
-        isGrounded = GetGrounded || Physics.CheckSphere(pos, radius, groundLayer);
+        _isGrounded = GetGrounded || Physics.CheckSphere(pos, radius, groundLayer);
     }
 
     // Physics callback for collision
