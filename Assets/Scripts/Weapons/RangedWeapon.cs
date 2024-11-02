@@ -30,6 +30,9 @@ public class RangedWeapon : Weapon
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+
+        WeaponName = SetWeaponName;
+
     }
 
     #region Accessors

@@ -12,6 +12,8 @@ public class MeleeWeapon : Weapon
     [SerializeField] private Vector3 holdRotation;
     [SerializeField] private DamageObject hitBoxInstance; // Should have DamageObject component
     [SerializeField] private AudioSource audioSource;
+    
+    public string SetWeaponName;
 
     public AudioClip meleeSoundClip;
 
@@ -43,6 +45,8 @@ public class MeleeWeapon : Weapon
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+
+        WeaponName = SetWeaponName;
     }
 
     public override void Attack()

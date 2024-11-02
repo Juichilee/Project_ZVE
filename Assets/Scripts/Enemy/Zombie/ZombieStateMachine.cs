@@ -143,7 +143,7 @@ public class ZombieStateMachine : MonoBehaviour
         private void GoToWaypoint()
         {
             if (waypoints.Count > 0)
-                Zombie.GoTo(waypoints[currWaypointIndex], Zombie.ZombieMaxSpeed * 2 / 3);
+                Zombie.GoTo(waypoints[currWaypointIndex], Zombie.MaxSpeed * 2 / 3);
         }
     }
 
@@ -229,7 +229,6 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
-            // TODO: Spawn Collectable and Enable Ragdoll
             Zombie.Die();
             Zombie.SpawnPickUp();
         }
