@@ -30,6 +30,11 @@ public class MeleeWeapon : Weapon
         IsReady = true; // Reset IsReady when re-enabled
     }
 
+    void OnDisable()
+    {
+        hitBoxInstance.gameObject.SetActive(false); // Reset hitbox after unequipped
+    }
+
     void Start(){
         hitBoxInstance.gameObject.SetActive(false);
 
