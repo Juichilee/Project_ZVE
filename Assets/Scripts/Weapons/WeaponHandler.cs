@@ -90,8 +90,9 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             thirdPersonCamera.SwitchCameraStyle(ThirdPersonCamera.CameraStyle.Basic);
             aimRig.weight = 0f;
             // Reset all combat layers
+            playerControlScript.Anim.SetLayerWeight(3, 0);
             playerControlScript.Anim.SetLayerWeight(2, 0);
-            playerControlScript.Anim.SetLayerWeight(1, 0);
+            playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
             // UpdateAimRigWeight(0f); // Reset aim rig when no weapon equipped
             return;
         }
@@ -109,8 +110,8 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     private void HandleRangedWeaponInput(RangedWeapon rangedWeapon)
     {
         thirdPersonCamera.SwitchCameraStyle(ThirdPersonCamera.CameraStyle.Ranged);
-        playerControlScript.Anim.SetLayerWeight(2, 0); // Reset melee layer
-        playerControlScript.Anim.SetLayerWeight(1, 1);
+        playerControlScript.Anim.SetLayerWeight(3, 0); // Reset melee layer
+        playerControlScript.Anim.SetLayerWeight(2, 1);
 
         aimRig.weight = 1f;
 
@@ -186,8 +187,8 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     private void HandleMeleeWeaponInput(MeleeWeapon meleeWeapon)
     {
         thirdPersonCamera.SwitchCameraStyle(ThirdPersonCamera.CameraStyle.Basic);
-        playerControlScript.Anim.SetLayerWeight(2, 1);
-        playerControlScript.Anim.SetLayerWeight(1, 0); // Reset ranged layer
+        playerControlScript.Anim.SetLayerWeight(3, 1);
+        playerControlScript.Anim.SetLayerWeight(2, 0); // Reset ranged layer
         aimRig.weight = 0f;
 
         if (meleeWeapon.IsReady && playerControlScript.InputAttack)
@@ -241,7 +242,10 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         {
             nextWeapon.gameObject.SetActive(true);
             playerControlScript.Anim.SetInteger("weaponAnimId", nextWeapon.WeaponAnimId);
+        } else {
+            playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
         }
+        playerControlScript.Anim.SetTrigger("changeWeapon");
         currentWeaponIndex = index;
     }
 
@@ -276,6 +280,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             }
 
             weaponSlots[index] = null;
+            playerControlScript.Anim.SetTrigger("changeWeapon"); // trigger change weapon in animation
         }
     }
 
