@@ -150,7 +150,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         }
 
         // Updated ranged fov when aiming down
-        thirdPersonCamera.SetRangedCameraFOV(playerControlScript.InputAimDown ? 15 : 50);
+        thirdPersonCamera.UpdateRangedCameraFOV(playerControlScript.InputAimDown);
 
         // Player reload input to ranged weapon
         if (playerControlScript.Reload)

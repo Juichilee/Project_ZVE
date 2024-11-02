@@ -1,24 +1,19 @@
 using UnityEngine;
-using System.Collections;
 using Cinemachine;
-using Unity.VisualScripting;
 
-// [RequireComponent(typeof(CharacterInputController))]
 public class ThirdPersonCamera : MonoBehaviour
 {
     public float maxYAxisSpeed = 2f;
     public float maxXAxisSpeed = 300f;
 	public float sensitivity = 1.0f;
     public float aimSensitivity = 0.5f;
+    public float aimDownFov = 15f;
+    public float regularFov = 50f;
 	public GameObject basicCam;
     private CinemachineFreeLook basicFreeLook;
     public GameObject rangedCam;
     private CinemachineFreeLook rangedFreeLook;
-    public CinemachineFreeLook currFreeLook;
     public CameraStyle currCamStyle;
-    public CharacterInputController cinput;
-    public WeaponHandler weaponHandler;
-    public bool _inputAimDown;
     public enum CameraStyle
     {
         Basic,
@@ -31,21 +26,23 @@ public class ThirdPersonCamera : MonoBehaviour
         rangedCam.SetActive(false);
         basicFreeLook = basicCam.GetComponent<CinemachineFreeLook>();
         rangedFreeLook = rangedCam.GetComponent<CinemachineFreeLook>();
-        cinput = GetComponent<CharacterInputController>();
     }
 
     void Start()
     {
-        SetSensitivity();
+        SetDefaultFreeLook();
     }
 
-    public void SetSensitivity()
+    public void SetDefaultFreeLook()
     {
         basicFreeLook.m_YAxis.m_MaxSpeed = maxYAxisSpeed * sensitivity;
         basicFreeLook.m_XAxis.m_MaxSpeed = maxXAxisSpeed * sensitivity;
 
         rangedFreeLook.m_YAxis.m_MaxSpeed = maxYAxisSpeed * aimSensitivity;
         rangedFreeLook.m_XAxis.m_MaxSpeed = maxXAxisSpeed * aimSensitivity;
+
+        basicFreeLook.m_Lens.FieldOfView = regularFov;
+        rangedFreeLook.m_Lens.FieldOfView = regularFov;
     }
     
     public void SwitchCameraStyle(CameraStyle newStyle)
@@ -57,18 +54,21 @@ public class ThirdPersonCamera : MonoBehaviour
             case CameraStyle.Basic:
                 basicCam.SetActive(true);
                 rangedCam.SetActive(false);
-                currFreeLook = basicFreeLook;
                 break;
             case CameraStyle.Ranged:
                 rangedCam.SetActive(true);
                 basicCam.SetActive(false);
-                currFreeLook = rangedFreeLook;
                 break;
         }
     }
 
-    public void SetRangedCameraFOV(int fov)
+    public void UpdateRangedCameraFOV(bool aimDown)
     {
-        rangedFreeLook.m_Lens.FieldOfView = fov;
+        if (aimDown)
+        {
+            rangedFreeLook.m_Lens.FieldOfView = aimDownFov;
+            return;
+        }
+        rangedFreeLook.m_Lens.FieldOfView = regularFov;
     }
 }
