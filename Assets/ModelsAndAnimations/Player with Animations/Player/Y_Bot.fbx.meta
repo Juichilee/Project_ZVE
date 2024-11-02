@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 11d723d356152494ea1f1dc10ed906ef
 ModelImporter:
-  serializedVersion: 26
+  serializedVersion: 21300
   internalIDToNameTable:
   - first:
       1: 100000
@@ -456,7 +456,7 @@ ModelImporter:
       name: Alpha_Joints_MAT
     second: {fileID: 2100000, guid: 8b943e5e6464746bd965516479a3b32c, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 0
@@ -465,6 +465,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -552,22 +553,30 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 0
     importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -577,24 +586,11 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips:
-  - 8417d1e459ab4467d838dec7ff2e8b36
-  - 3d0af1fe034814074af5e8c8b58e4af3
-  - 4ce560982255540d989ef8553399ac4c
-  - 875b40e19c527411eb15702a1429db26
   - 26102bb1421eb44abbd382a68dd93890
-  - 22fcdce2a35b54756a55ecd3dcbfbe1e
-  - 12b1c54fc38fb46b48011875bd818bd2
   - 4cf578991964f41099b396e023f9d3ff
-  - 3dd3c9ee760d64a388e74a714caa2057
-  - 0711197d58c024911a611936d64474e1
-  - 8eb8f8eca48754e45b8c7e365c1e9cd1
-  - 9e9ce5f9fd21d4a519d0544b58487a00
   - c640669d579fa466dbd73f173427364e
   - 08a0c0894f7444f6f9fa01a7851641ef
-  - c3fe578020ec644ea90e68463b5de090
-  - 992ed05af12ce49f1a21f6b8ff4190e8
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
     serializedVersion: 3
     human:
@@ -1370,8 +1366,12 @@ ModelImporter:
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

@@ -413,7 +413,7 @@ ModelImporter:
     second: //RootNode
   - first:
       74: 7400000
-    second: idle
+    second: Idle
   - first:
       95: 9500000
     second: //RootNode
@@ -453,7 +453,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: idle
+      name: Idle
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0

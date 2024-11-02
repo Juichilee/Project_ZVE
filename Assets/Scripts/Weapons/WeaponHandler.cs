@@ -2,23 +2,31 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
+
 [RequireComponent(typeof(PlayerControlScript))]
 public class WeaponHandler : MonoBehaviour, IWeaponHolder
 {
     public Transform holdWeaponParent;
-    public Transform aimTarget;
     [SerializeField]
-    private Weapon[] weaponSlots = new Weapon[3]; // Fixed array to hold 3 weapons
+    private Weapon[] weaponSlots = new Weapon[3];
     private int currentWeaponIndex = 0;
     private Collider currentPickupCollider;
     private PlayerControlScript playerControlScript;
+    private ThirdPersonCamera thirdPersonCamera;
     public Rig aimRig;
     public TextMeshProUGUI ammoCountText;
     private GameObject pickupGuide;
+
+    private Coroutine weaponsAtReadyCoroutine;
+
     void Awake()
     {
         playerControlScript = GetComponent<PlayerControlScript>();
+        thirdPersonCamera = GetComponent<ThirdPersonCamera>();
     }
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -26,7 +34,6 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-
         GameObject ammoCountGameObject = GameObject.Find("AmmoCount");
         if (ammoCountGameObject)
         {
@@ -42,23 +49,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         HandleWeaponInput();
         HandleWeaponDrop();
         pickupGuide.SetActive(currentPickupCollider != null);
-
-        if (GetCurrentWeapon() is RangedWeapon rangedWeapon)
-        {
-            string ammoString = $"{rangedWeapon.CurrentClip}/{rangedWeapon.MaxClip}({rangedWeapon.CurrentAmmo})";
-            ammoCountText.text = ammoString;
-        }
-        if (GetCurrentWeapon() is MeleeWeapon meleeWeapon)
-        {
-            string ammoString = $"1/1(1)";
-            ammoCountText.text = ammoString;
-        }
-
-        if (GetCurrentWeapon() is null)
-        {
-            string ammoString = $"0/0(0)";
-            ammoCountText.text = ammoString;
-        }
+        UpdateAmmoCountDisplay();
     }
 
     public Transform GetWeaponHolderRootTransform()
@@ -83,7 +74,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
 
     private void HandlePickupTrigger()
     {
-        if (currentPickupCollider != null && playerControlScript._interact)
+        if (currentPickupCollider != null && playerControlScript.Interact)
         {
             Weapon weapon = currentPickupCollider.GetComponent<Weapon>();
             PickUpWeapon(weapon);
@@ -96,7 +87,6 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         {
             if (Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha1 + i)))
             {
-                Debug.Log("EQUIPPED WEAPON SLOT: " + i);
                 EquipWeapon(i);
             }
         }
@@ -104,53 +94,143 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
 
     private void HandleWeaponInput()
     {
-        // Reset all combat layer weights
-        playerControlScript.anim.SetLayerWeight(2, 0); // Index 2 is ranged combat layer
-        playerControlScript.anim.SetLayerWeight(3, 0); // Index 3 is melee combat layer
-
         Weapon currentWeapon = GetCurrentWeapon();
         if (currentWeapon == null)
         {
-            // Reset aimRig weight if no weapon equipped
-            aimRig.weight = Mathf.Lerp(aimRig.weight, 0f, Time.deltaTime * 2f);
+            thirdPersonCamera.SwitchCameraStyle(ThirdPersonCamera.CameraStyle.Basic);
+            aimRig.weight = 0f;
+            // Reset all combat layers
+            playerControlScript.Anim.SetLayerWeight(3, 0);
+            playerControlScript.Anim.SetLayerWeight(2, 0);
+            playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
+            // UpdateAimRigWeight(0f); // Reset aim rig when no weapon equipped
             return;
         }
 
-        if (currentWeapon is RangedWeapon rangedWeapon){
-
-            playerControlScript.anim.SetLayerWeight(2, 1);
-
-            if (playerControlScript._inputAimDown)
-            {
-                aimRig.weight = Mathf.Lerp(aimRig.weight, 1f, Time.deltaTime * 2f);
-            } else {
-                aimRig.weight = Mathf.Lerp(aimRig.weight, 0f, Time.deltaTime * 2f);
-            }
-
-            if(playerControlScript._reload)
-            {
-                rangedWeapon.Reload();
-            }
-            rangedWeapon.UpdateWeaponAim(ref aimTarget);
-        }
-
-        if (currentWeapon is MeleeWeapon meleeWeapon){
-            aimRig.weight = 0f; // Reset aimRig weight immediately
-            playerControlScript.anim.SetLayerWeight(3, 1);
-        }
-
-        if (currentWeapon.IsReady && playerControlScript._inputAttack)
+        if (currentWeapon is RangedWeapon)
         {
-            currentWeapon.Attack();
+            HandleRangedWeaponInput((RangedWeapon)currentWeapon);
+        }
+        else if (currentWeapon is MeleeWeapon)
+        {
+            HandleMeleeWeaponInput((MeleeWeapon)currentWeapon);
+        }
+    }
+
+    private void HandleRangedWeaponInput(RangedWeapon rangedWeapon)
+    {
+        thirdPersonCamera.SwitchCameraStyle(ThirdPersonCamera.CameraStyle.Ranged);
+        playerControlScript.Anim.SetLayerWeight(3, 0); // Reset melee layer
+        playerControlScript.Anim.SetLayerWeight(2, 1);
+
+        aimRig.weight = 1f;
+
+        // Weapons At Ready state keeps player ranged weapon at the ready after aiming or firing
+        if (playerControlScript.InputAimDown || playerControlScript.InputAttack)
+        {
+            if (weaponsAtReadyCoroutine != null)
+            {
+                StopCoroutine(weaponsAtReadyCoroutine);
+            }
+            weaponsAtReadyCoroutine = StartCoroutine(WeaponsAtReady(1f));
+        }
+
+        MultiAimConstraint aim = null;
+        MultiAimConstraint bodyAim = null;
+
+        // Retrieve the list of multi-aimconstraint source objects for current type of ranged weapon
+        if (rangedWeapon.WeaponName == "Pistol")
+        {
+            Transform pistolRig = aimRig.transform.Find("PistolRig");
+            aim = pistolRig.Find("Aim").gameObject.GetComponent<MultiAimConstraint>();
+            bodyAim = pistolRig.Find("BodyAim").gameObject.GetComponent<MultiAimConstraint>();
+        }
+
+        // Switch between weapon ready and weapon idle states by switching Aim and BodyAim source blend weights
+        if (playerControlScript.Anim.GetBool("weaponsAtReady"))
+        {
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 0, 0f);
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 1, 1f);
+            PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 0, 0f);
+            PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 1, 1f);
+        } else {
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 0, 1f);
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 1, 0f);
+            PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 0, 1f);
+            PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 1, 0f);
+        }
+
+        // Updated ranged fov when aiming down
+        thirdPersonCamera.UpdateRangedCameraFOV(playerControlScript.InputAimDown);
+
+        // Player reload input to ranged weapon
+        if (playerControlScript.Reload)
+        {
+            rangedWeapon.Reload();
+        }
+
+        if (rangedWeapon.IsReady && playerControlScript.InputAttack)
+        {
+            playerControlScript.Anim.SetTrigger("attack");
+            rangedWeapon.Attack();
+        }
+
+        rangedWeapon.UpdateWeaponAim(playerControlScript.aimTarget);
+    }
+
+    // private void UpdateAimRigWeight(float targetWeight)
+    // {
+    //     aimRig.weight = Mathf.Lerp(aimRig.weight, targetWeight, Time.deltaTime * 25f);
+    // }
+
+    private IEnumerator WeaponsAtReady(float seconds)
+    {
+        // aimRig.weight = 1f;
+        playerControlScript.ForceStrafe = true;
+        playerControlScript.Anim.SetBool("weaponsAtReady", true);
+        yield return new WaitForSeconds(seconds);
+        playerControlScript.Anim.SetBool("weaponsAtReady", false);
+        playerControlScript.ForceStrafe = false;
+        // UpdateAimRigWeight(0f);
+    }
+
+    private void HandleMeleeWeaponInput(MeleeWeapon meleeWeapon)
+    {
+        thirdPersonCamera.SwitchCameraStyle(ThirdPersonCamera.CameraStyle.Basic);
+        playerControlScript.Anim.SetLayerWeight(3, 1);
+        playerControlScript.Anim.SetLayerWeight(2, 0); // Reset ranged layer
+        aimRig.weight = 0f;
+
+        if (meleeWeapon.IsReady && playerControlScript.InputAttack)
+        {
+            playerControlScript.Anim.SetTrigger("attack");
+            meleeWeapon.Attack();
         }
     }
 
     private void HandleWeaponDrop()
     {
         Weapon currentWeapon = GetCurrentWeapon();
-        if (playerControlScript._drop && currentWeapon != null)
+        if (playerControlScript.Drop && currentWeapon != null)
         {
             DropWeapon(currentWeaponIndex);
+        }
+    }
+
+    private void UpdateAmmoCountDisplay()
+    {
+        Weapon currentWeapon = GetCurrentWeapon();
+        if (currentWeapon is RangedWeapon rangedWeapon)
+        {
+            ammoCountText.text = $"{rangedWeapon.CurrentClip}/{rangedWeapon.MaxClip}({rangedWeapon.CurrentAmmo})";
+        }
+        else if (currentWeapon is MeleeWeapon)
+        {
+            ammoCountText.text = "1/1(1)";
+        }
+        else
+        {
+            ammoCountText.text = "0/0(0)";
         }
     }
 
@@ -159,6 +239,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         if (index < 0 || index >= weaponSlots.Length)
         {
             Debug.LogError("EquipWeapon() index is not within the range of weaponSlots array");
+            return;
         }
 
         if (GetCurrentWeapon() != null)
@@ -167,12 +248,14 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         }
 
         Weapon nextWeapon = weaponSlots[index];
-        // Activate the weapon at the new index
         if (nextWeapon != null)
         {
             nextWeapon.gameObject.SetActive(true);
-            playerControlScript.anim.SetInteger("weaponAnimId", nextWeapon.WeaponAnimId); // Update the animator's weaponAnimId to change weapon anim configs
+            playerControlScript.Anim.SetInteger("weaponAnimId", nextWeapon.WeaponAnimId);
+        } else {
+            playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
         }
+        playerControlScript.Anim.SetTrigger("changeWeapon");
         currentWeaponIndex = index;
     }
 
@@ -191,6 +274,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             Weapon weapon = weaponSlots[index];
             weapon.WeaponHolder = null;
             weapon.gameObject.transform.SetParent(null);
+            SceneManager.MoveGameObjectToScene(weapon.gameObject, SceneManager.GetActiveScene());
 
             Rigidbody rb = weapon.gameObject.GetComponent<Rigidbody>();
             if (rb != null)
@@ -206,6 +290,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             }
 
             weaponSlots[index] = null;
+            playerControlScript.Anim.SetTrigger("changeWeapon"); // trigger change weapon in animation
         }
     }
 
@@ -219,9 +304,8 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         GameObject weaponGameObject = weapon.gameObject;
         weaponSlots[currentWeaponIndex] = weapon;
 
-        // Update weapon references to current holder
         weapon.WeaponHolder = this;
-        weapon.WeaponHolderAnim = playerControlScript.anim;
+        weapon.WeaponHolderAnim = playerControlScript.Anim;
         weaponGameObject.transform.SetParent(holdWeaponParent);
         weaponGameObject.transform.localPosition = weapon.HoldPosition;
         weaponGameObject.transform.localRotation = Quaternion.Euler(weapon.HoldRotation);
@@ -237,10 +321,10 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         Collider collider = weaponGameObject.GetComponent<Collider>();
         if (collider != null)
         {
-            collider.enabled = false; // Turn off collider to prevent detection by triggers
+            collider.enabled = false;
         }
         currentPickupCollider = null;
-        EquipWeapon(currentWeaponIndex); // Used to update anim parameters
+        EquipWeapon(currentWeaponIndex);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -15,7 +15,5 @@ public enum MotionStateType
 public enum ActionStateType
 {
     Idle,
-    Pickup,
-    Interact,
     Attack
 }

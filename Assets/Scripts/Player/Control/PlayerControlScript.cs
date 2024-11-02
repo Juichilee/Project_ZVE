@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Animations.Rigging;
 
 // Require necessary components
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
@@ -15,11 +16,19 @@ public class PlayerControlScript : MonoBehaviour
     public static PlayerControlScript PlayerInstance { get; private set;}
 
     #region Player Components & State Management
-    public Animator anim;
-    public Rigidbody rbody;
+    public Animator Anim { get => anim; private set => anim = value;}
+    private Animator anim;
+    public Rigidbody Rbody { get => rbody; private set => rbody = value;}
+    private Rigidbody rbody;
+    // NOTE: Still need to figure out some way to find and set in awake the below references
     public Camera mainCamera;
     public Transform orientation;
     public Transform spawn;
+    public Transform aimTarget; 
+    public LayerMask aimColliderLayerMask;
+    public Rig headRig; 
+    private MultiAimConstraint headAim;
+    private PlayerStatus playerStatus;
 
     /* State Machines:
         PlayerControlScript handles 3 states machines that each store a separate state.
@@ -35,38 +44,51 @@ public class PlayerControlScript : MonoBehaviour
 
     #region Controller Input Reading & Caching
     // Cached input readings to be used by player state and component classes
-    public CharacterInputController cinput;
-    public float _inputForward = 0f;
-    public float _inputRight = 0f;
-    public bool _inputJump = false;
-    public bool _inputAimDown = false;
-    public bool _inputAttack = false;
-    public bool _interact = false;
-    public bool _drop = false;
-    public bool _reload = false;
-    public Vector3 _inputDir;
+    private CharacterInputController cinput;
+    public float InputForward { get => _inputForward; private set => _inputForward = value; }
+    private float _inputForward = 0f;
+    public float InputRight { get => _inputRight; private set => _inputRight = value; }
+    private float _inputRight = 0f;
+    public bool InputJump { get => _inputJump; private set => _inputJump = value; }
+    private bool _inputJump = false;
+    public bool InputAimDown { get => _inputAimDown; private set => _inputAimDown = value; }
+    private bool _inputAimDown = false;
+    public bool InputAttack { get => _inputAttack; private set => _inputAttack = value; }
+    private bool _inputAttack = false;
+    public bool Interact { get => _interact; private set => _interact = value; }
+    private bool _interact = false;
+    public bool Drop { get => _drop; private set => _drop = value; }
+    private bool _drop = false;
+    public bool Reload { get => _reload; private set => _reload = value; }
+    private bool _reload = false;
+    public Vector3 InputDir { get => _inputDir; private set => _inputDir = value; }
+    private Vector3 _inputDir;
+    public bool ForceStrafe { get => forceStrafe; set => forceStrafe = value;}
+    private bool forceStrafe; // Can be set by outside components to force player to strafe
     #endregion
 
     #region Movement & Animation Properties
     public float speedMultiplier = 1f; // Sets the animationSpeed, rootMovementSpeed, and rootTurnSpeed
-    public float animationSpeed = 1f;
-    public float rootMovementSpeed = 1f;
-    public float rootTurnSpeed = 1f;
-    public float groundDrag = 0f;
-    public float airDrag = 0.2f;
-    public bool isMoving = false;
-    public float aimDownSpeed = 5f;
+    private float animationSpeed = 1f;
+    public float RootMovementSpeed { get => rootMovementSpeed; private set => rootMovementSpeed = value;}
+    private float rootMovementSpeed = 1f;
+    private float groundDrag = 0f;
+    private float airDrag = 0.2f;
+    public bool IsMoving { get => isMoving; private set => isMoving = value; }
+    private bool isMoving = false;
+    private float turnStrafeSpeed = 10f;
     public float upgradeMult = .1f;
     #endregion
 
-    PlayerStatus playerStatus;
-
     #region Environmental/Sensor Properties
-    public Vector3 WorldVelocity { get; private set; }
-    public Vector3 localVelocity;
+    public Vector3 WorldVelocity { get => worldVelocity; private set => worldVelocity = value; }
+    private Vector3 worldVelocity;
+    public Vector3 LocalVelocity { get => localVelocity; private set => localVelocity = value; }
+    private Vector3 localVelocity = Vector3.zero;
     private Vector3 prevWorldPosition;
     private int groundContactCount = 0;
-    public bool isGrounded = true;
+    public bool IsGrounded { get => _isGrounded; private set => _isGrounded = value; }
+    private bool _isGrounded = true;
 
     public bool GetGrounded
     {
@@ -119,6 +141,7 @@ public class PlayerControlScript : MonoBehaviour
             Debug.LogError("Player Script requires an orientation transform");
         }
 
+        headAim = headRig.transform.Find("HeadAim").GetComponent<MultiAimConstraint>();
 
         // Initialize State Machines
         ActionStateMachine = new StateMachine<ActionStateType, BaseState>();
@@ -189,6 +212,9 @@ public class PlayerControlScript : MonoBehaviour
         // Handles player orientation with respect to the camera and the player aiming down
         HandleOrientation();
 
+        // Update the aim target world position based on screen raycast
+        UpdateTargets();
+
         // Modifies the current GlobalState based on outside parameters
         HandleGlobalState();
 
@@ -202,21 +228,20 @@ public class PlayerControlScript : MonoBehaviour
     void FixedUpdate()
     {
         // Handle drag based on grounded state
-        rbody.drag = isGrounded ? groundDrag : airDrag;
+        rbody.drag = _isGrounded ? groundDrag : airDrag;
 
         // Physics calculations for Rigidbody because animator velocity is inaccurate
-        WorldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
+        worldVelocity = (transform.position - prevWorldPosition) / Time.fixedDeltaTime;
         prevWorldPosition = transform.position;
 
         // Project the world velocity onto the character's local axes
-        localVelocity.z = Vector3.Dot(WorldVelocity, transform.forward);
-        localVelocity.y = Vector3.Dot(WorldVelocity, transform.up);
-        localVelocity.x = Vector3.Dot(WorldVelocity, transform.right);
+        localVelocity.z = Vector3.Dot(worldVelocity, transform.forward);
+        localVelocity.y = Vector3.Dot(worldVelocity, transform.up);
+        localVelocity.x = Vector3.Dot(worldVelocity, transform.right);
 
         // Update all animation/root speed based on speed multiplier
         animationSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
         rootMovementSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
-        rootTurnSpeed = speedMultiplier + (playerStatus.speedUpgrade * upgradeMult);
         anim.speed = animationSpeed;
 
         // Ground Check
@@ -234,40 +259,84 @@ public class PlayerControlScript : MonoBehaviour
         }
 
         // Update Global Animator Parameters
-        anim.SetBool("isFalling", !isGrounded);
+        anim.SetBool("isGrounded", _isGrounded);
         anim.SetBool("isMoving", isMoving);
         anim.SetBool("aimDown", _inputAimDown);
 
         // Smoothly transition the aimDownLerp parameter (Determines blending between strafe and turning animations)
-        float targetAimDown = _inputAimDown ? 1f : 0f;
-        float currentAimDown = anim.GetFloat("aimDownLerp");
-        float newAimDownValue = Mathf.Lerp(currentAimDown, targetAimDown, Time.deltaTime * aimDownSpeed);
-        anim.SetFloat("aimDownLerp", newAimDownValue);
+        float targetAimDown = 0f;
+        if (_inputAimDown || forceStrafe){
+            targetAimDown = 1f;
+        }
+        float currentTurnStrafe = anim.GetFloat("TurnStrafeLerp");
+        float newTurnStrafe = Mathf.Lerp(currentTurnStrafe, targetAimDown, Time.deltaTime * turnStrafeSpeed);
+        anim.SetFloat("TurnStrafeLerp", newTurnStrafe);
     }
 
     private void HandleOrientation()
     {
         Transform mainCameraTrans = mainCamera.transform;
+        Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
+        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+        orientation.forward = cameraForward;
 
-        if (_inputAimDown)
+        if (_inputAimDown || forceStrafe)
         {
             // Strafing combat style (used for ranged attacks)
-            Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
-            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 5f);
-            orientation.forward = this.transform.forward;
-            _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 25f);
+            // orientation.forward = cameraForward;
 
         } else {
-            Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
-            viewDir = viewDir.normalized;
-            orientation.forward = viewDir;
-            _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+            // Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
+            // viewDir = viewDir.normalized;
+            // orientation.forward = cameraForward;
 
             // Regular combat style (character forward is in direction of movement keys)
             if (_inputDir != Vector3.zero)
             {
-                this.transform.forward = Vector3.Slerp(this.transform.forward, _inputDir, Time.deltaTime * 20f);
+
+                Quaternion targetRotation = Quaternion.LookRotation(_inputDir);
+
+                // Handle abrupt direction changes with a slight right rotation offset (prevent ping ponging)
+                if (Vector3.Dot(this.transform.forward, _inputDir) < -0.90f) // Check if facing almost opposite directions
+                {
+                    targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
+                }
+
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 5f);
             }
+            // When player is facing the camera, set head aim target to forward head
+            if (Vector3.Dot(this.transform.forward, cameraForward) <= 0f)
+            {
+                SetMultiAimSourceWeight(headAim, 0, 1f); // Set forwardHeadTarget target weight to 1
+                SetMultiAimSourceWeight(headAim, 1, 0f); // Set aimTarget target weight to 0
+            } else {
+                SetMultiAimSourceWeight(headAim, 0, 0f); 
+                SetMultiAimSourceWeight(headAim, 1, 1f);
+            }
+        }
+    }
+    public static void SetMultiAimSourceWeight(MultiAimConstraint aim, int idx, float val)
+    {
+        var aimSources = aim.data.sourceObjects;
+        float currentWeight = aimSources[idx].weight;
+        currentWeight = Mathf.Lerp(currentWeight, val, Time.deltaTime * 5f);
+        aimSources.SetWeight(idx, currentWeight);
+        aim.data.sourceObjects = aimSources;
+    }
+
+    private void UpdateTargets()
+    {
+        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+        int fixedDistance = 99;
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, aimColliderLayerMask))
+        {
+            aimTarget.position = raycastHit.point;
+        }
+        else
+        {
+            aimTarget.position = ray.origin + ray.direction * fixedDistance;
         }
     }
 
@@ -276,7 +345,7 @@ public class PlayerControlScript : MonoBehaviour
         float radius = GetComponent<CapsuleCollider>().radius * 0.9f;
         Vector3 pos = transform.position + Vector3.up * (radius * 0.5f);
         LayerMask groundLayer = LayerMask.GetMask("ground");
-        isGrounded = GetGrounded || Physics.CheckSphere(pos, radius, groundLayer);
+        _isGrounded = GetGrounded || Physics.CheckSphere(pos, radius, groundLayer);
     }
 
     // Physics callback for collision
@@ -285,8 +354,6 @@ public class PlayerControlScript : MonoBehaviour
         if (collision.transform.CompareTag("ground"))
         {
             ++groundContactCount;
-            Debug.Log("COLLIDING WITH: " + collision.gameObject.name);
-            Debug.Log("GroundedContactCount: " + groundContactCount);
             // Trigger landing event if necessary
             // EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(collision.contacts[0].point, collision.impulse.magnitude);
         }
@@ -297,8 +364,6 @@ public class PlayerControlScript : MonoBehaviour
         if (collision.transform.CompareTag("ground"))
         {
             --groundContactCount;
-            Debug.Log("EXIT COLLIDING WITH: " + collision.gameObject.name);
-            Debug.Log("GroundedContactCount: " + groundContactCount);
         }
     }
 
