@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
-    public string WeaponName { get; set; }
+    public abstract string WeaponName { get; set; }
     public abstract DamageData DamageAttributes { get; protected set; }
     public abstract float CoolDownTime { get; protected set; }
     public bool IsReady { get; set; } = true;

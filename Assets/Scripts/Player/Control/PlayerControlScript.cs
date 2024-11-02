@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Animations.Rigging;
 
 // Require necessary components
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
@@ -20,6 +21,9 @@ public class PlayerControlScript : MonoBehaviour
     public Camera mainCamera;
     public Transform orientation;
     public Transform spawn;
+    public Transform aimTarget;
+    public LayerMask aimColliderLayerMask;
+    public Rig headRig;
 
     /* State Machines:
         PlayerControlScript handles 3 states machines that each store a separate state.
@@ -45,6 +49,7 @@ public class PlayerControlScript : MonoBehaviour
     public bool _drop = false;
     public bool _reload = false;
     public Vector3 _inputDir;
+    public bool forceStrafe; // Can be set by outside components to force player to strafe
     #endregion
 
     #region Movement & Animation Properties
@@ -55,7 +60,7 @@ public class PlayerControlScript : MonoBehaviour
     public float groundDrag = 0f;
     public float airDrag = 0.2f;
     public bool isMoving = false;
-    public float aimDownSpeed = 5f;
+    public float turnStrafeSpeed = 10f;
     public float upgradeMult = .1f;
     #endregion
 
@@ -189,6 +194,9 @@ public class PlayerControlScript : MonoBehaviour
         // Handles player orientation with respect to the camera and the player aiming down
         HandleOrientation();
 
+        // Update the aim target world position based on screen raycast
+        UpdateTargets();
+
         // Modifies the current GlobalState based on outside parameters
         HandleGlobalState();
 
@@ -239,35 +247,84 @@ public class PlayerControlScript : MonoBehaviour
         anim.SetBool("aimDown", _inputAimDown);
 
         // Smoothly transition the aimDownLerp parameter (Determines blending between strafe and turning animations)
-        float targetAimDown = _inputAimDown ? 1f : 0f;
-        float currentAimDown = anim.GetFloat("aimDownLerp");
-        float newAimDownValue = Mathf.Lerp(currentAimDown, targetAimDown, Time.deltaTime * aimDownSpeed);
-        anim.SetFloat("aimDownLerp", newAimDownValue);
+        float targetAimDown = 0f;
+        if (_inputAimDown || forceStrafe){
+            targetAimDown = 1f;
+        }
+        float currentTurnStrafe = anim.GetFloat("TurnStrafeLerp");
+        float newTurnStrafe = Mathf.Lerp(currentTurnStrafe, targetAimDown, Time.deltaTime * turnStrafeSpeed);
+        anim.SetFloat("TurnStrafeLerp", newTurnStrafe);
+    }
+
+    public void SetForceStrafe(bool newForceStrafe)
+    {
+        forceStrafe = newForceStrafe;
     }
 
     private void HandleOrientation()
     {
         Transform mainCameraTrans = mainCamera.transform;
+        Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
+        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+        orientation.forward = cameraForward;
 
-        if (_inputAimDown)
+        if (_inputAimDown || forceStrafe)
         {
             // Strafing combat style (used for ranged attacks)
-            Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
-            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 5f);
-            orientation.forward = this.transform.forward;
-            _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 25f);
+            // orientation.forward = cameraForward;
 
         } else {
-            Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
-            viewDir = viewDir.normalized;
-            orientation.forward = viewDir;
-            _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+            // Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
+            // viewDir = viewDir.normalized;
+            // orientation.forward = cameraForward;
 
             // Regular combat style (character forward is in direction of movement keys)
             if (_inputDir != Vector3.zero)
             {
-                this.transform.forward = Vector3.Slerp(this.transform.forward, _inputDir, Time.deltaTime * 20f);
+
+                Quaternion targetRotation = Quaternion.LookRotation(_inputDir);
+
+                // Handle abrupt direction changes with a slight right rotation offset (prevent ping ponging)
+                if (Vector3.Dot(this.transform.forward, _inputDir) < -0.90f) // Check if facing almost opposite directions
+                {
+                    targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
+                }
+
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 5f);
             }
+            // Prevents the head from rotating wierdly when player is facing towards camera
+            if (Vector3.Dot(this.transform.forward, cameraForward) <= 0f)
+            {
+                Debug.Log("Setting HEad Rig Weight to 0");
+                SetHeadRigWeight(0);
+            } else {
+                Debug.Log("Setting HEad Rig Weight to 1");
+                SetHeadRigWeight(1);
+            }
+        }
+    }
+    float velocity = 0;
+    float smoothTime = 0.25f;  // The time it takes to reach the target smoothly
+    private void SetHeadRigWeight(float desiredWeight)
+    {
+        
+        
+        headRig.weight = Mathf.SmoothDamp(headRig.weight, desiredWeight, ref velocity, smoothTime);
+    }
+
+    private void UpdateTargets()
+    {
+        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+        int fixedDistance = 99;
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, aimColliderLayerMask))
+        {
+            aimTarget.position = raycastHit.point;
+        }
+        else
+        {
+            aimTarget.position = ray.origin + ray.direction * fixedDistance;
         }
     }
 

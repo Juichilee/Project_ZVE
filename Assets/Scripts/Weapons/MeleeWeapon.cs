@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MeleeWeapon : Weapon
 {
+    [SerializeField] private string weaponName;
     [SerializeField] private DamageData damageAttributes;
     [SerializeField] private float coolDownTime = 1f;
     [SerializeField] private int weaponAnimId = 0;
@@ -15,6 +16,7 @@ public class MeleeWeapon : Weapon
     public AudioClip meleeSoundClip;
 
     #region Accessors
+    public override string WeaponName { get => weaponName; set => weaponName = value; }
     public override DamageData DamageAttributes { get => damageAttributes; protected set => damageAttributes = value; }
     public override float CoolDownTime { get => coolDownTime; protected set => coolDownTime = value; }
     public override int WeaponAnimId { get => weaponAnimId; protected set => weaponAnimId = value; }
@@ -43,7 +45,6 @@ public class MeleeWeapon : Weapon
         if (IsReady) 
         {
             Debug.Log($"Melee attack with {WeaponName}");
-            WeaponHolderAnim.SetTrigger("attack1");
             SpawnDamageObject();
             StartCoroutine(AttackCooldown());
         }

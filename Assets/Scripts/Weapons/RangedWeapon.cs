@@ -3,6 +3,7 @@ using System.Collections;
 
 public class RangedWeapon : Weapon
 {
+    [SerializeField] private string weaponName;
     [SerializeField] private DamageData damageAttributes;
     [SerializeField] private float coolDownTime = 1f;
     [SerializeField] private int weaponAnimId = 1;
@@ -14,14 +15,10 @@ public class RangedWeapon : Weapon
     [SerializeField] private int currentAmmo;
     [SerializeField] private int currentClip;
     [SerializeField] private float effectiveRange;
-    [SerializeField] private LayerMask aimColliderLayerMask;
     [SerializeField] private Vector3 holdPosition;
     [SerializeField] private Vector3 holdRotation;
     [SerializeField] private AudioSource audioSource;
-
-    private Vector3 targetPosition;
     private Vector3 aimDir;
-
     public AudioClip gunshot;
     public AudioClip gunClick;
     private bool hasPlayedGunReady = false;
@@ -36,6 +33,7 @@ public class RangedWeapon : Weapon
     }
 
     #region Accessors
+    public override string WeaponName { get => weaponName; set => weaponName = value; }
     public override DamageData DamageAttributes { get => damageAttributes; protected set => damageAttributes = value; }
     public override float CoolDownTime { get => coolDownTime; protected set => coolDownTime = value; }
     public override int WeaponAnimId { get => weaponAnimId; protected set => weaponAnimId = value; }
@@ -46,7 +44,6 @@ public class RangedWeapon : Weapon
     public int MaxClip { get => maxClip; set => maxClip = value; }
     public int CurrentAmmo { get => currentAmmo; set => currentAmmo = value; }
     public int CurrentClip { get => currentClip; set => currentClip = value; }
-    public LayerMask AimColliderLayerMask { get => aimColliderLayerMask; set => aimColliderLayerMask = value; }
     public override Vector3 HoldPosition { get => holdPosition; }
     public override Vector3 HoldRotation { get => holdRotation; } 
     #endregion
@@ -101,23 +98,11 @@ public class RangedWeapon : Weapon
         IsReady = true;
     }
 
-    public void UpdateWeaponAim(ref Transform aimTarget)
+    public void UpdateWeaponAim(Transform aimTarget)
     {
         if (WeaponHolder == null) return;
 
-        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-        int fixedDistance = 99;
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, AimColliderLayerMask))
-        {
-            targetPosition = raycastHit.point;
-        }
-        else
-        {
-            targetPosition = ray.origin + ray.direction * fixedDistance;
-        }
-        aimDir = (targetPosition - ShootPos.position).normalized;
-        aimTarget.position = targetPosition; // update aimTarget position
+        aimDir = (aimTarget.position - ShootPos.position).normalized;
     }
 
     private void FireWeapon()
