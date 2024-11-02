@@ -305,24 +305,24 @@ public class PlayerControlScript : MonoBehaviour
 
                 this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 5f);
             }
-            // Prevents the head from rotating wierdly when player is facing towards camera
+            // When player is facing the camera, set head aim target to forward head
             if (Vector3.Dot(this.transform.forward, cameraForward) <= 0f)
             {
-                Debug.Log("Setting HEad Rig Weight to 0");
-                SetHeadRigWeight(0);
+                SetMultiAimSourceWeight(headAim, 0, 1f); // Set forwardHeadTarget target weight to 1
+                SetMultiAimSourceWeight(headAim, 1, 0f); // Set aimTarget target weight to 0
             } else {
-                Debug.Log("Setting HEad Rig Weight to 1");
-                SetHeadRigWeight(1);
+                SetMultiAimSourceWeight(headAim, 0, 0f); 
+                SetMultiAimSourceWeight(headAim, 1, 1f);
             }
         }
     }
-    float velocity = 0;
-    float smoothTime = 0.25f;  // The time it takes to reach the target smoothly
-    private void SetHeadRigWeight(float desiredWeight)
+    public static void SetMultiAimSourceWeight(MultiAimConstraint aim, int idx, float val)
     {
-        
-        
-        headRig.weight = Mathf.SmoothDamp(headRig.weight, desiredWeight, ref velocity, smoothTime);
+        var aimSources = aim.data.sourceObjects;
+        float currentWeight = aimSources[idx].weight;
+        currentWeight = Mathf.Lerp(currentWeight, val, Time.deltaTime * 5f);
+        aimSources.SetWeight(idx, currentWeight);
+        aim.data.sourceObjects = aimSources;
     }
 
     private void UpdateTargets()

@@ -106,16 +106,6 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         }
     }
 
-    private void SetAimAndBodyAimSourceObjects(MultiAimConstraint aim, MultiAimConstraint bodyAim, int idx, float val)
-    {
-        var aimSources = aim.data.sourceObjects;
-        var bodySources = bodyAim.data.sourceObjects;
-        aimSources.SetWeight(idx, val);
-        bodySources.SetWeight(idx, val);
-        aim.data.sourceObjects = aimSources;
-        bodyAim.data.sourceObjects = bodySources;
-    }
-
     private void HandleRangedWeaponInput(RangedWeapon rangedWeapon)
     {
         thirdPersonCamera.SwitchCameraStyle(ThirdPersonCamera.CameraStyle.Ranged);
@@ -125,7 +115,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         aimRig.weight = 1f;
 
         // Weapons At Ready state keeps player ranged weapon at the ready after aiming or firing
-        if (playerControlScript._inputAimDown || playerControlScript._inputAttack)
+        if (playerControlScript.InputAimDown || playerControlScript.InputAttack)
         {
             if (weaponsAtReadyCoroutine != null)
             {
@@ -146,13 +136,17 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         }
 
         // Switch between weapon ready and weapon idle states by switching Aim and BodyAim source blend weights
-        if (playerControlScript.anim.GetBool("weaponsAtReady"))
+        if (playerControlScript.Anim.GetBool("weaponsAtReady"))
         {
-            SetAimAndBodyAimSourceObjects(aim, bodyAim, 0, 0f);
-            SetAimAndBodyAimSourceObjects(aim, bodyAim, 1, 1f);
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 0, 0f);
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 1, 1f);
+            PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 0, 0f);
+            PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 1, 1f);
         } else {
-            SetAimAndBodyAimSourceObjects(aim, bodyAim, 0, 1f);
-            SetAimAndBodyAimSourceObjects(aim, bodyAim, 1, 0f);
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 0, 1f);
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 1, 0f);
+            PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 0, 1f);
+            PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 1, 0f);
         }
 
         // Updated ranged fov when aiming down
