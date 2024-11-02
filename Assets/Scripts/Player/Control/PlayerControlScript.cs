@@ -354,8 +354,6 @@ public class PlayerControlScript : MonoBehaviour
         if (collision.transform.CompareTag("ground"))
         {
             ++groundContactCount;
-            Debug.Log("COLLIDING WITH: " + collision.gameObject.name);
-            Debug.Log("GroundedContactCount: " + groundContactCount);
             // Trigger landing event if necessary
             // EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(collision.contacts[0].point, collision.impulse.magnitude);
         }
@@ -366,8 +364,6 @@ public class PlayerControlScript : MonoBehaviour
         if (collision.transform.CompareTag("ground"))
         {
             --groundContactCount;
-            Debug.Log("EXIT COLLIDING WITH: " + collision.gameObject.name);
-            Debug.Log("GroundedContactCount: " + groundContactCount);
         }
     }
 
