@@ -8,8 +8,10 @@ public class MeleeWeapon : Weapon
     [SerializeField] private float coolDownTime = 1f;
     [SerializeField] private int weaponAnimId = 0;
     [SerializeField] private WeaponType weaponType = WeaponType.Melee;
-    [SerializeField] private Vector3 holdPosition;
-    [SerializeField] private Vector3 holdRotation;
+    // [SerializeField] private Vector3 holdPosition;
+    // [SerializeField] private Vector3 holdRotation;
+    [SerializeField] private string holdConfigName;
+    [SerializeField] private Transform hold;
     [SerializeField] private DamageObject hitBoxInstance; // Should have DamageObject component
     [SerializeField] private AudioSource audioSource;
     
@@ -23,8 +25,9 @@ public class MeleeWeapon : Weapon
     public override float CoolDownTime { get => coolDownTime; protected set => coolDownTime = value; }
     public override int WeaponAnimId { get => weaponAnimId; protected set => weaponAnimId = value; }
     public override WeaponType WeaponType { get => weaponType; protected set => weaponType = value; }
-    public override Vector3 HoldPosition { get => holdPosition; }
-    public override Vector3 HoldRotation { get => holdRotation; } 
+    // public override Vector3 HoldPosition { get => holdPosition; }
+    // public override Vector3 HoldRotation { get => holdRotation; } 
+    public override Transform Hold { get => hold; }
     #endregion
 
     void OnEnable()
@@ -47,6 +50,11 @@ public class MeleeWeapon : Weapon
         }
 
         WeaponName = SetWeaponName;
+    }
+
+    public override void SetHoldConfigs(Transform holdParent)
+    {
+        hold = holdParent.Find(holdConfigName).Find("Hold");
     }
 
     public override void Attack()

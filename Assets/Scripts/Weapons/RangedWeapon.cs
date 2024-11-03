@@ -15,14 +15,17 @@ public class RangedWeapon : Weapon
     [SerializeField] private int currentAmmo;
     [SerializeField] private int currentClip;
     [SerializeField] private float effectiveRange;
-    [SerializeField] private Vector3 holdPosition;
-    [SerializeField] private Vector3 holdRotation;
+    [SerializeField] private string holdConfigName;
+    [SerializeField] private Transform hold;
+    [SerializeField] private Transform secondHandTarget;
+    [SerializeField] private Transform secondHandHint;
     [SerializeField] private AudioSource audioSource;
+
+
     private Vector3 aimDir;
     public AudioClip gunshot;
     public AudioClip gunClick;
     private bool hasPlayedGunReady = false;
-    public string SetWeaponName;
 
     void Start()
     {
@@ -31,9 +34,6 @@ public class RangedWeapon : Weapon
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-
-        WeaponName = SetWeaponName;
-
     }
 
     #region Accessors
@@ -48,13 +48,22 @@ public class RangedWeapon : Weapon
     public int MaxClip { get => maxClip; set => maxClip = value; }
     public int CurrentAmmo { get => currentAmmo; set => currentAmmo = value; }
     public int CurrentClip { get => currentClip; set => currentClip = value; }
-    public override Vector3 HoldPosition { get => holdPosition; }
-    public override Vector3 HoldRotation { get => holdRotation; } 
+    public override Transform Hold { get => hold; }
+    public Transform SecondHandTarget { get => secondHandTarget; }
+    public Transform SecondHandHint { get => secondHandHint; }
     #endregion
 
     void OnEnable()
     {
         IsReady = true; // Reset IsReady when re-enabled
+    }
+
+    // Automatically sets the hold configurations
+    public override void SetHoldConfigs(Transform holdParent)
+    {
+        hold = holdParent.Find(holdConfigName).Find("Hold");
+        secondHandTarget = holdParent.Find(holdConfigName).Find("SecondHandTarget");
+        secondHandHint = holdParent.Find(holdConfigName).Find("SecondHandHint");
     }
 
     public override void Attack()
