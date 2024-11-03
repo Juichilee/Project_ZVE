@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2066152371}
-  - {fileID: 149674759206679513}
+  - {fileID: 3126376493983984556}
   m_Father: {fileID: 5657926159221709921}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -51,8 +51,8 @@ MonoBehaviour:
   coolDownTime: 1
   weaponAnimId: 0
   weaponType: 0
-  holdConfigName: HoldConfig_Hand
-  hold: {fileID: 0}
+  holdConfigName: 
+  hold: {fileID: 3126376493983984556}
   hitBoxInstance: {fileID: 2066152374}
   audioSource: {fileID: 0}
   meleeSoundClip: {fileID: 0}
@@ -741,13 +741,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653048787396143349}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.144, y: -0.001, z: 0.055}
+  m_LocalRotation: {x: 0.000000089406896, y: 0.00000012665977, z: -0.000000044703448, w: 1}
+  m_LocalPosition: {x: -0.14400056, y: -0.0010001585, z: 0.054999877}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 149674759206679513}
-  m_RootOrder: 0
+  m_Father: {fileID: 166969431}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &662114542345870685
 GameObject:
@@ -4349,38 +4349,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6037244969878288553}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7286082046135836430
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 149674759206679513}
-  m_Layer: 7
-  m_Name: HoldConfig_Hand
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &149674759206679513
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7286082046135836430}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3126376493983984556}
-  m_Father: {fileID: 166969431}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7413808090783144947
 GameObject:
