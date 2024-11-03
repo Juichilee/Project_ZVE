@@ -246,8 +246,8 @@ MonoBehaviour:
   coolDownTime: 1
   weaponAnimId: 0
   weaponType: 0
-  holdPosition: {x: 0.0116, y: -0.0099, z: 0.026}
-  holdRotation: {x: 0, y: 0, z: 76.501}
+  holdConfigName: HoldConfig_Knife
+  hold: {fileID: 0}
   hitBoxInstance: {fileID: 2247798695849639553}
   audioSource: {fileID: 0}
   SetWeaponName: Knife

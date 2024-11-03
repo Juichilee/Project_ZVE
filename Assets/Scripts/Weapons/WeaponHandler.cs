@@ -9,6 +9,8 @@ using System.Collections.Generic;
 public class WeaponHandler : MonoBehaviour, IWeaponHolder
 {
     public Transform holdWeaponParent;
+    public Transform secondHandAimTarget;
+    public Transform secondHandHintTarget;
     [SerializeField]
     private Weapon[] weaponSlots = new Weapon[3];
     private int currentWeaponIndex = 0;
@@ -117,6 +119,19 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         }
     }
 
+    // Stores references to the current weapon rig contraints
+    MultiAimConstraint aim;
+    MultiAimConstraint bodyAim;
+    TwoBoneIKConstraint secondHandAim;
+    private void UpdateWeaponRigConByName(string weaponName){
+        Transform weaponRig = aimRig.transform.Find(weaponName); // weapon rig name must match weapon name
+        aim = weaponRig.Find("Aim").gameObject.GetComponent<MultiAimConstraint>();
+        bodyAim = weaponRig.Find("BodyAim").gameObject.GetComponent<MultiAimConstraint>();
+        secondHandAim = weaponRig.Find("SecondHandAim").gameObject.GetComponent<TwoBoneIKConstraint>();
+        secondHandAim.data.target = secondHandAimTarget;
+        secondHandAim.data.hint = secondHandHintTarget;
+    }
+
     private void HandleRangedWeaponInput(RangedWeapon rangedWeapon)
     {
         thirdPersonCamera.SwitchCameraStyle(ThirdPersonCamera.CameraStyle.Ranged);
@@ -135,22 +150,11 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             weaponsAtReadyCoroutine = StartCoroutine(WeaponsAtReady(1f));
         }
 
-        MultiAimConstraint aim = null;
-        MultiAimConstraint bodyAim = null;
-
-        // Retrieve the list of multi-aimconstraint source objects for current type of ranged weapon
-        if (rangedWeapon.WeaponName == "Pistol")
-        {
-            Transform pistolRig = aimRig.transform.Find("PistolRig");
-            aim = pistolRig.Find("Aim").gameObject.GetComponent<MultiAimConstraint>();
-            bodyAim = pistolRig.Find("BodyAim").gameObject.GetComponent<MultiAimConstraint>();
-        }
-
         // Switch between weapon ready and weapon idle states by switching Aim and BodyAim source blend weights
         if (playerControlScript.Anim.GetBool("weaponsAtReady"))
         {
-            PlayerControlScript.SetMultiAimSourceWeight(aim, 0, 0f);
-            PlayerControlScript.SetMultiAimSourceWeight(aim, 1, 1f);
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 0, 0f); // idle aim target weight off
+            PlayerControlScript.SetMultiAimSourceWeight(aim, 1, 1f); // aim target weight on
             PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 0, 0f);
             PlayerControlScript.SetMultiAimSourceWeight(bodyAim, 1, 1f);
         } else {
@@ -242,7 +246,8 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             return;
         }
 
-        if (GetCurrentWeapon() != null)
+        // Prevents deequipping a weapon just after picking it up
+        if (currentWeaponIndex != index && GetCurrentWeapon() != null)
         {
             DeEquipWeapon(currentWeaponIndex);
         }
@@ -252,17 +257,50 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         {
             nextWeapon.gameObject.SetActive(true);
             playerControlScript.Anim.SetInteger("weaponAnimId", nextWeapon.WeaponAnimId);
+
+            nextWeapon.transform.SetLocalPositionAndRotation(nextWeapon.Hold.localPosition, nextWeapon.Hold.localRotation);
+            if (nextWeapon is RangedWeapon rangedWeapon)
+            {
+                // Reposition second hand targets and activate aim weights
+                secondHandAimTarget.SetLocalPositionAndRotation(rangedWeapon.SecondHandTarget.localPosition, rangedWeapon.SecondHandTarget.localRotation);
+                secondHandHintTarget.localPosition = rangedWeapon.SecondHandHint.localPosition;
+                // Updates all weapon rig constraint references to the current weapon
+                UpdateWeaponRigConByName(rangedWeapon.WeaponName);
+                ActivateWeaponAimWeights(rangedWeapon);
+            }
+            playerControlScript.Anim.SetTrigger("changeWeapon");
         } else {
             playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
         }
-        playerControlScript.Anim.SetTrigger("changeWeapon");
+
         currentWeaponIndex = index;
+    }
+
+    private void ActivateWeaponAimWeights(Weapon weapon)
+    {
+        if (weapon is RangedWeapon)
+        {
+            aim.weight = 1f;
+            bodyAim.weight = 1f;
+        }
+    }
+
+    private void DeactivateWeaponAimWeights(Weapon weapon)
+    {
+        if (weapon is RangedWeapon)
+        {
+            // Reset prev ranged weapon aim weights so that curr equipped weapon aim is not affected
+            aim.weight = 0f;
+            bodyAim.weight = 0f;
+        }
     }
 
     private void DeEquipWeapon(int index)
     {
         if (index >= 0 && index < weaponSlots.Length && weaponSlots[index] != null)
         {
+            Weapon prevWeapon = weaponSlots[index];
+            DeactivateWeaponAimWeights(prevWeapon);
             weaponSlots[index].gameObject.SetActive(false);
         }
     }
@@ -272,9 +310,10 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         if (index >= 0 && index < weaponSlots.Length && weaponSlots[index] != null)
         {
             Weapon weapon = weaponSlots[index];
+            DeactivateWeaponAimWeights(weapon);
             weapon.WeaponHolder = null;
             weapon.gameObject.transform.SetParent(null);
-            SceneManager.MoveGameObjectToScene(weapon.gameObject, SceneManager.GetActiveScene());
+            SceneManager.MoveGameObjectToScene(weapon.gameObject, SceneManager.GetActiveScene()); // Move outside DoNotDestroyOnLoad scene
 
             Rigidbody rb = weapon.gameObject.GetComponent<Rigidbody>();
             if (rb != null)
@@ -307,8 +346,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         weapon.WeaponHolder = this;
         weapon.WeaponHolderAnim = playerControlScript.Anim;
         weaponGameObject.transform.SetParent(holdWeaponParent);
-        weaponGameObject.transform.localPosition = weapon.HoldPosition;
-        weaponGameObject.transform.localRotation = Quaternion.Euler(weapon.HoldRotation);
+        weapon.SetHoldConfigs(holdWeaponParent); // hold configs should be directly under the hold weapon parent
         weaponGameObject.transform.localScale = Vector3.one;
 
         Rigidbody rb = weaponGameObject.GetComponent<Rigidbody>();
