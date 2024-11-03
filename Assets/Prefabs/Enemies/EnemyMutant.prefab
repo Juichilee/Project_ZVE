@@ -3136,6 +3136,7 @@ GameObject:
   - component: {fileID: 7017068930390835601}
   - component: {fileID: 7017068930390835600}
   - component: {fileID: 8284694609700114681}
+  - component: {fileID: 226116746}
   m_Layer: 7
   m_Name: HandWeapon
   m_TagString: Untagged
@@ -3278,6 +3279,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &226116746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7017068930390835606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a59a63912dbe7049b02b2fbe9851f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponName: Claw
+  damageAttributes: {fileID: 11400000, guid: 3aac468a838775f4aaebe1d858593b3d, type: 2}
+  coolDownTime: 1
+  weaponAnimId: 0
+  weaponType: 0
+  holdPosition: {x: 0, y: 0, z: 0}
+  holdRotation: {x: 0, y: 0, z: 0}
+  hitBoxInstance: {fileID: 7017068930059786601}
+  audioSource: {fileID: 0}
+  SetWeaponName: 
+  meleeSoundClip: {fileID: 0}
 --- !u!1 &7169310011310474172
 GameObject:
   m_ObjectHideFlags: 0
