@@ -8,7 +8,7 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
     private AudioSource zombieSound;
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor { get; private set; }
-    public Weapon weapon;
+    public MeleeClawWeapon weapon;
     // TODO: Replace this once Enemy Factory is Implemented
     protected EnemiesRemaining enemiesRemaining;
     #endregion
@@ -25,6 +25,8 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
 
     #region Animation Speed Variables
     public float MaxSpeed { get; private set; }
+    // Player Body Reference
+    private readonly Transform playerBodyTransform;
     #endregion
 
     #region Sound
@@ -61,7 +63,7 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
         aiSensor = GetComponent<AISensor>();
         
         // Weapon
-        weapon = GetComponentInChildren<Weapon>();
+        weapon = GetComponentInChildren<MeleeClawWeapon>();
         weapon.WeaponName = "Zombie Hand";
         weapon.WeaponHolder = this;
         weapon.WeaponHolderAnim = anim;
@@ -80,6 +82,8 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
     {
         base.Start();
         attackRange = 2f;
+        PlayerControlScript player = PlayerControlScript.PlayerInstance;
+        Transform playerBodyTransform = player.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
     }
 
     void FixedUpdate()
@@ -95,6 +99,7 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
         MaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
     }
 
+    #region Sounds
     // This method is called by the animation event 'ZombieWalk'
     public void ZombieWalk()
     {
@@ -111,6 +116,7 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
             zombieSound.PlayOneShot(attackSound);
         }
     }
+    #endregion
 
     #region Movement
     public float maxLookAheadTime = 0.5f;
@@ -123,16 +129,21 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
         Vector3 playerPos = player.transform.position;
 
         float distance = Vector3.Distance(currPos, playerPos);
-        float speed = aiAgent.speed;
-        float lookAheadTime = Mathf.Clamp(distance / speed, 0 , maxLookAheadTime);
 
-        Vector3 velocity = player.GetComponent<PlayerControlScript>().WorldVelocity;
-        Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
-        
-        if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
-            predictedPosition = hit.position;
+        if (distance > attackRange)
+        {
+            float speed = aiAgent.speed;
+            float lookAheadTime = Mathf.Clamp(distance / speed, 0 , maxLookAheadTime);
 
-        return GoTo(predictedPosition, MaxSpeed);
+            Vector3 velocity = player.GetComponent<PlayerControlScript>().WorldVelocity;
+            Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
+            
+            if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
+                predictedPosition = hit.position;
+            return GoTo(predictedPosition, MaxSpeed);
+        }
+        return GoTo(playerPos, MaxSpeed);
+
     }
     #endregion
 
@@ -183,8 +194,20 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
 
     public void AttackTarget()
     {
+        anim.SetTrigger("attack1");
         weapon.Attack();
         ZombieAttack();
+    }
+
+
+    public void EnableHitbox()
+    {
+        weapon.EnableHitbox();
+    }
+
+    public void DisableHitbox()
+    {
+        weapon.DisableHitbox();
     }
 
     #endregion
@@ -195,5 +218,32 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
         return this.transform.root;
     }
     #endregion
+
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if(anim) 
+        {
+            AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(layerIndex);
+            if(astate.IsName("Attack"))
+            {
+                float aimWeight = 1f;
+
+                // Set the look target position, if one has been assigned
+                if(playerBodyTransform != null)
+                {
+                    anim.SetLookAtWeight(aimWeight);
+                    anim.SetLookAtPosition(playerBodyTransform.position);
+                    anim.SetIKPositionWeight(AvatarIKGoal.RightHand, aimWeight);
+                    anim.SetIKPosition(AvatarIKGoal.RightHand, playerBodyTransform.position);
+                }
+            }
+            else
+            {
+                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+                anim.SetLookAtWeight(0);
+
+            }
+        }
+    } 
 
 }
