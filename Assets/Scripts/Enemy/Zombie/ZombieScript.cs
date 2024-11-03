@@ -67,7 +67,7 @@ public class ZombieScript : EnemyBase, IMovable, IKillable, IAttacker, IWeaponHo
         weapon.WeaponName = "Zombie Hand";
         weapon.WeaponHolder = this;
         weapon.WeaponHolderAnim = anim;
-        weapon.transform.SetLocalPositionAndRotation(weapon.HoldPosition, Quaternion.Euler(weapon.HoldRotation));
+        weapon.transform.SetLocalPositionAndRotation(weapon.Hold.localPosition, weapon.Hold.localRotation);
         weapon.transform.localScale = Vector3.one;
 
         // Sound
