@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &469702363
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 469702364}
+  m_Layer: 7
+  m_Name: Hold
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &469702364
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469702363}
+  m_LocalRotation: {x: 0.45219997, y: -0.8778623, z: 0.15759142, w: -0.006156166}
+  m_LocalPosition: {x: -16.223776, y: 26.215021, z: 7.3152432}
+  m_LocalScale: {x: 0.5000004, y: 0.50000024, z: 0.5}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 7017068930390835601}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &175888674508326222
 GameObject:
   m_ObjectHideFlags: 0
@@ -3074,7 +3105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSource: {fileID: 7017068930390835600}
-  attacker: {fileID: 0}
+  attacker: {fileID: 7416050342597764625}
 --- !u!23 &7017068930059786606
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3157,6 +3188,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7017068930059786604}
+  - {fileID: 469702364}
   m_Father: {fileID: 1172337427169707868}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3177,8 +3209,8 @@ MonoBehaviour:
   coolDownTime: 1
   weaponAnimId: 0
   weaponType: 0
-  holdPosition: {x: 0, y: 0, z: 0}
-  holdRotation: {x: 0, y: 0, z: 0}
+  holdConfigName: 
+  hold: {fileID: 469702364}
   hitBoxInstance: {fileID: 7017068930059786601}
   audioSource: {fileID: 8284694609700114681}
   SetWeaponName: 
@@ -3296,11 +3328,10 @@ MonoBehaviour:
   coolDownTime: 1
   weaponAnimId: 0
   weaponType: 0
-  holdPosition: {x: 0, y: 0, z: 0}
-  holdRotation: {x: 0, y: 0, z: 0}
+  holdConfigName: 
+  hold: {fileID: 0}
   hitBoxInstance: {fileID: 7017068930059786601}
   audioSource: {fileID: 0}
-  SetWeaponName: 
   meleeSoundClip: {fileID: 0}
 --- !u!1 &7169310011310474172
 GameObject:
@@ -3619,6 +3650,7 @@ MonoBehaviour:
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
+  aiSensor: {fileID: 0}
   weapon: {fileID: 0}
   healthPrefab: {fileID: 1677881876994486743, guid: 517b083583479c1478d06d7edfa6f4ee, type: 3}
   ammoPrefab: {fileID: 7821734596122092112, guid: cd8e101b53d56c64f9d05cc782af3159, type: 3}

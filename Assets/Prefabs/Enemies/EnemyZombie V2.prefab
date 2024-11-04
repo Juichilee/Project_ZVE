@@ -116,8 +116,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b38be9a5db0cd3d4583e5ba6ce970260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSource: {fileID: 0}
-  attacker: {fileID: 0}
+  weaponSource: {fileID: 1084643511}
+  attacker: {fileID: 3058587722941347216}
 --- !u!23 &2066152373
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1609,6 +1609,7 @@ MonoBehaviour:
   animationSpeed: 1
   rootMovementSpeed: 1
   rootTurnSpeed: 1
+  aiSensor: {fileID: 0}
   weapon: {fileID: 0}
   healthPrefab: {fileID: 1677881876994486743, guid: 517b083583479c1478d06d7edfa6f4ee, type: 3}
   ammoPrefab: {fileID: 7821734596122092112, guid: cd8e101b53d56c64f9d05cc782af3159, type: 3}
