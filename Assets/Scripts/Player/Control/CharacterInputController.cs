@@ -54,6 +54,12 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
+    public bool HoldAttack
+    {
+        get;
+        private set;
+    }
+
     public bool Interact
     {
         get;
@@ -134,41 +140,17 @@ public class CharacterInputController : MonoBehaviour {
         Jump = Input.GetButton("Jump");
 
         // Aimdown sights
-        if (Input.GetMouseButtonDown(1))
-        {
-            AimDown = true; // Generalize later to allow controller aim down as well
-        } else if (Input.GetMouseButtonUp(1))
-        {
-            AimDown = false;
-        }
+        AimDown = Input.GetMouseButton(1);
 
         // Melee
-        if (Input.GetMouseButtonDown(0))
-        {
-            Attack = true;
-        } else {
-            Attack = false;
-        }
+        Attack = Input.GetMouseButtonDown(0);
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Interact = true;
-        } else {
-            Interact = false;
-        }
+        HoldAttack = Input.GetMouseButton(0);
 
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            Drop = true;
-        } else {
-            Drop = false;
-        }
+        Interact = Input.GetKeyDown(KeyCode.E);
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Reload = true;
-        } else {
-            Reload = false;
-        }
+        Drop = Input.GetKeyDown(KeyCode.X);
+
+        Reload = Input.GetKeyDown(KeyCode.R);
 	}
 }

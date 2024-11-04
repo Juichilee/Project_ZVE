@@ -55,6 +55,8 @@ public class PlayerControlScript : MonoBehaviour
     private bool _inputAimDown = false;
     public bool InputAttack { get => _inputAttack; private set => _inputAttack = value; }
     private bool _inputAttack = false;
+    public bool InputHoldAttack { get => _inputHoldAttack; private set => _inputHoldAttack = value; }
+    private bool _inputHoldAttack = false;
     public bool Interact { get => _interact; private set => _interact = value; }
     private bool _interact = false;
     public bool Drop { get => _drop; private set => _drop = value; }
@@ -200,6 +202,7 @@ public class PlayerControlScript : MonoBehaviour
             _inputRight = cinput.Right;
             _inputAimDown = cinput.AimDown;
             _inputAttack = cinput.Attack;
+            _inputHoldAttack = cinput.HoldAttack;
             _inputJump = cinput.Jump;
             _interact = cinput.Interact;
             _drop = cinput.Drop;
