@@ -2,10 +2,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(EnemyDamageable), typeof(AISensor), typeof(Weapon))]
-public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
+public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
 {
     #region Component Reference
-    private AudioSource zombieSound;
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor;
     public MeleeClawWeapon weapon;
@@ -67,20 +66,16 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         weapon.WeaponName = "Zombie Hand";
         weapon.WeaponHolder = this;
         weapon.WeaponHolderAnim = anim;
+        weapon.transform.SetLocalPositionAndRotation(weapon.Hold.localPosition, weapon.Hold.localRotation);
         weapon.transform.localScale = Vector3.one;
 
         // Sound
-        zombieSound = GetComponent<AudioSource>();
-        if (zombieSound == null)
-        {
-            zombieSound = gameObject.AddComponent<AudioSource>();
-        }
     }
 
     protected override void Start() 
     {
         base.Start();
-        attackRange = 2f;
+        attackRange = 20f;
         PlayerControlScript player = PlayerControlScript.PlayerInstance;
         playerBodyTransform = player.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
     }
@@ -97,25 +92,6 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
 
         MaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
     }
-
-    #region Sounds
-    // This method is called by the animation event 'ZombieWalk'
-    public void ZombieWalk()
-    {
-        if (footstepClip != null && !zombieSound.isPlaying)
-        {
-            zombieSound.PlayOneShot(footstepClip, 0.5f); //temp drop to half volume b/c everything's loud
-        }
-    }
-
-    public void ZombieAttack()
-    {
-        if (attackSound != null && !zombieSound.isPlaying)
-        {
-            zombieSound.PlayOneShot(attackSound);
-        }
-    }
-    #endregion
 
     #region Movement
     public float maxLookAheadTime = 0.5f;
@@ -193,11 +169,10 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
 
     public void AttackTarget()
     {
+        // TODO: Talk to Juichi on how to shoot the gun
         anim.SetTrigger("attack1");
         weapon.Attack();
-        ZombieAttack();
     }
-
 
     public void EnableHitbox()
     {
@@ -224,7 +199,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
             AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(layerIndex);
             if(astate.IsName("Attack"))
             {
-                float aimWeight = 0.1f;
+                float aimWeight = 1f;
 
                 // Set the look target position, if one has been assigned
                 if(playerBodyTransform != null)
@@ -243,5 +218,4 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
             }
         }
     } 
-
 }
