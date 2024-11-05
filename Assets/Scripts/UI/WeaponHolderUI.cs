@@ -7,6 +7,7 @@ public class WeaponHolderUI : MonoBehaviour
 {
     public GameObject gun;
     public GameObject knife;
+    public GameObject ar;
     private WeaponHandler weaponHandler;
     private Image image;
     public int CurrentSlot = 0;
@@ -30,14 +31,22 @@ public class WeaponHolderUI : MonoBehaviour
             case "Pistol":
                 gun.SetActive(true);
                 knife.SetActive(false);
+                ar.SetActive(false);
                 break;
             case "Knife":
                 gun.SetActive(false);
                 knife.SetActive(true);
+                ar.SetActive(false);
+                break;
+            case "AR":
+                gun.SetActive(false);
+                knife.SetActive(false);
+                ar.SetActive(true);
                 break;
             default:
                 gun.SetActive(false);
                 knife.SetActive(false);
+                ar.SetActive(false);
                 break;
         }
 

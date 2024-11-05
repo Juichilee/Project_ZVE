@@ -35,23 +35,29 @@ public class AmmoPickup : MonoBehaviour
     {
         if (c.transform.gameObject.CompareTag("Player"))
         {
-            if (true) {         //TODO: check if player can hold more ammo
+            WeaponHandler pWeaponH = c.GetComponent<WeaponHandler>();
+            Weapon weapon = pWeaponH.GetWeapon(pWeaponH.GetCurrentWeaponIndex());
+
+            if (weapon is RangedWeapon rangedWeapon) {         //TODO: check if player can hold more ammo
                 //TODO: Give the player more ammo
-
-                // Play the pickup sound from the player's AudioSource
-                AudioSource playerAudio = c.gameObject.GetComponent<AudioSource>();
-                if (playerAudio != null && pickupSound != null)
+                if (rangedWeapon.gainAmmo(AmmoAmt))
                 {
-                    playerAudio.PlayOneShot(pickupSound);
-                }
+                    // Play the pickup sound from the player's AudioSource
+                    AudioSource playerAudio = c.gameObject.GetComponent<AudioSource>();
+                    if (playerAudio != null && pickupSound != null)
+                    {
+                        playerAudio.PlayOneShot(pickupSound);
+                    }
 
-                // Disable the collider and hide the pickup object
-                pickupCollider.enabled = false;
-                if (pickupRenderer != null)
-                {
-                    pickupRenderer.enabled = false;
+                    // Disable the collider and hide the pickup object
+                    pickupCollider.enabled = false;
+                    if (pickupRenderer != null)
+                    {
+                        pickupRenderer.enabled = false;
+                    }
+                    Destroy(this.gameObject);
+
                 }
-                Destroy(this.gameObject);
 
             }
 
