@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 public class RangedWeapon : Weapon
@@ -138,4 +139,16 @@ public class RangedWeapon : Weapon
     {
         hasPlayedGunReady = false;
     }
+
+    public Boolean gainAmmo(int ammoAmt)
+    {
+        if (currentAmmo == maxAmmo)
+            return false;
+        else if (currentAmmo + ammoAmt >= maxAmmo)
+            currentAmmo = maxAmmo;
+        else
+            currentAmmo += ammoAmt;
+        return true;
+    }
+
 }
