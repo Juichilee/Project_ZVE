@@ -10,6 +10,8 @@ public class PlayerStatus : BasicDamageable
     public int strengthUpgrade = 0;
     public int hpUpgrade = 0;
     public int monsterPoints = 0;
+    private PlayerSounds playerSounds;
+
     // TODO: public float iframes;
 
     private bool isDead = false;
@@ -18,6 +20,12 @@ public class PlayerStatus : BasicDamageable
     {
         maxHealth = 200 + 20*hpUpgrade;
         currentHealth = 200 + 20 * hpUpgrade;
+
+        playerSounds = GetComponent<PlayerSounds>();
+        if (playerSounds == null)
+        {
+            Debug.LogWarning("PlayerSounds component not found.");
+        }
     }
 
     private void FixedUpdate()
@@ -35,6 +43,12 @@ public class PlayerStatus : BasicDamageable
         if (damageData.StaggerDamage > 0) StaggerHealth -= damageData.StaggerDamage;
         if (damageData.SlowDamage > 0) SlowHealth -= damageData.SlowDamage;
         if (damageData.BleedDamage > 0) BleedHealth -= damageData.BleedDamage;
+        
+        if (playerSounds != null)
+        {
+            playerSounds.PlayerHurt();
+            playerSounds.GotHit();
+        }
 
         StartCoroutine(InvincibilityFrames());
 
@@ -46,7 +60,14 @@ public class PlayerStatus : BasicDamageable
 
     public override void Die()
     {
+        if (isDead) return; // returns dead status
+
+        isDead = true;
         Debug.Log($"The Player has died.");
+        if (playerSounds != null)
+        {
+            playerSounds.PlayDeathSound();
+        }
         // Handle object destruction or death animations
     }
 
