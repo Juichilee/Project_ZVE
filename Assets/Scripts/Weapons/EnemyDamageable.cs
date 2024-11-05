@@ -9,6 +9,7 @@ public class EnemyDamageable : BasicDamageable
     public MeshRenderer meshRenderer;
     public RagdollOnDeath ragdollOnDeath;
     public AudioClip deathSound;
+    public AudioClip damageSound;
     private AudioSource audioSource;
     public DamageData damage;
     public float AttackDamage { get; private set; }
@@ -40,6 +41,10 @@ public class EnemyDamageable : BasicDamageable
 
         // Visualize taking damage
         //if(meshRenderer != null) meshRenderer.material = onDamageMaterial;
+        if (damageSound != null)
+        {
+            audioSource.PlayOneShot(damageSound);
+        }
 
         StartCoroutine(InvincibilityFrames());
         Debug.Log(CurrentHealth);
@@ -69,16 +74,10 @@ public class EnemyDamageable : BasicDamageable
     public void OnDefeated()
     {
         ragdollOnDeath.EnableRagdoll();
-        if (deathSound != null)
-        {
-            audioSource.PlayOneShot(deathSound);
-        }
-
     }
 
     public void DealDamage(PlayerStatus receiverStatus)
     {
         receiverStatus.OnDamage(damage);
     }
-
 }
