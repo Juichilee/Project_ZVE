@@ -268,10 +268,10 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
                 UpdateWeaponRigConByName(rangedWeapon.WeaponName);
                 ActivateWeaponAimWeights(rangedWeapon);
             }
-            playerControlScript.Anim.SetTrigger("changeWeapon");
         } else {
             playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
         }
+        playerControlScript.Anim.SetTrigger("changeWeapon");
 
         currentWeaponIndex = index;
     }

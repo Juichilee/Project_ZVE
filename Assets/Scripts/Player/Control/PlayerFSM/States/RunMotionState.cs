@@ -67,6 +67,8 @@ public class RunMotionState : BaseState
         // Convert the modified local position back to world space
         newRootPosition = player.transform.TransformPoint(localRootPosition);
 
+        newRootPosition = player.CalculateSlopeAdjustedPos(newRootPosition);
+
         // Scale the difference in position and rotation to make the character go faster or slower
         newRootPosition = Vector3.LerpUnclamped(player.transform.position, newRootPosition, player.RootMovementSpeed);
 
