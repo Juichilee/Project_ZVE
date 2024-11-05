@@ -141,7 +141,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         aimRig.weight = 1f;
 
         // Weapons At Ready state keeps player ranged weapon at the ready after aiming or firing
-        if (playerControlScript.InputAimDown || playerControlScript.InputAttack)
+        if (playerControlScript.InputAimDown || playerControlScript.InputHoldAttack)
         {
             if (weaponsAtReadyCoroutine != null)
             {
@@ -173,7 +173,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             rangedWeapon.Reload();
         }
 
-        if (rangedWeapon.IsReady && playerControlScript.InputAttack)
+        if (rangedWeapon.IsReady && playerControlScript.InputHoldAttack)
         {
             playerControlScript.Anim.SetTrigger("attack");
             rangedWeapon.Attack();
@@ -268,10 +268,10 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
                 UpdateWeaponRigConByName(rangedWeapon.WeaponName);
                 ActivateWeaponAimWeights(rangedWeapon);
             }
-            playerControlScript.Anim.SetTrigger("changeWeapon");
         } else {
             playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
         }
+        playerControlScript.Anim.SetTrigger("changeWeapon");
 
         currentWeaponIndex = index;
     }

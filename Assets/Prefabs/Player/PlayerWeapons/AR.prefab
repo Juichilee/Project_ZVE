@@ -514,7 +514,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: AR
   damageAttributes: {fileID: 11400000, guid: 7b437b54f52b83e4fb3610526daec387, type: 2}
-  coolDownTime: 1
+  coolDownTime: 0.1
   weaponAnimId: 2
   weaponType: 1
   projectileObj: {fileID: 5341742223406746680, guid: 80b9e7b54b8dfe04fa8fb202d73c59d9, type: 3}
@@ -529,8 +529,8 @@ MonoBehaviour:
   secondHandTarget: {fileID: 0}
   secondHandHint: {fileID: 0}
   audioSource: {fileID: 0}
-  gunshot: {fileID: 0}
-  gunClick: {fileID: 0}
+  gunshot: {fileID: 8300000, guid: 7e85c811417efdf4ead0bb7703d45a55, type: 3}
+  gunClick: {fileID: 8300000, guid: 4087eea1541dd6146bd87756af6e9629, type: 3}
 --- !u!82 &-4605851996556465678
 AudioSource:
   m_ObjectHideFlags: 0

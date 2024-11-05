@@ -6,13 +6,14 @@ public class JumpAirMotionState : BaseState
     public override Enum stateType => MotionStateType.JumpAir;
     private PlayerControlScript player;
 
-    public float jumpForce = 10f;
+    public float jumpForce = 100f;
+    public float horizontalBoost = 100f;
     public float jumpCooldown = 0.1f;
     private bool hasJumped = false;
     public bool multiJump = false;
     private float maxVerticalSpeed = 10f; // Maximum falling speed for falling animation blend
     public float maxMidairControlSpeed = 10f;
-    public float midairControlForce = 10f;
+    public float midairControlForce = 2f;
 
     public JumpAirMotionState(PlayerControlScript player)
     {
@@ -76,11 +77,11 @@ public class JumpAirMotionState : BaseState
     // PlayerJump() is called by animation event from the jump animation
     public void PlayerJump()
     {
-        Vector3 verticalForce = Vector3.up * jumpForce;
+        Vector3 verticalForce = Vector3.up * jumpForce * player.speedMultiplier;
         player.Rbody.velocity = new Vector3(player.Rbody.velocity.x, 0f, player.Rbody.velocity.z); // reset y velocity before jump
-        Vector3 horizontalForce = player.InputDir * jumpForce;
+        Vector3 horizontalForce = player.InputDir * horizontalBoost * player.speedMultiplier;
         Vector3 totalForce = verticalForce + horizontalForce;
-        player.Rbody.AddForce(totalForce, ForceMode.VelocityChange);
+        player.Rbody.AddForce(totalForce, ForceMode.Impulse);
         player.StartCoroutine(JumpResetDelay()); // Reference StartCoroutine that belongs to player MonoBehavior class
     }
 
@@ -88,14 +89,14 @@ public class JumpAirMotionState : BaseState
     {
         if (player.IsMoving)
         {
-            Vector3 horizontalForce = player.InputDir * midairControlForce;
+            Vector3 horizontalForce = player.InputDir * midairControlForce * player.speedMultiplier;
             player.Rbody.AddForce(horizontalForce, ForceMode.Impulse);
 
             // Get horizontal velocity
             Vector3 horizontalVelocity = new Vector3(player.Rbody.velocity.x, 0f, player.Rbody.velocity.z);
 
             // Clamp horizontal speed using Vector3.ClampMagnitude
-            horizontalVelocity = Vector3.ClampMagnitude(horizontalVelocity, maxMidairControlSpeed);
+            horizontalVelocity = Vector3.ClampMagnitude(horizontalVelocity, maxMidairControlSpeed * player.speedMultiplier);
 
             // Update Rigidbody's velocity
             player.Rbody.velocity = new Vector3(horizontalVelocity.x, player.Rbody.velocity.y, horizontalVelocity.z);

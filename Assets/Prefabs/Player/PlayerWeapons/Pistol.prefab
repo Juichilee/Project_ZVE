@@ -447,7 +447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Pistol
   damageAttributes: {fileID: 11400000, guid: 7b437b54f52b83e4fb3610526daec387, type: 2}
-  coolDownTime: 1
+  coolDownTime: 0.5
   weaponAnimId: 1
   weaponType: 1
   projectileObj: {fileID: 3700960318299724318, guid: 23e3b161e98615544be8a3bc1fc111f5, type: 3}

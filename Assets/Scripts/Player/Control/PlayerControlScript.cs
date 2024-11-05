@@ -26,6 +26,8 @@ public class PlayerControlScript : MonoBehaviour
     public Transform spawn;
     public Transform aimTarget; 
     public LayerMask aimColliderLayerMask;
+    public LayerMask groundLayerMask;
+    private float slopeCheckDistance = 1f; // Adjust based on player height
     public Rig headRig; 
     private MultiAimConstraint headAim;
     private PlayerStatus playerStatus;
@@ -55,6 +57,8 @@ public class PlayerControlScript : MonoBehaviour
     private bool _inputAimDown = false;
     public bool InputAttack { get => _inputAttack; private set => _inputAttack = value; }
     private bool _inputAttack = false;
+    public bool InputHoldAttack { get => _inputHoldAttack; private set => _inputHoldAttack = value; }
+    private bool _inputHoldAttack = false;
     public bool Interact { get => _interact; private set => _interact = value; }
     private bool _interact = false;
     public bool Drop { get => _drop; private set => _drop = value; }
@@ -90,13 +94,6 @@ public class PlayerControlScript : MonoBehaviour
     public bool IsGrounded { get => _isGrounded; private set => _isGrounded = value; }
     private bool _isGrounded = true;
 
-    public bool GetGrounded
-    {
-        get
-        {
-            return groundContactCount > 0;
-        }
-    }
     #endregion
 
     void Awake()
@@ -188,18 +185,21 @@ public class PlayerControlScript : MonoBehaviour
         {
             spawn = GameObject.FindGameObjectsWithTag("Respawn")[0].transform;
             this.gameObject.transform.position = spawn.position;
-            groundContactCount = 0;
+            // groundContactCount = 0;
         }
     }
     // Responsible for reading (and caching) input, updating certain global environment properties, and interrupting global states
     private void Update()
     {
+        // Debug.Log("Player velocity: " + WorldVelocity);
+
         if (cinput.enabled)
         {
             _inputForward = cinput.Forward;
             _inputRight = cinput.Right;
             _inputAimDown = cinput.AimDown;
             _inputAttack = cinput.Attack;
+            _inputHoldAttack = cinput.HoldAttack;
             _inputJump = cinput.Jump;
             _interact = cinput.Interact;
             _drop = cinput.Drop;
@@ -344,27 +344,26 @@ public class PlayerControlScript : MonoBehaviour
     {
         float radius = GetComponent<CapsuleCollider>().radius * 0.9f;
         Vector3 pos = transform.position + Vector3.up * (radius * 0.5f);
-        LayerMask groundLayer = LayerMask.GetMask("ground");
-        _isGrounded = GetGrounded || Physics.CheckSphere(pos, radius, groundLayer);
+        _isGrounded = Physics.CheckSphere(pos, radius, groundLayerMask);
     }
 
-    // Physics callback for collision
-    void OnCollisionEnter(Collision collision)
+    // Adjusts position to factor in moving up or down a slope
+    public Vector3 CalculateSlopeAdjustedPos(Vector3 position)
     {
-        if (collision.transform.CompareTag("ground"))
+        // Debug.DrawRay(position + Vector3.up * 0.1f, Vector3.down * (slopeCheckDistance + 0.1f), Color.red);
+        RaycastHit hit;
+        if (Physics.Raycast(position + Vector3.up * 0.1f, Vector3.down, out hit, slopeCheckDistance + 0.1f, groundLayerMask))
         {
-            ++groundContactCount;
-            // Trigger landing event if necessary
-            // EventManager.TriggerEvent<PlayerLandsEvent, Vector3, float>(collision.contacts[0].point, collision.impulse.magnitude);
-        }
-    }
+            float hitY = hit.point.y;
+            float positionY = position.y;
 
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.transform.CompareTag("ground"))
-        {
-            --groundContactCount;
+            if (hitY < positionY)
+            {
+                // Adjust y position down to ground level when moving down a slope
+                position.y = hitY;
+            }
         }
+        return position;
     }
 
     void OnAnimatorMove()
