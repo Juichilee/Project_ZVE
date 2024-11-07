@@ -6,7 +6,7 @@ public class JumpAirMotionState : BaseState
     public override Enum stateType => MotionStateType.JumpAir;
     private PlayerControlScript player;
 
-    public float jumpForce = 100f;
+    public float jumpForce = 150f;
     public float horizontalBoost = 100f;
     public float jumpCooldown = 0.1f;
     private bool hasJumped = false;
