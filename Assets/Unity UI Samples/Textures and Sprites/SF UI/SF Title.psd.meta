@@ -159,13 +159,13 @@ TextureImporter:
       name: SF Title
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 256
-        height: 64
+        x: 6
+        y: 6
+        width: 244
+        height: 52
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 125, y: 30, z: 125, w: 30}
+      border: {x: 119, y: 21, z: 125, w: 30}
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -179,7 +179,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: a3f0c712e1b4e4343a519bd44fe5469a
     internalID: 0
     vertices: []
     indices: 
