@@ -467,7 +467,7 @@ GameObject:
   - component: {fileID: 6731076747964974991}
   - component: {fileID: 6731076747964974989}
   - component: {fileID: 6731076747964974988}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPieces
   m_TagString: Untagged
   m_Icon: {fileID: 0}

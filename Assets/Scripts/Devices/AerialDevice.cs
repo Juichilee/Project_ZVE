@@ -77,11 +77,15 @@ public class AerialDevice : MonoBehaviour
                 if (Random.Range(0f, 1f) >= 0.5f)
                 {
                     if (DroppableObjectOne != null) {
-                        Instantiate(DroppableObjectOne, this.transform.position - new Vector3(0, 5, 0), this.transform.rotation);
+                        Instantiate(DroppableObjectOne, this.transform.position - new Vector3(0, 2, 0), this.transform.rotation);
+                        // Increase the dropPause to 30f
+                        dropPause = 30f;
                     }
                 } else {
                     if (DroppableObjectTwo != null) {
-                        Instantiate(DroppableObjectTwo, this.transform.position - new Vector3(0, 5, 0), this.transform.rotation);
+                        Instantiate(DroppableObjectTwo, this.transform.position - new Vector3(0, 2, 0), this.transform.rotation);
+                        // Increase the dropPause to 30f
+                        dropPause = 30f;
                     }
                 }
                 break;

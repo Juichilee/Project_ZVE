@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8525812996806841415}
   - component: {fileID: 7294936994394883875}
   - component: {fileID: 3010406322419864394}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: ProjectileShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -548,7 +548,7 @@ GameObject:
   - component: {fileID: 6353690945132503114}
   - component: {fileID: 6353690945132503115}
   - component: {fileID: 6353690945132503112}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: HidingAreaBarrier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
