@@ -10,7 +10,7 @@ public class BackgroundMusic : MonoBehaviour
         source = GetComponent<AudioSource>();
         source.volume = 0f;
         StartCoroutine(Fade(true, source, 2f, 1f));
-        StartCoroutine(Fade(false, source, 2f, 0f));
+        // StartCoroutine(Fade(false, source, 2f, 0f));
     }
 
     private void Update()
@@ -19,7 +19,7 @@ public class BackgroundMusic : MonoBehaviour
         {
             source.Play();
             StartCoroutine(Fade(true, source, 2f, 1f));
-            StartCoroutine(Fade(false, source, 2f, 0f));
+            // StartCoroutine(Fade(false, source, 2f, 0f));
         }
     }
 
