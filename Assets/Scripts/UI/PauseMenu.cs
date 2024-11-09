@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject settingsMenu;
     public GameObject pauseMenu;
     public GameObject mainUI;
+    public GameObject crosshair;
     private static bool isPaused;
 
     public static bool GetIsPaused()
@@ -19,6 +20,7 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        crosshair = GameObject.FindWithTag("crosshair");
         Unpause();
     }
 
@@ -41,6 +43,7 @@ public class PauseMenu : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0f;
+        crosshair.SetActive(false);
         pauseMenu.SetActive(true);
         settingsMenu.SetActive(false);
         mainUI.SetActive(false);
@@ -52,6 +55,7 @@ public class PauseMenu : MonoBehaviour
     public void Unpause()
     {
         Time.timeScale = 1f;
+        crosshair.SetActive(true);
         pauseMenu.SetActive(false);
         settingsMenu.SetActive(false);
         mainUI.SetActive(true);
