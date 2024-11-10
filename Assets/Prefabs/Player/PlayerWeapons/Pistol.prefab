@@ -462,7 +462,7 @@ MonoBehaviour:
   secondHandTarget: {fileID: 0}
   secondHandHint: {fileID: 0}
   audioSource: {fileID: 0}
-  gunshot: {fileID: 8300000, guid: 7e85c811417efdf4ead0bb7703d45a55, type: 3}
+  gunshot: {fileID: 8300000, guid: 3b7f7438121b0404f9930779f1fe00a5, type: 3}
   gunClick: {fileID: 8300000, guid: 4087eea1541dd6146bd87756af6e9629, type: 3}
 --- !u!82 &1347887267273607973
 AudioSource:

@@ -10,6 +10,7 @@ TagManager:
   - floor
   - PickupPanel
   - AmmoCount
+  - crosshair
   layers:
   - Default
   - TransparentFX
@@ -24,8 +25,8 @@ TagManager:
   - Projectile
   - DeadEnemy
   - SurfaceOffset
-  - 
-  - 
+  - Trigger
+  - PostProcessing
   - 
   - 
   - 

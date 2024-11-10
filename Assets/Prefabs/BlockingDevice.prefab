@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 8535004431623760018}
   - component: {fileID: 8535004431623760023}
   - component: {fileID: 8535004431623760020}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: BlockingDevice
   m_TagString: Untagged
   m_Icon: {fileID: 0}

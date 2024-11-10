@@ -1649,7 +1649,8 @@ MonoBehaviour:
   onDamageMaterial: {fileID: 2100000, guid: 3eb7b85297fa545f5878b528ed5cd46f, type: 2}
   meshRenderer: {fileID: 0}
   ragdollOnDeath: {fileID: 726160093790132481}
-  deathSound: {fileID: 8300000, guid: 2f813c3597bd78246a1c7c1643163f98, type: 3}
+  deathSound: {fileID: 8300000, guid: 331fa6d65ee7aa04b9e22957061fead6, type: 3}
+  damageSound: {fileID: 8300000, guid: bd25ec31566daf145bce4f71ee34c678, type: 3}
   damage: {fileID: 11400000, guid: 00e40074c337bc14cb9f79d88ad4620a, type: 2}
 --- !u!114 &1522734564
 MonoBehaviour:
@@ -1738,7 +1739,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: 950c9c8a773cba148b44d336b5808688, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.515
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1747,7 +1748,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 50
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -1782,7 +1783,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.99
       inSlope: 0
       outSlope: 0
       tangentMode: 0

@@ -9,6 +9,9 @@ public class PlayerSounds : MonoBehaviour
     public AudioClip runningClip;
     public AudioClip jumpGrunt;
     public AudioClip landingClip;
+    public AudioClip deathClip;
+    public AudioClip hurtClip;
+    public AudioClip damageImpactClip;
 
     void Start()
     {
@@ -42,6 +45,30 @@ public class PlayerSounds : MonoBehaviour
         if (landingClip != null)
         {
             audioSource.PlayOneShot(landingClip);
+        }
+    }
+
+    public void PlayDeathSound()  // Method to play the death sound
+    {
+        if (deathClip != null)
+        {
+            audioSource.PlayOneShot(deathClip);
+        }
+    }
+
+    public void PlayerHurt()  // Method to play the death sound
+    {
+        if (hurtClip != null)
+        {
+            audioSource.PlayOneShot(hurtClip);
+        }
+    }
+
+    public void GotHit()
+    {
+        if (damageImpactClip != null)
+        {
+            audioSource.PlayOneShot(damageImpactClip);
         }
     }
 }
