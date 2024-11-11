@@ -62,6 +62,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSource: {fileID: 0}
   attacker: {fileID: 0}
+  damageLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!23 &2247798695849639559
 MeshRenderer:
   m_ObjectHideFlags: 0
