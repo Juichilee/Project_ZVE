@@ -52,6 +52,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         aiAgent = GetComponent<NavMeshAgent>();
         aiAgent.updatePosition = false;
         aiAgent.updateRotation = true;
+        aiAgent.updateUpAxis = false;
 
         // Enemy Damageable TODO: Remove Later
         EnemyDamageable = GetComponent<EnemyDamageable>();
@@ -75,6 +76,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         {
             zombieSound = gameObject.AddComponent<AudioSource>();
         }
+
     }
 
     protected override void Start() 
