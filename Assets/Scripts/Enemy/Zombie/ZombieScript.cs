@@ -5,10 +5,11 @@ using UnityEngine.AI;
 public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
 {
     #region Component Reference
-    private AudioSource zombieSound;
+    private AudioSource sound;
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor;
     public MeleeClawWeapon weapon;
+    public PlayerVelocityTracker playerVelocityTracker;
     // TODO: Replace this once Enemy Factory is Implemented
     protected EnemiesRemaining enemiesRemaining;
     #endregion
@@ -71,10 +72,10 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         weapon.transform.localScale = Vector3.one;
 
         // Sound
-        zombieSound = GetComponent<AudioSource>();
-        if (zombieSound == null)
+        sound = GetComponent<AudioSource>();
+        if (sound == null)
         {
-            zombieSound = gameObject.AddComponent<AudioSource>();
+            sound = gameObject.AddComponent<AudioSource>();
         }
 
     }
@@ -85,6 +86,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         attackRange = 2f;
         PlayerControlScript player = PlayerControlScript.PlayerInstance;
         playerBodyTransform = player.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
+        playerVelocityTracker = player.GetComponent<PlayerVelocityTracker>();
     }
 
     void FixedUpdate()
@@ -104,23 +106,31 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     // This method is called by the animation event 'ZombieWalk'
     public void ZombieWalk()
     {
-        if (footstepClip != null && !zombieSound.isPlaying)
+        if (footstepClip != null && !sound.isPlaying)
         {
-            zombieSound.PlayOneShot(footstepClip, 0.5f); //temp drop to half volume b/c everything's loud
+            sound.PlayOneShot(footstepClip, 0.5f); //temp drop to half volume b/c everything's loud
         }
     }
 
     public void ZombieAttack()
     {
-        if (attackSound != null && !zombieSound.isPlaying)
+        if (attackSound != null && !sound.isPlaying)
         {
-            zombieSound.PlayOneShot(attackSound);
+            sound.PlayOneShot(attackSound);
         }
     }
     #endregion
 
     #region Movement
     public float maxLookAheadTime = 0.5f;
+    public float MovementPredictionThreshold = 0.25f;
+
+    public override bool GoTo(Vector3 position, float speed = 0)
+    {
+        anim.SetFloat("vely", speed, 0.3f, Time.deltaTime);
+
+        return base.GoTo(position, speed);
+    }
 
     public bool GoToPlayer()
     {
@@ -131,20 +141,23 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
 
         float distance = Vector3.Distance(currPos, playerPos);
 
-        if (distance > attackRange)
-        {
-            float speed = aiAgent.speed;
-            float lookAheadTime = Mathf.Clamp(distance / speed, 0 , maxLookAheadTime);
+        float speed = aiAgent.speed;
+        float lookAheadTime = Mathf.Clamp(distance / speed, 0 , maxLookAheadTime);
 
-            Vector3 velocity = player.GetComponent<PlayerControlScript>().WorldVelocity;
-            Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
-            
-            if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
-                predictedPosition = hit.position;
-            return GoTo(predictedPosition, MaxSpeed);
-        }
-        return GoTo(playerPos, MaxSpeed);
+        Vector3 velocity = playerVelocityTracker.AverageVelocity;
+        Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
 
+        Vector3 directionToPrediction = (predictedPosition - this.transform.position).normalized;
+        Vector3 directionToPlayer = (player.transform.position - this.transform.position).normalized;
+
+        float dot = Vector3.Dot(directionToPrediction, directionToPlayer);
+
+        if (dot < MovementPredictionThreshold)
+            predictedPosition = player.transform.position;
+
+        if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
+            predictedPosition = hit.position;
+        return GoTo(predictedPosition, MaxSpeed);
     }
     #endregion
 
