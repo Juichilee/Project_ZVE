@@ -118,6 +118,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponSource: {fileID: 1084643511}
   attacker: {fileID: 3058587722941347216}
+  damageLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!23 &2066152373
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1501,7 +1504,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8f7380da49034cd488ddff94b1ac35d1, type: 3}
   m_Controller: {fileID: 9100000, guid: c77b1bb45d1dfbb4192ec0530da92663, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 1
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
