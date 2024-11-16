@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyDamageable), typeof(AISensor), typeof(Weapon))]
+[RequireComponent(typeof(EnemyDamageable), typeof(AISensor))]
 public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
 {
     #region Component Reference
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor;
-    public MeleeClawWeapon weapon;
+    public RangedWeapon weapon;
     // TODO: Replace this once Enemy Factory is Implemented
     protected EnemiesRemaining enemiesRemaining;
     #endregion
@@ -15,15 +15,13 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     #region Pickup Prefabs 
     public Rigidbody healthPrefab;
     public Rigidbody ammoPrefab;
-    public Rigidbody dnaPrefab;
     public Rigidbody currPickup;
-    public Rigidbody currPickup2;
     public float pickupHealthProb = .5f;
     public float pickupAmmoProb = .5f;
     #endregion
 
     #region Animation Speed Variables
-    public float MaxSpeed { get; private set; }
+    public float MaxSpeed;
     // Player Body Reference
     private Transform playerBodyTransform;
     #endregion
@@ -50,7 +48,6 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         // NavMeshAgent
         aiAgent = GetComponent<NavMeshAgent>();
         aiAgent.updatePosition = false;
-        aiAgent.updateRotation = true;
 
         // Enemy Damageable TODO: Remove Later
         EnemyDamageable = GetComponent<EnemyDamageable>();
@@ -62,7 +59,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         aiSensor = GetComponent<AISensor>();
         
         // Weapon
-        weapon = GetComponentInChildren<MeleeClawWeapon>();
+        weapon = GetComponentInChildren<RangedWeapon>();
         weapon.WeaponName = "Zombie Hand";
         weapon.WeaponHolder = this;
         weapon.WeaponHolderAnim = anim;
@@ -95,6 +92,13 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
 
     #region Movement
     public float maxLookAheadTime = 0.5f;
+
+    public override bool GoTo(Vector3 position, float speed = 0)
+    {
+        anim.SetFloat("vely", speed, 0.3f, Time.deltaTime);
+
+        return base.GoTo(position, speed);
+    }
 
     public bool GoToPlayer()
     {
@@ -147,9 +151,6 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
             currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
             currPickup.isKinematic = true;
         }
-        currPickup2 = Instantiate(dnaPrefab, transform);
-        currPickup2.transform.localPosition = new Vector3(.25f, 1f, .25f);
-        currPickup2.isKinematic = true;
     } 
     #endregion
     
@@ -174,15 +175,6 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         weapon.Attack();
     }
 
-    public void EnableHitbox()
-    {
-        weapon.EnableHitbox();
-    }
-
-    public void DisableHitbox()
-    {
-        weapon.DisableHitbox();
-    }
     #endregion
 
     #region WeaponHolder
@@ -191,31 +183,4 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         return this.transform.root;
     }
     #endregion
-
-    private void OnAnimatorIK(int layerIndex)
-    {
-        if(anim) 
-        {
-            AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(layerIndex);
-            if(astate.IsName("Attack"))
-            {
-                float aimWeight = 1f;
-
-                // Set the look target position, if one has been assigned
-                if(playerBodyTransform != null)
-                {
-                    anim.SetLookAtWeight(aimWeight);
-                    anim.SetLookAtPosition(playerBodyTransform.position);
-                    anim.SetIKPositionWeight(AvatarIKGoal.RightHand, aimWeight);
-                    anim.SetIKPosition(AvatarIKGoal.RightHand, playerBodyTransform.position);
-                }
-            }
-            else
-            {
-                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
-                anim.SetLookAtWeight(0);
-
-            }
-        }
-    } 
 }

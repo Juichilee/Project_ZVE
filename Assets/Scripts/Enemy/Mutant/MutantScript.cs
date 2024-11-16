@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyDamageable), typeof(AISensor), typeof(Weapon))]
-public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
+[RequireComponent(typeof(EnemyDamageable), typeof(AISensor))]
+public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
 {
     #region Component Reference
     private AudioSource sound;
@@ -10,7 +10,6 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     public AISensor aiSensor;
     public MeleeClawWeapon weapon;
     public PlayerVelocityTracker playerVelocityTracker;
-    // TODO: Replace this once Enemy Factory is Implemented
     protected EnemiesRemaining enemiesRemaining;
     #endregion
     
@@ -25,6 +24,8 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
 
     #region Animation Speed Variables
+    private Vector2 smoothDeltaPosition = Vector2.zero;
+    private Vector2 velocity = Vector2.zero;
     public float MaxSpeed { get; private set; }
     // Player Body Reference
     private Transform playerBodyTransform;
@@ -35,6 +36,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     public AudioClip attackSound;
     #endregion
 
+    // Start is called before the first frame update
     void Awake()
     {
         // Animator
@@ -52,7 +54,6 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         // NavMeshAgent
         aiAgent = GetComponent<NavMeshAgent>();
         aiAgent.updatePosition = false;
-        aiAgent.updateRotation = true;
 
         // Enemy Damageable TODO: Remove Later
         EnemyDamageable = GetComponent<EnemyDamageable>();
@@ -69,22 +70,30 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         weapon.WeaponHolder = this;
         weapon.WeaponHolderAnim = anim;
         weapon.transform.localScale = Vector3.one;
-
-        // Sound
-        sound = GetComponent<AudioSource>();
-        if (sound == null)
-        {
-            sound = gameObject.AddComponent<AudioSource>();
-        }
     }
 
-    protected override void Start() 
+    protected override void Start()
     {
         base.Start();
         attackRange = 2f;
         PlayerControlScript player = PlayerControlScript.PlayerInstance;
         playerBodyTransform = player.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
         playerVelocityTracker = player.GetComponent<PlayerVelocityTracker>();
+    }
+
+    void Update() 
+    {
+        Vector3 worldDeltaPosition = aiAgent.nextPosition - this.transform.position;
+
+        float dx = Vector3.Dot (this.transform.right, worldDeltaPosition);
+        float dy = Vector3.Dot (this.transform.forward, worldDeltaPosition);
+        Vector2 deltaPosition = new Vector2 (dx, dy);
+        float smooth = Mathf.Min(1.0f, Time.deltaTime/0.15f);
+        smoothDeltaPosition = Vector2.Lerp (smoothDeltaPosition, deltaPosition, smooth);
+
+        // Update velocity if time advances
+        if (Time.deltaTime > 1e-5f)
+            velocity = smoothDeltaPosition / Time.deltaTime;
     }
 
     void FixedUpdate()
@@ -117,18 +126,20 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
             sound.PlayOneShot(attackSound);
         }
     }
-    #endregion
 
+    #endregion
     #region Movement
     public float maxLookAheadTime = 0.5f;
     public float MovementPredictionThreshold = 0.25f;
 
     public override bool GoTo(Vector3 position, float speed = 0)
     {
-        anim.SetFloat("vely", speed, 0.3f, Time.deltaTime);
+        // anim.SetFloat("velx", velocity.x * speed);
+        anim.SetFloat("vely", velocity.y * speed, 0.3f, Time.deltaTime);
 
         return base.GoTo(position, speed);
     }
+
 
     public bool GoToPlayer()
     {
@@ -189,7 +200,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         currPickup2.isKinematic = true;
     } 
     #endregion
-    
+
     #region Attack
     private float attackRange;
 
@@ -208,9 +219,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     {
         anim.SetTrigger("attack1");
         weapon.Attack();
-        ZombieAttack();
     }
-
 
     public void EnableHitbox()
     {
@@ -256,5 +265,4 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
             }
         }
     } 
-
 }

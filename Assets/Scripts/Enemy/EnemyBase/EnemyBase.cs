@@ -25,17 +25,15 @@ public class EnemyBase : MonoBehaviour, IMovable, IKillable
 
     protected virtual void Start()
     {
-        animationSpeed = 1f;
-        rootMovementSpeed = 1f;
-        rootTurnSpeed = 1f;
+        // animationSpeed = 1f;
+        // rootMovementSpeed = 1f;
+        // rootTurnSpeed = 1f;
     }
 
     
     #region Movement
     public virtual bool GoTo(Vector3 position, float speed = 0f)
     {
-        anim.SetFloat("vely", speed);
-    
         if (NavMesh.SamplePosition(position, out NavMeshHit nmh, aiAgent.height * 3, NavMesh.AllAreas))
         {
             if (aiAgent.SetDestination(nmh.position))

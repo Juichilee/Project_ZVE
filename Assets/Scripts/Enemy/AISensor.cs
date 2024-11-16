@@ -68,7 +68,7 @@ public class AISensor : MonoBehaviour
 
         // Right Rectangle
         SetUpTriangleVertices(ref vertices, ref vertices_index, botCenter, topCenter, topRight);
-        SetUpTriangleVertices(ref vertices, ref vertices_index, topRight, botCenter, botCenter);
+        SetUpTriangleVertices(ref vertices, ref vertices_index, topRight, botRight, botCenter);
 
         float currAngle = -angle;
         float deltaAngle = angle * 2 / segments;

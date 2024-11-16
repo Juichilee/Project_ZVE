@@ -3490,8 +3490,8 @@ GameObject:
   - component: {fileID: 7017068930809607275}
   - component: {fileID: 7017068930809607272}
   - component: {fileID: 7017068930809607273}
-  - component: {fileID: 7017068930809607313}
-  - component: {fileID: 7017068930809607318}
+  - component: {fileID: 6180524803013610778}
+  - component: {fileID: 6492570869657490946}
   - component: {fileID: 7017068930809607319}
   - component: {fileID: 7017068930809607316}
   - component: {fileID: 7416050342597764635}
@@ -3620,7 +3620,7 @@ MonoBehaviour:
   - {fileID: 7017068931065777397}
   - {fileID: 7017068931070353908}
   - {fileID: 7017068931458696148}
---- !u!114 &7017068930809607313
+--- !u!114 &6180524803013610778
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3629,27 +3629,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7899536750643805355}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 507ab5876f985f54d935f7bb7ba7d40a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugState: Attack
---- !u!114 &7017068930809607318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7899536750643805355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b035f919658294ca069c18b895c9ee, type: 3}
+  m_Script: {fileID: 11500000, guid: ff2ae1f27c84673408c9466f8be4b755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isGrounded: 1
   isDead: 0
-  animationSpeed: 1
-  rootMovementSpeed: 1
-  rootTurnSpeed: 1
+  animationSpeed: 0
+  rootMovementSpeed: 0
+  rootTurnSpeed: 0
   aiSensor: {fileID: 0}
   weapon: {fileID: 0}
   healthPrefab: {fileID: 1677881876994486743, guid: 517b083583479c1478d06d7edfa6f4ee, type: 3}
@@ -3659,9 +3646,22 @@ MonoBehaviour:
   currPickup2: {fileID: 0}
   pickupHealthProb: 0.5
   pickupAmmoProb: 0.5
-  footstepClip: {fileID: 8300000, guid: 54851d95d66a88048b3363148abbd14a, type: 3}
-  attackSound: {fileID: 8300000, guid: 52c75614e57bb304c90f979d24cf4a24, type: 3}
-  maxLookAheadTime: 1
+  footstepClip: {fileID: 0}
+  attackSound: {fileID: 0}
+  maxLookAheadTime: 0.5
+--- !u!114 &6492570869657490946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7899536750643805355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87c5bdd620e3a3f42bcc73342ebb2d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugState: 
 --- !u!114 &7017068930809607319
 MonoBehaviour:
   m_ObjectHideFlags: 0

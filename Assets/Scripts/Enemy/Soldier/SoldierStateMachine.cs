@@ -6,7 +6,7 @@ using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ZombieStateMachine : MonoBehaviour
+public class SoldierStateMachine : MonoBehaviour
 {
     #region Constant State Strings
     public const string GlobalTransitionStateName = "GlobalTransition";
@@ -17,69 +17,69 @@ public class ZombieStateMachine : MonoBehaviour
     #endregion
     
     [SerializeField]
-    FiniteStateMachine<ZombieFSMData> fsm;
-    public ZombieScript Zombie { get; private set; }
-    struct ZombieFSMData
+    FiniteStateMachine<SoldierFSMData> fsm;
+    public SoldierScript Soldier { get; private set; }
+    struct SoldierFSMData
     {
-        public ZombieStateMachine ZombieFSM { get; private set; }
-        public ZombieScript Zombie { get; private set; }
+        public SoldierStateMachine SoldierFSM { get; private set; }
+        public SoldierScript Soldier { get; private set; }
 
-        public ZombieFSMData(ZombieStateMachine zombieFSM, ZombieScript zombie) 
+        public SoldierFSMData(SoldierStateMachine soldierFSM, SoldierScript soldier) 
         {
-            ZombieFSM = zombieFSM;
-            Zombie = zombie; 
+            SoldierFSM = soldierFSM;
+            Soldier = soldier; 
         }
     }
 
 
-    #region Zombie Base States
-    abstract class ZombieStateBase
+    #region Soldier Base States
+    abstract class SoldierStateBase
     {
-        public virtual string Name => "Zombie";
+        public virtual string Name => "Soldier";
 
-        protected IFiniteStateMachine<ZombieFSMData> ParentFSM;
-        protected ZombieStateMachine ZombieFSM;
-        protected ZombieScript Zombie;
+        protected IFiniteStateMachine<SoldierFSMData> ParentFSM;
+        protected SoldierStateMachine SoldierFSM;
+        protected SoldierScript Soldier;
 
-        public virtual void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
+        public virtual void Init(IFiniteStateMachine<SoldierFSMData> parentFSM, SoldierFSMData soldierFSMData)
         {
             ParentFSM = parentFSM;
-            ZombieFSM = zombieFSMData.ZombieFSM;
-            Zombie = zombieFSMData.Zombie;
+            SoldierFSM = soldierFSMData.SoldierFSM;
+            Soldier = soldierFSMData.Soldier;
         }
 
         public virtual void Exit(bool globalTransition) { }
         public virtual void Exit() {Exit(false); }
 
-        public virtual StateTransitionBase<ZombieFSMData> Update()
+        public virtual StateTransitionBase<SoldierFSMData> Update()
         {
             return null;
         }
 
     }
 
-    abstract class ZombieState : ZombieStateBase, IState<ZombieFSMData>
+    abstract class SoldierState : SoldierStateBase, IState<SoldierFSMData>
     {
         public virtual void Enter() {}
     }
 
-    abstract class ZombieState<S0> : ZombieStateBase, IState<ZombieFSMData, S0>
+    abstract class SoldierState<S0> : SoldierStateBase, IState<SoldierFSMData, S0>
     {
         public virtual void Enter(S0 s) {}
     }
 
-    abstract class ZombieState<S0, S1> : ZombieStateBase, IState<ZombieFSMData, S0, S1>
+    abstract class SoldierState<S0, S1> : SoldierStateBase, IState<SoldierFSMData, S0, S1>
     {
         public virtual void Enter(S0 s0, S1 s1) {}
     }
     #endregion
 
     /* ======================================================================================================
-    ______________________________________________.Zombie States.____________________________________________
+    ______________________________________________.Soldier States.____________________________________________
     ====================================================================================================== */
 
-    #region Zombie States 
-    class PatrolState : ZombieState
+    #region Soldier States 
+    class PatrolState : SoldierState
     {
         public override string Name => PatrolStateName;
         private List<Vector3> waypoints;
@@ -87,9 +87,9 @@ public class ZombieStateMachine : MonoBehaviour
         private int numWaypoints = 3;
         private float patrolRange = 20f; 
 
-        public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
+        public override void Init(IFiniteStateMachine<SoldierFSMData> parentFSM, SoldierFSMData soldierFSMData)
         {
-            base.Init(parentFSM, zombieFSMData);
+            base.Init(parentFSM, soldierFSMData);
         }
 
         public override void Enter()
@@ -103,12 +103,12 @@ public class ZombieStateMachine : MonoBehaviour
             base.Exit();
         }
 
-        public override StateTransitionBase<ZombieFSMData> Update()
+        public override StateTransitionBase<SoldierFSMData> Update()
         {
-            if (Zombie.IsInSight())
+            if (Soldier.IsInSight())
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
-            if (Zombie.ReachedTarget())
+            if (Soldier.ReachedTarget())
                 currWaypointIndex = (currWaypointIndex + 1) % numWaypoints;
             GoToWaypoint();   
             return null;
@@ -120,7 +120,7 @@ public class ZombieStateMachine : MonoBehaviour
             for (int i = 0; i < numWaypoints; i++)
             {
                 Vector3 randomDirection = Random.insideUnitSphere * patrolRange; 
-                randomDirection += Zombie.transform.position;
+                randomDirection += Soldier.transform.position;
 
                 if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRange, NavMesh.AllAreas))
                     waypoints.Add(hit.position);
@@ -131,17 +131,17 @@ public class ZombieStateMachine : MonoBehaviour
         private void GoToWaypoint()
         {
             if (waypoints.Count > 0)
-                Zombie.GoTo(waypoints[currWaypointIndex], Zombie.MaxSpeed * 2 / 3);
+                Soldier.GoTo(waypoints[currWaypointIndex], Soldier.MaxSpeed * 2 / 3);
         }
     }
 
-    class ChaseState : ZombieState
+    class ChaseState : SoldierState
     {
         public override string Name => ChaseStateName;
 
-        public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
+        public override void Init(IFiniteStateMachine<SoldierFSMData> parentFSM, SoldierFSMData soldierFSMData)
         {
-            base.Init(parentFSM, zombieFSMData);
+            base.Init(parentFSM, soldierFSMData);
         }
 
         public override void Enter()
@@ -154,35 +154,35 @@ public class ZombieStateMachine : MonoBehaviour
             base.Exit();
         }
 
-        public override StateTransitionBase<ZombieFSMData> Update()
+        public override StateTransitionBase<SoldierFSMData> Update()
         {
-            Zombie.GoToPlayer();
+            Soldier.GoToPlayer();
 
-            if (Zombie.IsInAttackRange())
+            if (Soldier.IsInAttackRange())
             {
                 return ParentFSM.CreateStateTransition(AttackStateName);
             }
-            if (!Zombie.IsInSight())
+            if (!Soldier.IsInSight())
                 return ParentFSM.CreateStateTransition(PatrolStateName);
             return null;
         }
     }
 
-    class AttackState : ZombieState
+    class AttackState : SoldierState
     {
         public override string Name => AttackStateName;
 
 
-        public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
+        public override void Init(IFiniteStateMachine<SoldierFSMData> parentFSM, SoldierFSMData soldierFSMData)
         {
-            base.Init(parentFSM, zombieFSMData);
+            base.Init(parentFSM, soldierFSMData);
         }
 
         public override void Enter()
         {
             base.Enter();
             
-            Zombie.GoToPlayer();
+            Soldier.GoToPlayer();
         }
 
         public override void Exit()
@@ -190,35 +190,35 @@ public class ZombieStateMachine : MonoBehaviour
             base.Exit();
         }
 
-        public override StateTransitionBase<ZombieFSMData> Update()
+        public override StateTransitionBase<SoldierFSMData> Update()
         {
-            Zombie.GoToPlayer();
+            Soldier.GoToPlayer();
 
-            if (!Zombie.IsInAttackRange())
+            if (!Soldier.IsInAttackRange())
             {
                 return ParentFSM.CreateStateTransition(ChaseStateName);
             }
 
-            Zombie.AttackTarget();
+            Soldier.AttackTarget();
 
             return null;
         }
     }
 
-    class DeathState : ZombieState
+    class DeathState : SoldierState
     {
         public override string Name => DeathStateName;
 
-        public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
+        public override void Init(IFiniteStateMachine<SoldierFSMData> parentFSM, SoldierFSMData soldierFSMData)
         {
-            base.Init(parentFSM, zombieFSMData);
+            base.Init(parentFSM, soldierFSMData);
         }
 
         public override void Enter()
         {
             base.Enter();
-            Zombie.Die();
-            Zombie.SpawnPickUp();
+            Soldier.Die();
+            Soldier.SpawnPickUp();
         }
 
         public override void Exit()
@@ -226,20 +226,20 @@ public class ZombieStateMachine : MonoBehaviour
             base.Exit();
         }
 
-        public override StateTransitionBase<ZombieFSMData> Update()
+        public override StateTransitionBase<SoldierFSMData> Update()
         {
             return null;
         }
     }
 
-    class GlobalTransitionState : ZombieState
+    class GlobalTransitionState : SoldierState
     {
         public override string Name => GlobalTransitionStateName;
         bool wasDead = false;
 
-        public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
+        public override void Init(IFiniteStateMachine<SoldierFSMData> parentFSM, SoldierFSMData soldierFSMData)
         {
-            base.Init(parentFSM, zombieFSMData);
+            base.Init(parentFSM, soldierFSMData);
         }
 
         public override void Enter()
@@ -247,10 +247,10 @@ public class ZombieStateMachine : MonoBehaviour
             base.Enter();
         }
 
-        public override StateTransitionBase<ZombieFSMData> Update()
+        public override StateTransitionBase<SoldierFSMData> Update()
         {
             // Transition to DeathState
-            if (!Zombie.EnemyDamageable.IsAlive && !wasDead) 
+            if (!Soldier.EnemyDamageable.IsAlive && !wasDead) 
             {
                 wasDead = true;
                 return ParentFSM.CreateStateTransition(DeathStateName);
@@ -264,15 +264,15 @@ public class ZombieStateMachine : MonoBehaviour
     #region FSM
     private void Awake()
     {
-        Zombie = GetComponent<ZombieScript>();
-        if (Zombie == null) 
-            Debug.LogError("No Zombie Script");
+        Soldier = GetComponent<SoldierScript>();
+        if (Soldier == null) 
+            Debug.LogError("No Soldier Script");
     }
 
     protected void Start()
     {
-        var zombieFSMData = new ZombieFSMData(this, Zombie);
-        fsm = new FiniteStateMachine<ZombieFSMData>(zombieFSMData);
+        var soldierFSMData = new SoldierFSMData(this, Soldier);
+        fsm = new FiniteStateMachine<SoldierFSMData>(soldierFSMData);
 
         fsm.SetGlobalTransitionState(new GlobalTransitionState());
         fsm.AddState(new PatrolState(), true);
