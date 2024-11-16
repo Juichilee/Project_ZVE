@@ -319,7 +319,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             if (rb != null)
             {
                 rb.isKinematic = false;
-                rb.useGravity = true;
+                rb.useGravity = false;
             }
 
             Collider collider = weapon.gameObject.GetComponent<Collider>();
@@ -328,6 +328,28 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
                 collider.enabled = true;
             }
 
+            int rotationSetting = 0;
+
+            Spinner spinner = weapon.gameObject.GetComponent<Spinner>();
+            if (spinner != null)
+            {
+                spinner.enabled = true;
+                rotationSetting = spinner.type;
+            }
+
+            Transform transform = weapon.gameObject.transform;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).gameObject.tag == "Particle")
+                {
+                    transform.GetChild(i).gameObject.SetActive(true);
+                }
+            }
+
+            if (rotationSetting == 0)
+                transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f));
+            else
+                transform.rotation = Quaternion.Euler(new Vector3(0f, 90f, 0f));
             weaponSlots[index] = null;
             playerControlScript.Anim.SetTrigger("changeWeapon"); // trigger change weapon in animation
         }
@@ -362,6 +384,22 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             collider.enabled = false;
         }
         currentPickupCollider = null;
+
+        Spinner spinner = weaponGameObject.GetComponent<Spinner>();
+        if (spinner != null)
+        {
+            spinner.enabled = false;
+        }
+
+        Transform transform = weaponGameObject.transform;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).gameObject.tag == "Particle")
+            {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+
         EquipWeapon(currentWeaponIndex);
     }
 

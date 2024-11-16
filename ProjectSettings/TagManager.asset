@@ -11,6 +11,7 @@ TagManager:
   - PickupPanel
   - AmmoCount
   - crosshair
+  - Particle
   layers:
   - Default
   - TransparentFX
