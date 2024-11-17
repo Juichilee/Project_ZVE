@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class DoorButton : MonoBehaviour
 {
-    public AudioClip press;
     private AudioSource audioSource;
+    public AudioClip press;
+    public AudioClip doorOpen;
 
     public GameObject door;
     private Animator doorAnimator;
@@ -42,9 +43,9 @@ public class DoorButton : MonoBehaviour
     {
         if (c.transform.gameObject.tag == "Player" && !buttonHit && !hasPlayedSound)
         {
-            // Play the sound only if it hasn't been played yet
             audioSource.PlayOneShot(press);
-            hasPlayedSound = true; // Mark the sound as played
+            audioSource.PlayOneShot(doorOpen);
+            hasPlayedSound = true;
             buttonRenderer.material = buttonColor;
             doorAnimator.SetTrigger("ButtonHit");
         }

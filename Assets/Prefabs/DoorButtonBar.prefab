@@ -113,6 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   press: {fileID: 8300000, guid: 31b55f03d77d0d548bd43ac7cf503973, type: 3}
+  doorOpen: {fileID: 8300000, guid: ccf5670b3e7a5844ebc0d7bedc1f2d33, type: 3}
   door: {fileID: 0}
   buttonColor: {fileID: 0}
 --- !u!82 &8908040636602521469
