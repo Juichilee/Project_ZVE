@@ -3637,9 +3637,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGrounded: 1
   isDead: 0
-  animationSpeed: 0
-  rootMovementSpeed: 0
-  rootTurnSpeed: 0
+  animationSpeed: 1
+  rootMovementSpeed: 1
+  rootTurnSpeed: 1
   aiSensor: {fileID: 0}
   weapon: {fileID: 0}
   playerVelocityTracker: {fileID: 0}
