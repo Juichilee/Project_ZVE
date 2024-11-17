@@ -30,11 +30,13 @@ public class DeadMenu : MonoBehaviour
             Time.timeScale = 0f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            PauseMenu.SetIsPaused(true);
         }
     }
 
     public void RestartLevel()
     {
+        PauseMenu.SetIsPaused(false);
         dna.GetComponent<DNA>().ResetPoints();
         playerStatus.CurrentHealth = playerStatus.MaxHealth;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
