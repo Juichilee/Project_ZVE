@@ -17,6 +17,11 @@ public class PauseMenu : MonoBehaviour
         return isPaused;
     }
 
+    public static void SetIsPaused(bool pause)
+    {
+        isPaused = pause;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

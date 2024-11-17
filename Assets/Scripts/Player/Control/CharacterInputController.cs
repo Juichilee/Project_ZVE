@@ -123,34 +123,37 @@ public class CharacterInputController : MonoBehaviour {
         //     forwardSpeedLimit = 1.0f;
         //END ANALOG ON KEYBOARD DEMO CODE  
 
+        if (!PauseMenu.GetIsPaused())
+        {
+            //do some filtering of our input as well as clamp to a speed limit
+            filteredForwardInput = Mathf.Clamp(Mathf.Lerp(filteredForwardInput, v,
+                Time.deltaTime * forwardInputFilter), -forwardSpeedLimit, forwardSpeedLimit);
 
-        //do some filtering of our input as well as clamp to a speed limit
-        filteredForwardInput = Mathf.Clamp(Mathf.Lerp(filteredForwardInput, v, 
-            Time.deltaTime * forwardInputFilter), -forwardSpeedLimit, forwardSpeedLimit);
+            filteredRightInput = Mathf.Clamp(Mathf.Lerp(filteredRightInput, h,
+                Time.deltaTime * RightInputFilter), -rightSpeedLimit, rightSpeedLimit);
 
-        filteredRightInput = Mathf.Clamp(Mathf.Lerp(filteredRightInput, h, 
-            Time.deltaTime * RightInputFilter), -rightSpeedLimit, rightSpeedLimit);
+            Forward = filteredForwardInput;
+            Right = filteredRightInput;
 
-        Forward = filteredForwardInput;
-        Right = filteredRightInput;
+            //Capture "fire" button for action event
+            Action = Input.GetButtonDown("Fire1");
 
-        //Capture "fire" button for action event
-        Action = Input.GetButtonDown("Fire1");
+            Jump = Input.GetButton("Jump");
 
-        Jump = Input.GetButton("Jump");
+            // Aimdown sights
+            AimDown = Input.GetMouseButton(1);
 
-        // Aimdown sights
-        AimDown = Input.GetMouseButton(1);
+            // Melee
+            Attack = Input.GetMouseButtonDown(0);
 
-        // Melee
-        Attack = Input.GetMouseButtonDown(0);
+            HoldAttack = Input.GetMouseButton(0);
 
-        HoldAttack = Input.GetMouseButton(0);
+            Interact = Input.GetKeyDown(KeyCode.E);
 
-        Interact = Input.GetKeyDown(KeyCode.E);
+            Drop = Input.GetKeyDown(KeyCode.X);
 
-        Drop = Input.GetKeyDown(KeyCode.X);
-
-        Reload = Input.GetKeyDown(KeyCode.R);
+            Reload = Input.GetKeyDown(KeyCode.R);
+        }
+        
 	}
 }

@@ -40,6 +40,7 @@ public class ShopMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         shopping = false;
+        PauseMenu.SetIsPaused(false);
     }
 
     public void Shop()
@@ -50,6 +51,7 @@ public class ShopMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         shopping = true;
+        PauseMenu.SetIsPaused(true);
     }
 
 }
