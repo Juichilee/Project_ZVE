@@ -23,6 +23,9 @@ public class EnemyHealthUI : MonoBehaviour
     {
         hp.value = enemyStatus.CurrentHealth;
         this.transform.LookAt(GameObject.FindGameObjectsWithTag("MainCamera")[0].transform);
-        
+        if(hp.value == 0)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }
