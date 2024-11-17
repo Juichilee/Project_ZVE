@@ -20,11 +20,14 @@ public class DNA : MonoBehaviour
     void Update()
     {
         dnaText.text = "" + DNAPoints;
-        if (DNAPoints >= Shop.HealthCost || DNAPoints >= Shop.SpeedCost || DNAPoints >= Shop.StrengthCost || DNAPoints >= Shop.UnstableCost)
+        if(PanelPrompt != null)
         {
-            PanelPrompt.SetActive(true);
+            if (DNAPoints >= Shop.HealthCost || DNAPoints >= Shop.SpeedCost || DNAPoints >= Shop.StrengthCost || DNAPoints >= Shop.UnstableCost)
+            {
+                PanelPrompt.SetActive(true);
+            }
+            else PanelPrompt.SetActive(false);
         }
-        else PanelPrompt.SetActive(false);
     }
 
     public static void Addpoints(int points)
