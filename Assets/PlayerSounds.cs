@@ -13,6 +13,8 @@ public class PlayerSounds : MonoBehaviour
     public AudioClip hurtClip;
     public AudioClip damageImpactClip;
 
+    private PlayerControlScript playerControlScript;
+
     void Start()
     {
         // Initialize the AudioSource component
@@ -21,12 +23,18 @@ public class PlayerSounds : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+
+        playerControlScript = GetComponent<PlayerControlScript>();
+        if (playerControlScript == null)
+        {
+            Debug.LogWarning("PlayerControlScript not found on Player.");
+        }
     }
 
     // This function will be called by the animation event for running sounds
     public void runningSound()
     {
-        if (runningClip != null && !audioSource.isPlaying)
+        if (runningClip != null && playerControlScript.IsGrounded && !audioSource.isPlaying)
         {
             audioSource.PlayOneShot(runningClip); // Play the footstep sound
         }

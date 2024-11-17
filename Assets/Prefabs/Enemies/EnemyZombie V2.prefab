@@ -24,8 +24,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166969430}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.66174936, y: -0.7098457, z: 0.18875821, w: -0.15025711}
+  m_LocalPosition: {x: -0.264, y: 0.108, z: -0.034}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -120,7 +120,7 @@ MonoBehaviour:
   attacker: {fileID: 3058587722941347216}
   damageLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
 --- !u!23 &2066152373
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1614,6 +1614,7 @@ MonoBehaviour:
   rootTurnSpeed: 1
   aiSensor: {fileID: 0}
   weapon: {fileID: 0}
+  playerVelocityTracker: {fileID: 0}
   healthPrefab: {fileID: 1677881876994486743, guid: 517b083583479c1478d06d7edfa6f4ee, type: 3}
   ammoPrefab: {fileID: 7821734596122092112, guid: cd8e101b53d56c64f9d05cc782af3159, type: 3}
   dnaPrefab: {fileID: 7373850764300426978, guid: 3d1ab24c7cb44db428b0b0c1f96834bc, type: 3}
@@ -1624,6 +1625,7 @@ MonoBehaviour:
   footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
   attackSound: {fileID: 8300000, guid: 52c75614e57bb304c90f979d24cf4a24, type: 3}
   maxLookAheadTime: 1
+  MovementPredictionThreshold: 0.25
 --- !u!114 &3269064097985217135
 MonoBehaviour:
   m_ObjectHideFlags: 0
