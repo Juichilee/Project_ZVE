@@ -35,6 +35,8 @@ public class PlayerStatus : BasicDamageable
 
     public override void OnDamage(DamageData damageData)
     {
+        Debug.Log("I GOT HIT");
+
         if (IsInvincible || !IsAlive) return;
         CurrentHealth -= damageData.BaseDamage;
 

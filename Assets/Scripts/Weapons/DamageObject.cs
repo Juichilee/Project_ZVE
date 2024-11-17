@@ -14,7 +14,6 @@ public class DamageObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         // Convert the collided layer to a bitmask
         int objLayerMask = 1 << other.gameObject.layer;
     
