@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
+    private AudioSource audioSource;
+    public AudioClip healthUpgrade;
+    public AudioClip speedUpgrade;
+    public AudioClip strengthUpgrade;
+    public AudioClip unstableUpgrade;
+
     public static int HealthCost = 2;
     public static int SpeedCost = 2;
     public static int StrengthCost = 2;
@@ -21,6 +27,12 @@ public class Shop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
         playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerStatus>();
         MonsterLevel.maxValue = 5;
         MonsterLevel.minValue = 0;
@@ -44,6 +56,10 @@ public class Shop : MonoBehaviour
     {
         if(DNA.GetPoints() >= HealthCost)
         {
+            if (healthUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(healthUpgrade);
+            }
             DNA.Addpoints(-1 * HealthCost);
             playerStatus.hpUpgrade += 1;
             HealthCost += costIncrease;
@@ -54,6 +70,10 @@ public class Shop : MonoBehaviour
     {
         if (DNA.GetPoints() >= SpeedCost)
         {
+            if (speedUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(speedUpgrade);
+            }
             DNA.Addpoints(-1 * SpeedCost);
             playerStatus.speedUpgrade += 1;
             SpeedCost += costIncrease;
@@ -64,6 +84,10 @@ public class Shop : MonoBehaviour
     {
         if (DNA.GetPoints() >= StrengthCost)
         {
+            if (strengthUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(strengthUpgrade);
+            }
             DNA.Addpoints(-1 * StrengthCost);
             playerStatus.strengthUpgrade += 1;
             StrengthCost += costIncrease;
@@ -74,6 +98,10 @@ public class Shop : MonoBehaviour
     {
         if (DNA.GetPoints() >= UnstableCost)
         {
+            if (unstableUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(unstableUpgrade);
+            }
             DNA.Addpoints(-1 * UnstableCost);
             randomUpgrade();
             randomUpgrade();
