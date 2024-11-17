@@ -27,7 +27,7 @@ public class PlayerSounds : MonoBehaviour
         playerControlScript = GetComponent<PlayerControlScript>();
         if (playerControlScript == null)
         {
-            Debug.LogWarning("PlayerStatus not found on Player.");
+            Debug.LogWarning("PlayerControlScript not found on Player.");
         }
     }
 

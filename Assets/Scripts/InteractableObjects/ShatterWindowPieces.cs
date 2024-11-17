@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ShatterWindowPieces : MonoBehaviour
 {
+    public AudioClip shatter;
+    private AudioSource audioSource;
+
     private Transform allwindowPieces;
     
     private Transform windowPiece1Transform;
@@ -42,6 +45,11 @@ public class ShatterWindowPieces : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
         allwindowPieces = transform;
         alreadyShattered = false;
         prepareObjects();
@@ -62,7 +70,7 @@ public class ShatterWindowPieces : MonoBehaviour
                 shatterObject(windowPiece7, windowPiece7Rigidbody);
                 shatterObject(windowPiece8, windowPiece8Rigidbody);
                 shatterObject(windowPiece9, windowPiece9Rigidbody);
-                
+                audioSource.PlayOneShot(shatter);
                 alreadyShattered = true;
             }
         }

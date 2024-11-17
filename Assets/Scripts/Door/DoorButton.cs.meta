@@ -3,7 +3,10 @@ guid: 36043297520fe754da33eae195d63785
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - press: {fileID: 8300000, guid: cb9779dae273bf241abdc899839d26dd, type: 3}
+  - door: {instanceID: 0}
+  - buttonColor: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
