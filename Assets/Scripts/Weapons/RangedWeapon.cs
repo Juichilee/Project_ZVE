@@ -151,4 +151,13 @@ public class RangedWeapon : Weapon
         return true;
     }
 
+    public int getCurrentClip()
+    {
+        return currentClip;
+    }
+
+    public int getCurrentAmmo()
+    {
+        return currentAmmo;
+    }
 }
