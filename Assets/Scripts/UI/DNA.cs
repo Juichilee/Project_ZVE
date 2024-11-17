@@ -8,6 +8,7 @@ public class DNA : MonoBehaviour
     static int DNAPoints = 0;
     int startPoints = 0;
     public TMP_Text dnaText;
+    public GameObject PanelPrompt;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,11 @@ public class DNA : MonoBehaviour
     void Update()
     {
         dnaText.text = "" + DNAPoints;
+        if (DNAPoints >= Shop.HealthCost || DNAPoints >= Shop.SpeedCost || DNAPoints >= Shop.StrengthCost || DNAPoints >= Shop.UnstableCost)
+        {
+            PanelPrompt.SetActive(true);
+        }
+        else PanelPrompt.SetActive(false);
     }
 
     public static void Addpoints(int points)
