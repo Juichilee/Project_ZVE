@@ -26,6 +26,7 @@ public class PlayerControlScript : MonoBehaviour
     public Transform spawn;
     public Transform aimTarget; 
     public LayerMask aimColliderLayerMask;
+    private float aimSpeed = 50f;
     public LayerMask groundLayerMask;
     private float slopeCheckDistance = 1f; // Adjust based on player height
     public Rig headRig; 
@@ -90,7 +91,6 @@ public class PlayerControlScript : MonoBehaviour
     public Vector3 LocalVelocity { get => localVelocity; private set => localVelocity = value; }
     private Vector3 localVelocity = Vector3.zero;
     private Vector3 prevWorldPosition;
-    private int groundContactCount = 0;
     public bool IsGrounded { get => _isGrounded; private set => _isGrounded = value; }
     private bool _isGrounded = true;
 
@@ -298,12 +298,12 @@ public class PlayerControlScript : MonoBehaviour
                 Quaternion targetRotation = Quaternion.LookRotation(_inputDir);
 
                 // Handle abrupt direction changes with a slight right rotation offset (prevent ping ponging)
-                if (Vector3.Dot(this.transform.forward, _inputDir) < -0.90f) // Check if facing almost opposite directions
+                if (Vector3.Dot(this.transform.forward, _inputDir) < 0f) // Check for abrupt change in direction
                 {
                     targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
                 }
-
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 5f);
+                
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 15f);
             }
             // When player is facing the camera, set head aim target to forward head
             if (Vector3.Dot(this.transform.forward, cameraForward) <= 0f)
@@ -330,14 +330,18 @@ public class PlayerControlScript : MonoBehaviour
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
         int fixedDistance = 99;
+        Vector3 aimTargetPos;
         if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, aimColliderLayerMask))
         {
-            aimTarget.position = raycastHit.point;
+            aimTargetPos = raycastHit.point;
         }
         else
         {
-            aimTarget.position = ray.origin + ray.direction * fixedDistance;
+            aimTargetPos = ray.origin + ray.direction * fixedDistance; // If the ray doesn't hit anything, set target a fixed distance
         }
+
+        // Lerp between aimtargetPos and current aimTarget.position
+        aimTarget.position = Vector3.Lerp(aimTarget.position, aimTargetPos, Time.deltaTime * aimSpeed);
     }
 
     private void PerformGroundCheck()
