@@ -12,6 +12,7 @@ TagManager:
   - AmmoCount
   - crosshair
   - Particle
+  - Projectile
   layers:
   - Default
   - TransparentFX
