@@ -23,6 +23,7 @@ public class Shop : MonoBehaviour
     public TMP_Text StrengthText;
     public TMP_Text UnstableText;
     public Slider MonsterLevel;
+    public int MaxHumanity = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +35,7 @@ public class Shop : MonoBehaviour
         }
 
         playerStatus = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerStatus>();
-        MonsterLevel.maxValue = 5;
+        MonsterLevel.maxValue = MaxHumanity;
         MonsterLevel.minValue = 0;
         HealthCost = 2 + costIncrease * playerStatus.hpUpgrade;
         SpeedCost = 2 + costIncrease * playerStatus.speedUpgrade;
@@ -49,7 +50,7 @@ public class Shop : MonoBehaviour
         SpeedText.text = SpeedCost.ToString();
         StrengthText.text = StrengthCost.ToString();
         UnstableText.text = UnstableCost.ToString();
-        MonsterLevel.value = playerStatus.monsterPoints;
+        MonsterLevel.value = MaxHumanity - playerStatus.monsterPoints;
     }
 
     public void Health()
