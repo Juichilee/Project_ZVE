@@ -55,11 +55,12 @@ public class ShatterWindowPieces : MonoBehaviour
         prepareObjects();
     }
 
-    void OnTriggerEnter(Collider c)
+    void OnCollisionEnter(Collision c)
     {
-        if (alreadyShattered == false && c.attachedRigidbody != null)
+        Debug.Log("Colldier: " + c.gameObject.name);
+        if (alreadyShattered == false)
         {
-            if (c.attachedRigidbody.gameObject.tag == "Player" || c.attachedRigidbody.gameObject.tag == "Projectile" || c.attachedRigidbody.gameObject.tag == "Enemy")
+            if (c.gameObject.tag == "Player" || c.gameObject.tag == "Projectile" || c.gameObject.tag == "Enemy")
             {
                 shatterObject(windowPiece1, windowPiece1Rigidbody);
                 shatterObject(windowPiece2, windowPiece2Rigidbody);

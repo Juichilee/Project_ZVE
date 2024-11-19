@@ -1,22 +1,18 @@
 using UnityEngine;
 using System.Collections;
 
-public class MeleeWeapon : Weapon
+public abstract class MeleeWeapon : Weapon
 {
-    [SerializeField] private string weaponName;
-    [SerializeField] private DamageData damageAttributes;
-    [SerializeField] private float coolDownTime = 1f;
-    [SerializeField] private int weaponAnimId = 0;
-    [SerializeField] private WeaponType weaponType = WeaponType.Melee;
-    // [SerializeField] private Vector3 holdPosition;
-    // [SerializeField] private Vector3 holdRotation;
-    [SerializeField] private string holdConfigName;
-    [SerializeField] private Transform hold;
-    [SerializeField] private DamageObject hitBoxInstance; // Should have DamageObject component
-    [SerializeField] private AudioSource audioSource;
-    
-    public string SetWeaponName;
-
+    protected string weaponName;
+    protected float coolDownTime = 1f;
+    protected int weaponAnimId = 0;
+    protected string holdConfigName;
+    protected Transform hold;
+    [SerializeField] protected float hitBoxDuration = 0.1f;
+    [SerializeField] protected WeaponType weaponType = WeaponType.Melee;
+    [SerializeField] protected DamageData damageAttributes;
+    [SerializeField] protected DamageObject hitBoxInstance; // Should have DamageObject component
+    [SerializeField] protected AudioSource audioSource;
     public AudioClip meleeSoundClip;
 
     #region Accessors
@@ -25,22 +21,21 @@ public class MeleeWeapon : Weapon
     public override float CoolDownTime { get => coolDownTime; protected set => coolDownTime = value; }
     public override int WeaponAnimId { get => weaponAnimId; protected set => weaponAnimId = value; }
     public override WeaponType WeaponType { get => weaponType; protected set => weaponType = value; }
-    // public override Vector3 HoldPosition { get => holdPosition; }
-    // public override Vector3 HoldRotation { get => holdRotation; } 
     public override Transform Hold { get => hold; }
     #endregion
 
-    void OnEnable()
+    public virtual void OnDisable()
     {
         IsReady = true; // Reset IsReady when re-enabled
-    }
-
-    void OnDisable()
-    {
         hitBoxInstance.gameObject.SetActive(false); // Reset hitbox after unequipped
+        // To disable or reset the attack trigger
+        if (WeaponHolderAnim)
+        {
+            WeaponHolderAnim.ResetTrigger("attack");
+        }
     }
 
-    void Start(){
+    public virtual void Start(){
         hitBoxInstance.gameObject.SetActive(false);
 
         audioSource = GetComponent<AudioSource>();
@@ -48,8 +43,6 @@ public class MeleeWeapon : Weapon
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-
-        WeaponName = SetWeaponName;
     }
 
     public override void SetHoldConfigs(Transform holdParent)
@@ -57,42 +50,23 @@ public class MeleeWeapon : Weapon
         hold = holdParent.Find(holdConfigName).Find("Hold");
     }
 
-    public override void Attack()
-    {
-        if (IsReady) 
-        {
-            Debug.Log($"Melee attack with {WeaponName}");
-            SpawnDamageObject();
-            StartCoroutine(AttackCooldown());
-        }
-        
-        if (meleeSoundClip != null)
-        {
-            audioSource.PlayOneShot(meleeSoundClip);
-        }
-    }
-
-    private IEnumerator ActivateHitbox(DamageObject hitBoxInstance)
-    {
-        // Activate the hitbox for a short duration to simulate an attack
-        // hitBoxInstance.transform.position = this.transform.position + transform.forward * 1.5f; // Adjust as needed
-        hitBoxInstance.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(1.0f); // Duration of the active hitbox
-
-        hitBoxInstance.gameObject.SetActive(false);
-    }
-
-    private IEnumerator AttackCooldown()
-    {
-        IsReady = false;
-        yield return new WaitForSeconds(CoolDownTime);
-        IsReady = true;
-    }
-
+    #region Event and Animation Event Callback Handling
     public override void SpawnDamageObject()
     {
         hitBoxInstance.SetDamageSource(this);
         StartCoroutine(ActivateHitbox(hitBoxInstance));
     }
+
+    private IEnumerator ActivateHitbox(DamageObject hitBoxInstance)
+    {
+        // Activate the hitbox for a short duration to simulate an attack
+        hitBoxInstance.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(hitBoxDuration); // Duration of the active hitbox
+
+        hitBoxInstance.gameObject.SetActive(false);
+    }
+
+    public abstract void PlayMeleeSound();
+    #endregion
 }

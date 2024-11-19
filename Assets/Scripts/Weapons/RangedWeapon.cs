@@ -4,8 +4,10 @@ using System.Collections;
 
 public class RangedWeapon : Weapon
 {
+    [SerializeField] private bool hitScan;
     [SerializeField] private string weaponName;
     [SerializeField] private DamageData damageAttributes;
+    public LayerMask damageLayer;
     [SerializeField] private float coolDownTime = 1f;
     [SerializeField] private int weaponAnimId = 1;
     [SerializeField] private WeaponType weaponType = WeaponType.Ranged;
@@ -54,14 +56,19 @@ public class RangedWeapon : Weapon
     public Transform SecondHandHint { get => secondHandHint; }
     #endregion
 
-    void OnEnable()
+    void OnDisable()
     {
-        IsReady = true; // Reset IsReady when re-enabled
+        IsReady = true;
+        if (WeaponHolderAnim)
+        {
+            WeaponHolderAnim.ResetTrigger("attack");
+        }
     }
 
     // Automatically sets the hold configurations
     public override void SetHoldConfigs(Transform holdParent)
     {
+        IsReady = true; // Reset IsReady when re-enabled
         hold = holdParent.Find(holdConfigName).Find("Hold");
         secondHandTarget = holdParent.Find(holdConfigName).Find("SecondHandTarget");
         secondHandHint = holdParent.Find(holdConfigName).Find("SecondHandHint");
@@ -69,6 +76,7 @@ public class RangedWeapon : Weapon
 
     public override void Attack()
     {
+        WeaponHolderAnim.SetTrigger("attack");
         if (IsReady && CurrentClip > 0)
         {
             FireWeapon();
@@ -83,7 +91,6 @@ public class RangedWeapon : Weapon
         {
             return;
         }
-        Debug.Log($"Reloading {WeaponName}");
 
         int spentClip = MaxClip - CurrentClip; // How many bullets were spent in the clip
         if (spentClip <= CurrentAmmo) // Full reload if enough ammo
@@ -131,8 +138,24 @@ public class RangedWeapon : Weapon
 
     public override void SpawnDamageObject()
     {
-        GameObject projInst = Instantiate(ProjectileObj, ShootPos.position, Quaternion.LookRotation(aimDir, Vector3.up));
-        projInst.GetComponent<DamageObject>().SetDamageSource(this);
+        // Spawn projectiles
+        Instantiate(ProjectileObj, ShootPos.position, Quaternion.LookRotation(aimDir, Vector3.up));
+
+        // Hitscan based damage
+        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+        int fixedDistance = 99;
+        Collider damageableCollider = null;
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, damageLayer))
+        {
+            damageableCollider = raycastHit.collider;
+        }
+
+        if (damageableCollider != null)
+        {
+            Damageable damageable = damageableCollider.GetComponent<Damageable>();
+            damageable.OnDamage(DamageAttributes);
+        }
     }
 
     public void ResetGunReadySound()

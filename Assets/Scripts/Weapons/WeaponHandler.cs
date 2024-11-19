@@ -20,8 +20,9 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     public Rig aimRig;
     public TextMeshProUGUI ammoCountText;
     private GameObject pickupGuide;
-
     private Coroutine weaponsAtReadyCoroutine;
+    private float bodyWeightConst = 0.75f;
+    private float aimWeightConst = 1.0f;
 
     void Awake()
     {
@@ -105,7 +106,6 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             playerControlScript.Anim.SetLayerWeight(3, 0);
             playerControlScript.Anim.SetLayerWeight(2, 0);
             playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
-            // UpdateAimRigWeight(0f); // Reset aim rig when no weapon equipped
             return;
         }
 
@@ -123,6 +123,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     MultiAimConstraint aim;
     MultiAimConstraint bodyAim;
     TwoBoneIKConstraint secondHandAim;
+    // Updates current weapon rig multi aim constraints to new weapon by name (rig setup name needs to match weapon name)
     private void UpdateWeaponRigConByName(string weaponName){
         Transform weaponRig = aimRig.transform.Find(weaponName); // weapon rig name must match weapon name
         aim = weaponRig.Find("Aim").gameObject.GetComponent<MultiAimConstraint>();
@@ -175,17 +176,11 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
 
         if (rangedWeapon.IsReady && playerControlScript.InputHoldAttack)
         {
-            playerControlScript.Anim.SetTrigger("attack");
             rangedWeapon.Attack();
         }
 
         rangedWeapon.UpdateWeaponAim(playerControlScript.aimTarget);
     }
-
-    // private void UpdateAimRigWeight(float targetWeight)
-    // {
-    //     aimRig.weight = Mathf.Lerp(aimRig.weight, targetWeight, Time.deltaTime * 25f);
-    // }
 
     private IEnumerator WeaponsAtReady(float seconds)
     {
@@ -205,9 +200,8 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         playerControlScript.Anim.SetLayerWeight(2, 0); // Reset ranged layer
         aimRig.weight = 0f;
 
-        if (meleeWeapon.IsReady && playerControlScript.InputAttack)
+        if (playerControlScript.InputAttack)
         {
-            playerControlScript.Anim.SetTrigger("attack");
             meleeWeapon.Attack();
         }
     }
@@ -280,8 +274,8 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     {
         if (weapon is RangedWeapon)
         {
-            aim.weight = 1f;
-            bodyAim.weight = 1f;
+            aim.weight = aimWeightConst;
+            bodyAim.weight = bodyWeightConst;
         }
     }
 
@@ -418,4 +412,47 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             currentPickupCollider = null;
         }
     }
+
+    #region Event and Animation Event Callback Handling
+    public void SpawnDamageObject()
+    {
+        Weapon currWeapon = GetCurrentWeapon();
+        if (currWeapon && currWeapon is MeleeWeapon meleeWeapon)
+        {
+            meleeWeapon.SpawnDamageObject();
+        }
+    }
+
+    // Mainly for melee weapon combos
+    public void SetIsReady(int weaponReady) // 0 for ready, 1 for not erady
+    {
+        Weapon currWeapon = GetCurrentWeapon();
+        if (!currWeapon)
+        {
+            return;
+        }
+        
+        if(weaponReady == 0)
+        {
+            currWeapon.IsReady = true;
+        } else {
+            currWeapon.IsReady = false;
+        }
+    }
+
+    public void PlayMeleeSound()
+    {
+        Weapon currWeapon = GetCurrentWeapon();
+        if (!currWeapon)
+        {
+            return;
+        }
+        
+        if (currWeapon is MeleeWeapon meleeWeapon)
+        {
+            meleeWeapon.PlayMeleeSound();
+        }
+    }
+
+    #endregion
 }

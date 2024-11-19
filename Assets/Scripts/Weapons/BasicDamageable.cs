@@ -14,7 +14,7 @@ public class BasicDamageable : Damageable
     [SerializeField] protected bool isBleed;
     [SerializeField] protected float bleedHealth = 20f;
     [SerializeField] protected bool isInvincible = false;
-    [SerializeField] protected float invincibilityDuration = 1.0f;
+    protected float invincibilityDuration = 0.1f;
 
     #region Accessors
     public override int MaxHealth { get => maxHealth; set => maxHealth = value; }
