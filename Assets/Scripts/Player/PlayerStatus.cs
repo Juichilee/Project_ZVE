@@ -11,6 +11,10 @@ public class PlayerStatus : BasicDamageable
     public int hpUpgrade = 0;
     public int monsterPoints = 0;
     private PlayerSounds playerSounds;
+    private int startSpeed;
+    private int startStrength;
+    private int startHp;
+    private int startMonster;
 
     // TODO: public float iframes;
 
@@ -26,11 +30,23 @@ public class PlayerStatus : BasicDamageable
         {
             Debug.LogWarning("PlayerSounds component not found.");
         }
+
+        startSpeed = speedUpgrade;
+        startStrength = strengthUpgrade;
+        startHp = hpUpgrade;
+        startMonster = monsterPoints;
     }
 
     private void FixedUpdate()
     {
         maxHealth = 200 + 20 * hpUpgrade;
+        if(currentHealth <= 0)
+        {
+            speedUpgrade = startSpeed;
+            strengthUpgrade = startStrength;
+            hpUpgrade = startHp;
+            monsterPoints = startMonster;
+        }
     }
 
     public override void OnDamage(DamageData damageData)
