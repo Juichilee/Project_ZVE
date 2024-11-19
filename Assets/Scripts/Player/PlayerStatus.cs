@@ -22,7 +22,7 @@ public class PlayerStatus : BasicDamageable
 
     void Awake()
     {
-        maxHealth = 200 + 20*hpUpgrade;
+        maxHealth = 200 + 20 * hpUpgrade;
         currentHealth = 200 + 20 * hpUpgrade;
 
         playerSounds = GetComponent<PlayerSounds>();
@@ -86,23 +86,7 @@ public class PlayerStatus : BasicDamageable
         {
             playerSounds.PlayDeathSound();
         }
-        // Handle object destruction or death animations
     }
-
-    // public UnityEvent onDefeated;
-
-    // Start is called before the first frame update
-    // public virtual void TakeDamage(int damage)
-    // {
-    //     if (isDead) return;  // Prevent damage after death
-
-    //     CurrentHealth -= damage;
-
-    //     if (currHealth <= 0)
-    //     {
-    //         OnDefeated();
-    //     }
-    // }
 
     public Boolean Heal(int healAmt)
     {
@@ -114,18 +98,4 @@ public class PlayerStatus : BasicDamageable
             CurrentHealth += healAmt;
         return true;
     }
-
-    // public virtual void OnDefeated()
-    // {
-    //     if (!isDead)
-    //     {
-    //         isDead = true;  // Mark the zombie as dead to prevent further actions
-
-    // /*        // Play death sound
-    //         if (deathSound != null)
-    //         {
-    //             audioSource.PlayOneShot(deathSound);
-    //         }*/
-    //     }
-    // }
 }
