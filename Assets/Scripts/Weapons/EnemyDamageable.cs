@@ -3,10 +3,6 @@ using UnityEngine;
 
 public class EnemyDamageable : BasicDamageable
 {
-        // Debugging purposes
-    public Material origMaterial;
-    public Material onDamageMaterial;
-    public MeshRenderer meshRenderer;
     public RagdollOnDeath ragdollOnDeath;
     public AudioClip deathSound;
     public AudioClip damageSound;
@@ -19,8 +15,6 @@ public class EnemyDamageable : BasicDamageable
 
     void Awake()
     {
-        //meshRenderer = GetComponent<MeshRenderer>();
-        //origMaterial = meshRenderer.material;
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
@@ -31,7 +25,7 @@ public class EnemyDamageable : BasicDamageable
     public override void OnDamage(DamageData damageData)
     {
         if (IsInvincible || !IsAlive) return;
-        CurrentHealth -= (damageData.BaseDamage + GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerStatus>().strengthUpgrade * 2);
+        CurrentHealth -= damageData.BaseDamage + GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<PlayerStatus>().strengthUpgrade * 2;
 
         // Handle special damage effects
         if (damageData.StunDamage > 0) StunHealth -= damageData.StunDamage;
@@ -39,8 +33,6 @@ public class EnemyDamageable : BasicDamageable
         if (damageData.SlowDamage > 0) SlowHealth -= damageData.SlowDamage;
         if (damageData.BleedDamage > 0) BleedHealth -= damageData.BleedDamage;
 
-        // Visualize taking damage
-        //if(meshRenderer != null) meshRenderer.material = onDamageMaterial;
         if (damageSound != null)
         {
             audioSource.PlayOneShot(damageSound);
@@ -54,15 +46,8 @@ public class EnemyDamageable : BasicDamageable
         }
     }
 
-    public void Update(){
-        //if (!IsInvincible){
-        //    meshRenderer.material = origMaterial;
-        //}
-    }
-
     public override void Die()
     {
-        Debug.Log("dieing now");
         ragdollOnDeath.EnableRagdoll();
         if (deathSound != null)
         {
