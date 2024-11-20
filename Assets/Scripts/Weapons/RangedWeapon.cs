@@ -7,7 +7,7 @@ public class RangedWeapon : Weapon
     [SerializeField] private bool hitScan;
     [SerializeField] private string weaponName;
     [SerializeField] private DamageData damageAttributes;
-    public LayerMask damageLayer;
+    public LayerMask hitLayer;
     [SerializeField] private float coolDownTime = 1f;
     [SerializeField] private int weaponAnimId = 1;
     [SerializeField] private WeaponType weaponType = WeaponType.Ranged;
@@ -146,7 +146,7 @@ public class RangedWeapon : Weapon
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
         int fixedDistance = 99;
         Collider damageableCollider = null;
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, damageLayer))
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, hitLayer))
         {
             damageableCollider = raycastHit.collider;
         }
@@ -154,7 +154,7 @@ public class RangedWeapon : Weapon
         if (damageableCollider != null)
         {
             Damageable damageable = damageableCollider.GetComponent<Damageable>();
-            damageable.OnDamage(DamageAttributes);
+            damageable?.OnDamage(DamageAttributes);
         }
     }
 

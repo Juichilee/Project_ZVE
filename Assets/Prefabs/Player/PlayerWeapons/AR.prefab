@@ -19481,9 +19481,9 @@ MonoBehaviour:
   hitScan: 0
   weaponName: AR
   damageAttributes: {fileID: 11400000, guid: a40b7e4d64306c643bd521e9a2a60847, type: 2}
-  damageLayer:
+  hitLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 193
   coolDownTime: 0.1
   weaponAnimId: 2
   weaponType: 1
