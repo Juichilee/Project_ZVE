@@ -69,7 +69,7 @@ public class PlayerControlScript : MonoBehaviour
     public Vector3 InputDir { get => _inputDir; private set => _inputDir = value; }
     private Vector3 _inputDir;
     public bool ForceStrafe { get => forceStrafe; set => forceStrafe = value;}
-    private bool forceStrafe; // Can be set by outside components to force player to strafe
+    private bool forceStrafe = false; // Can be set by outside components to force player to strafe
     #endregion
 
     #region Movement & Animation Properties
@@ -223,6 +223,10 @@ public class PlayerControlScript : MonoBehaviour
             ActionStateMachine.Update();
             MotionStateMachine.Update();
         }
+
+        // Update Global Animator Parameters
+        anim.SetBool("isGrounded", _isGrounded);
+        anim.SetBool("aimDown", _inputAimDown);
     }
 
     void FixedUpdate()
@@ -258,14 +262,9 @@ public class PlayerControlScript : MonoBehaviour
             // Handle Global State-specific updates if necessary
         }
 
-        // Update Global Animator Parameters
-        anim.SetBool("isGrounded", _isGrounded);
-        anim.SetBool("isMoving", isMoving);
-        anim.SetBool("aimDown", _inputAimDown);
-
         // Smoothly transition the aimDownLerp parameter (Determines blending between strafe and turning animations)
         float targetAimDown = 0f;
-        if (_inputAimDown || forceStrafe){
+        if (forceStrafe){
             targetAimDown = 1f;
         }
         float currentTurnStrafe = anim.GetFloat("TurnStrafeLerp");
@@ -277,24 +276,18 @@ public class PlayerControlScript : MonoBehaviour
     {
         Transform mainCameraTrans = mainCamera.transform;
         Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
-        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
         orientation.forward = cameraForward;
+        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
 
-        if (_inputAimDown || forceStrafe || _inputAttack)
+        // forceStrafe is mostly set outside this script (e.g., WeaponHandler)
+        if (forceStrafe)
         {
             // Strafing combat style (used for ranged attacks)
             this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 25f);
-            // orientation.forward = cameraForward;
-
         } else {
-            // Vector3 viewDir = this.transform.position - new Vector3(mainCameraTrans.position.x, this.transform.position.y, mainCameraTrans.position.z);
-            // viewDir = viewDir.normalized;
-            // orientation.forward = cameraForward;
-
             // Regular combat style (character forward is in direction of movement keys)
             if (_inputDir != Vector3.zero)
             {
-
                 Quaternion targetRotation = Quaternion.LookRotation(_inputDir);
 
                 // Handle abrupt direction changes with a slight right rotation offset (prevent ping ponging)
