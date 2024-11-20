@@ -22,8 +22,8 @@ public class PlayerStatus : BasicDamageable
 
     void Awake()
     {
-        maxHealth = 200 + 20 * hpUpgrade;
-        currentHealth = 200 + 20 * hpUpgrade;
+        maxHealth = maxHealth + 20 * hpUpgrade;
+        currentHealth = currentHealth + 20 * hpUpgrade;
 
         playerSounds = GetComponent<PlayerSounds>();
         if (playerSounds == null)
@@ -39,7 +39,7 @@ public class PlayerStatus : BasicDamageable
 
     private void FixedUpdate()
     {
-        maxHealth = 200 + 20 * hpUpgrade;
+        maxHealth = maxHealth + 20 * hpUpgrade;
         if(currentHealth <= 0)
         {
             speedUpgrade = startSpeed;
@@ -51,8 +51,6 @@ public class PlayerStatus : BasicDamageable
 
     public override void OnDamage(DamageData damageData)
     {
-        Debug.Log("I GOT HIT");
-
         if (IsInvincible || !IsAlive) return;
         CurrentHealth -= damageData.BaseDamage;
 

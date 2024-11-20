@@ -106,6 +106,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             playerControlScript.Anim.SetLayerWeight(3, 0);
             playerControlScript.Anim.SetLayerWeight(2, 0);
             playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
+            playerControlScript.ForceStrafe = playerControlScript.InputAimDown; // allow player to strafe while unarmed
             return;
         }
 
@@ -148,7 +149,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             {
                 StopCoroutine(weaponsAtReadyCoroutine);
             }
-            weaponsAtReadyCoroutine = StartCoroutine(WeaponsAtReady(1f));
+            weaponsAtReadyCoroutine = StartCoroutine(WeaponsAtReady(0.5f));
         }
 
         // Switch between weapon ready and weapon idle states by switching Aim and BodyAim source blend weights
@@ -202,6 +203,11 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
 
         if (playerControlScript.InputAttack)
         {
+            if (weaponsAtReadyCoroutine != null)
+            {
+                StopCoroutine(weaponsAtReadyCoroutine);
+            }
+            weaponsAtReadyCoroutine = StartCoroutine(WeaponsAtReady(0.5f));
             meleeWeapon.Attack();
         }
     }
@@ -266,6 +272,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             playerControlScript.Anim.SetInteger("weaponAnimId", -1); // id for unequipped is -1
         }
         playerControlScript.Anim.SetTrigger("changeWeapon");
+        playerControlScript.ForceStrafe = false; // Reset force strafe after weapon switches
 
         currentWeaponIndex = index;
     }

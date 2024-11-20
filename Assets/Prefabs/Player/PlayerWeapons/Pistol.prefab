@@ -19728,9 +19728,9 @@ MonoBehaviour:
   hitScan: 0
   weaponName: Pistol
   damageAttributes: {fileID: 11400000, guid: 7b437b54f52b83e4fb3610526daec387, type: 2}
-  damageLayer:
+  hitLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 193
   coolDownTime: 0.5
   weaponAnimId: 1
   weaponType: 1

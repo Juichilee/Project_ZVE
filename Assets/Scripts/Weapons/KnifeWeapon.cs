@@ -10,6 +10,8 @@ public class KnifeWeapon : MeleeWeapon
     [SerializeField] private float comboDelay = 0.2f; // Time allowed between combo inputs
     private bool canCombo = true;
     private bool comboRead = false;
+    private int comboStep = 0;
+    private int maxComboStep = 3; // Change to match max number of combos for this weapon
  
     public override void Start()
     {
@@ -19,6 +21,14 @@ public class KnifeWeapon : MeleeWeapon
         coolDownTime = knifeCoolDownTime;
         weaponAnimId = knifeWeaponAnimId;
         holdConfigName = knifeHoldConfigName;
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        comboStep = 0;
+        canCombo = true;
+        comboRead = false;
     }
 
     public override void Attack()
@@ -36,7 +46,8 @@ public class KnifeWeapon : MeleeWeapon
             if (canCombo)
             {
                 comboRead = true;
-                WeaponHolderAnim.SetTrigger("attack");
+                WeaponHolderAnim.SetTrigger("attack"); // Set attack trigger to be consumed
+                comboStep += 1;
             }
         }
     }
@@ -47,11 +58,11 @@ public class KnifeWeapon : MeleeWeapon
     {
         canCombo = true;
         yield return new WaitForSeconds(comboDelay); // Duration of the active hitbox
-        // If combo hasn't been read once delay is up
-        if(!comboRead)
+        // If combo hasn't been read once the combo delay is up or on final step of combo
+        if(!comboRead || comboStep == maxComboStep)
         {     
-            Debug.Log("Combo Time's Up, reseting combo");
             canCombo = false;
+            comboStep = 0;
         }
         
     }
