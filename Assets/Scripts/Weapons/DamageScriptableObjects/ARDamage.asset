@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3289fc9fe460d464b8b6612e9e883bb5, type: 3}
   m_Name: ARDamage
   m_EditorClassIdentifier: 
-  BaseDamage: 0
+  BaseDamage: 2
   StaggerDamage: 0
   StunDamage: 0
   SlowDamage: 0
