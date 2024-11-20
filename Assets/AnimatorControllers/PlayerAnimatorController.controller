@@ -1215,7 +1215,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: c640669d579fa466dbd73f173427364e, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0.5}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: velx
     m_Mirror: 0
@@ -1223,7 +1223,7 @@ BlendTree:
     m_Motion: {fileID: 7400014, guid: 7333bec06e04c4b6e9d78bd6e890dfb1, type: 3}
     m_Threshold: 0.095703125
     m_Position: {x: 0, y: 1}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: velx
     m_Mirror: 0
@@ -1247,7 +1247,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 08a0c0894f7444f6f9fa01a7851641ef, type: 3}
     m_Threshold: 0.3828125
     m_Position: {x: 0, y: -0.5}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: velx
     m_Mirror: 0
@@ -1660,7 +1660,7 @@ BlendTree:
     m_Motion: {fileID: 7400014, guid: 7333bec06e04c4b6e9d78bd6e890dfb1, type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 1}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: velx
     m_Mirror: 0
@@ -1668,7 +1668,7 @@ BlendTree:
     m_Motion: {fileID: 7400014, guid: 7333bec06e04c4b6e9d78bd6e890dfb1, type: 3}
     m_Threshold: 2
     m_Position: {x: 0, y: -1}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: velx
     m_Mirror: 0
@@ -1676,7 +1676,7 @@ BlendTree:
     m_Motion: {fileID: 7400014, guid: 7333bec06e04c4b6e9d78bd6e890dfb1, type: 3}
     m_Threshold: 3
     m_Position: {x: 1, y: 0}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: velx
     m_Mirror: 0
@@ -1684,7 +1684,7 @@ BlendTree:
     m_Motion: {fileID: 7400014, guid: 7333bec06e04c4b6e9d78bd6e890dfb1, type: 3}
     m_Threshold: 4
     m_Position: {x: -1, y: 0}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: velx
     m_Mirror: 0
@@ -1692,7 +1692,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: c640669d579fa466dbd73f173427364e, type: 3}
     m_Threshold: 5
     m_Position: {x: 0, y: 0.5}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: vely
     m_Mirror: 0
@@ -1700,7 +1700,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: c640669d579fa466dbd73f173427364e, type: 3}
     m_Threshold: 6
     m_Position: {x: 0, y: -0.5}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: vely
     m_Mirror: 0
@@ -1708,7 +1708,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: c640669d579fa466dbd73f173427364e, type: 3}
     m_Threshold: 7
     m_Position: {x: 0.5, y: 0}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: vely
     m_Mirror: 0
@@ -1716,7 +1716,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: c640669d579fa466dbd73f173427364e, type: 3}
     m_Threshold: 8
     m_Position: {x: -0.5, y: 0}
-    m_TimeScale: 0.75
+    m_TimeScale: 0.6
     m_CycleOffset: 0
     m_DirectBlendParameter: vely
     m_Mirror: 0
@@ -1735,7 +1735,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Knife2
-  m_Speed: 2
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2586681454101657570}
@@ -2053,7 +2053,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Knife3
-  m_Speed: 2.5
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1330779993689710502}
@@ -2246,7 +2246,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Knife1
-  m_Speed: 2
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8010410223253743381}
