@@ -280,7 +280,7 @@ public class PlayerControlScript : MonoBehaviour
         _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
         orientation.forward = cameraForward;
 
-        if (_inputAimDown || forceStrafe)
+        if (_inputAimDown || forceStrafe || _inputAttack)
         {
             // Strafing combat style (used for ranged attacks)
             this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 25f);
