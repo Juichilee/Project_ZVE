@@ -19480,7 +19480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitScan: 0
   weaponName: AR
-  damageAttributes: {fileID: 11400000, guid: 7b437b54f52b83e4fb3610526daec387, type: 2}
+  damageAttributes: {fileID: 11400000, guid: a40b7e4d64306c643bd521e9a2a60847, type: 2}
   damageLayer:
     serializedVersion: 2
     m_Bits: 128
