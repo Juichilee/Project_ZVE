@@ -4933,8 +4933,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1702777017994582083}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.22440004, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalPosition: {x: 0, y: 0.293, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7604670453976378626}
@@ -9925,12 +9925,12 @@ MonoBehaviour:
   damageAttributes: {fileID: 11400000, guid: 335236bc69e8c5c42ac74ae186d1dd16, type: 2}
   hitBoxInstance: {fileID: 2247798695849639553}
   audioSource: {fileID: 3057083976559277498}
-  comboStep: 0
   meleeSoundClip: {fileID: 8300000, guid: 09a2a530465bedd4b847ddf74392159a, type: 3}
   knifeName: Knife
   knifeCoolDownTime: 1
   knifeWeaponAnimId: 0
   knifeHoldConfigName: HoldConfig_Knife
+  comboDelay: 0.2
 --- !u!82 &3057083976559277498
 AudioSource:
   m_ObjectHideFlags: 0

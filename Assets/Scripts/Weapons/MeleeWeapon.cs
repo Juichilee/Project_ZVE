@@ -51,10 +51,15 @@ public abstract class MeleeWeapon : Weapon
     }
 
     #region Event and Animation Event Callback Handling
+    private Coroutine activateHitBox;
     public override void SpawnDamageObject()
     {
+        if (activateHitBox != null)
+        {
+            StopCoroutine(activateHitBox);
+        }
         hitBoxInstance.SetDamageSource(this);
-        StartCoroutine(ActivateHitbox(hitBoxInstance));
+        activateHitBox = StartCoroutine(ActivateHitbox(hitBoxInstance));
     }
 
     private IEnumerator ActivateHitbox(DamageObject hitBoxInstance)
