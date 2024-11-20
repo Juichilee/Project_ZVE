@@ -31,5 +31,8 @@ public class IdleMotionState : BaseState
         {
             player.MotionStateMachine.ChangeState(MotionStateType.JumpAir);
         }
+
+        player.Anim.SetFloat("velz", player.InputForward);
+        player.Anim.SetFloat("velStrafe", player.InputRight);
     }
 }
