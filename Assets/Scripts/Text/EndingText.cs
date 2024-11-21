@@ -7,16 +7,38 @@ using UnityEngine.SceneManagement;
 public class EndingText : MonoBehaviour
 {
     public TMP_Text endingText;
+    private string badEndingText = "Thank you for completing the game!\nYou found an escape helicopter.\nHowever, you couldn't pilot it since\nyou lost too much humanity\nand became a mindless monster.\nPlay again for a better ending!";
+
     private int endingTextAlpha = 0;
     private float pauseTime = 3f;
     private bool fadingIn = true;
     private bool fadedOut = false;
 
+    private GameObject player;
+    private float monsterLevel = 0f;
+    private float badEndingMonsterLevel = 4f;
+
+    public GameObject enemyGroup;
+
     private void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        SceneManager.MoveGameObjectToScene(player, SceneManager.GetActiveScene());
-        player.SetActive(false);   
+        player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            // Monster Level
+            if (monsterLevel >= badEndingMonsterLevel)
+            {
+                endingText.text = badEndingText;
+            } else {
+                if (enemyGroup != null)
+                {
+                    enemyGroup.SetActive(false);
+                }
+            }
+
+            SceneManager.MoveGameObjectToScene(player, SceneManager.GetActiveScene());
+            Destroy(player);
+        }
     }
 
     void FixedUpdate()
