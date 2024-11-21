@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ExitLevel : MonoBehaviour
 {
-    private string nextLevelName = "Level2Scene";
+ //   private string nextLevelName = "Level2Scene";
 
     void OnTriggerEnter(Collider c)
     {
