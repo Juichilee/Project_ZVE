@@ -47,7 +47,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         
         // NavMeshAgent
         aiAgent = GetComponent<NavMeshAgent>();
-        aiAgent.updatePosition = false;
+        aiAgent.updatePosition = true;
 
         // Enemy Damageable TODO: Remove Later
         EnemyDamageable = GetComponent<EnemyDamageable>();
@@ -59,12 +59,12 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         aiSensor = GetComponent<AISensor>();
         
         // Weapon
-        weapon = GetComponentInChildren<RangedWeapon>();
-        weapon.WeaponName = "Zombie Hand";
-        weapon.WeaponHolder = this;
-        weapon.WeaponHolderAnim = anim;
-        weapon.transform.SetLocalPositionAndRotation(weapon.Hold.localPosition, weapon.Hold.localRotation);
-        weapon.transform.localScale = Vector3.one;
+        // weapon = GetComponentInChildren<RangedWeapon>();
+        // weapon.WeaponName = "Zombie Hand";
+        // weapon.WeaponHolder = this;
+        // weapon.WeaponHolderAnim = anim;
+        // weapon.transform.SetLocalPositionAndRotation(weapon.Hold.localPosition, weapon.Hold.localRotation);
+        // weapon.transform.localScale = Vector3.one;
 
         // Sound
     }
@@ -122,7 +122,6 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
             return GoTo(predictedPosition, MaxSpeed);
         }
         return GoTo(playerPos, MaxSpeed);
-
     }
     #endregion
 
@@ -172,7 +171,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     {
         // TODO: Talk to Juichi on how to shoot the gun
         anim.SetTrigger("attack1");
-        weapon.Attack();
+        // weapon.Attack();
     }
 
     #endregion

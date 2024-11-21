@@ -83,7 +83,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     protected override void Start() 
     {
         base.Start();
-        attackRange = 2f;
+        attackRange = 1.5f;
         PlayerControlScript player = PlayerControlScript.PlayerInstance;
         playerBodyTransform = player.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
         playerVelocityTracker = player.GetComponent<PlayerVelocityTracker>();
