@@ -253,8 +253,8 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
                 {
                     anim.SetLookAtWeight(aimWeight);
                     anim.SetLookAtPosition(playerBodyTransform.position);
-                    anim.SetIKPositionWeight(AvatarIKGoal.RightHand, aimWeight);
-                    anim.SetIKPosition(AvatarIKGoal.RightHand, playerBodyTransform.position);
+                    anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, aimWeight);
+                    anim.SetIKPosition(AvatarIKGoal.LeftHand, playerBodyTransform.position);
                 }
             }
             else

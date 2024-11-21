@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyDamageable), typeof(AISensor), typeof(Weapon))]
+[RequireComponent(typeof(EnemyDamageable), typeof(AISensor))]
 public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
 {
     #region Component Reference
