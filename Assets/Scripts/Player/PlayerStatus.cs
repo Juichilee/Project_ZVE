@@ -10,20 +10,20 @@ public class PlayerStatus : BasicDamageable
     public int strengthUpgrade = 0;
     public int hpUpgrade = 0;
     public int monsterPoints = 0;
+    public int baseHealth = 200;
     private PlayerSounds playerSounds;
     private int startSpeed;
     private int startStrength;
     private int startHp;
     private int startMonster;
-
     // TODO: public float iframes;
 
     private bool isDead = false;
 
     void Awake()
     {
-        maxHealth = maxHealth + 20 * hpUpgrade;
-        currentHealth = currentHealth + 20 * hpUpgrade;
+        maxHealth = baseHealth + 20 * hpUpgrade;
+        currentHealth = baseHealth + 20 * hpUpgrade;
 
         playerSounds = GetComponent<PlayerSounds>();
         if (playerSounds == null)
@@ -39,7 +39,7 @@ public class PlayerStatus : BasicDamageable
 
     private void FixedUpdate()
     {
-        maxHealth = maxHealth + 20 * hpUpgrade;
+        maxHealth = baseHealth + 20 * hpUpgrade;
         if(currentHealth <= 0)
         {
             speedUpgrade = startSpeed;
