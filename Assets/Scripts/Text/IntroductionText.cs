@@ -41,7 +41,7 @@ public class IntroductionText : MonoBehaviour
         // Load the next scene
         if (fadedOut == true)
         {
-            SceneManager.LoadScene("Level1Scene");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 }
