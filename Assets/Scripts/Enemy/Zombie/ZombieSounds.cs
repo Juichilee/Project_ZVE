@@ -9,7 +9,7 @@ public class ZombieSounds : MonoBehaviour
     // public AudioClip deathSoundClip;    // Assign the death sound in the inspector
     private AudioSource audioSource;    // AudioSource for playing sounds
 
-    private bool isDead = false;        // To prevent playing sounds after death
+   // private bool isDead = false;        // To prevent playing sounds after death
 
     void Start()
     {
