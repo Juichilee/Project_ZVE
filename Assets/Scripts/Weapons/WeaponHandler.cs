@@ -30,6 +30,13 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         thirdPersonCamera = GetComponent<ThirdPersonCamera>();
     }
 
+    public void DropAllWeapons()
+    {
+        DropWeapon(0);
+        DropWeapon(1);
+        DropWeapon(2);           
+    }
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
