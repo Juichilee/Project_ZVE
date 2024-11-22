@@ -44,8 +44,13 @@ public class BlastAfterContact : MonoBehaviour
         }
         else if (c.transform.gameObject.tag != planeTag)
         {
+            if (blowUp != null)
+            {
+                Debug.Log("Explosion sound triggered.");
+                audioSource.PlayOneShot(blowUp);
+            }
             Instantiate(blastParticles, this.transform.position, this.transform.rotation);
-            Destroy(this.gameObject);
+            Destroy(this.gameObject, destroyDelay);
         }
     }
 }
