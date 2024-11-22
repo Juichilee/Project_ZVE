@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     //public string BackgroundSceneToLoad;
+    private GameObject player;
 
     // Start is called before the first frame update
     void Start()
@@ -13,11 +14,11 @@ public class MainMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         DNA.SetPoints(0);
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player");
         if(player != null)
         {
             SceneManager.MoveGameObjectToScene(player, SceneManager.GetActiveScene());
-            player.SetActive(false);
+            Destroy(player);
         }
 
     }
@@ -30,6 +31,6 @@ public class MainMenu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-        Debug.Log("Game would quit now");
+        Debug.Log("Game will quit now");
     }
 }

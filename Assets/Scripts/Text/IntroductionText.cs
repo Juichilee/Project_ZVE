@@ -7,10 +7,25 @@ using UnityEngine.SceneManagement;
 public class IntroductionText : MonoBehaviour
 {
     public TMP_Text introductionText;
-    private int introductionTextAlpha;
+    private int introductionTextAlpha = 0;
     private float pauseTime = 3f;
     private bool fadingIn = true;
     private bool fadedOut = false;
+
+    void Start()
+    {
+        Debug.Log("Introduction will start now");
+        // Time scale is 1f
+        Time.timeScale = 1f;
+    }
+
+    void Update()
+    {
+        if (introductionTextAlpha > 150 && Input.GetKeyDown(KeyCode.Space))
+        {
+            fadedOut = true;
+        }
+    }
     
     void FixedUpdate()
     {
