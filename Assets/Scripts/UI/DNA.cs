@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class DNA : MonoBehaviour
 {
@@ -15,7 +16,18 @@ public class DNA : MonoBehaviour
     {
         startPoints = DNAPoints;
     }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().name == "Level1Scene")
+        {
+            DNAPoints = 0;
+        }
+    }
     // Update is called once per frame
     void Update()
     {

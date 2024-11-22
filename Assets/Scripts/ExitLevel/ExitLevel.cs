@@ -13,6 +13,10 @@ public class ExitLevel : MonoBehaviour
         {
             if (c.attachedRigidbody.gameObject.tag == "Player")
             {
+                if(SceneManager.GetActiveScene().name == "TutorialScene")
+                {
+                    GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<WeaponHandler>().DropAllWeapons();
+                }
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             }
         }
