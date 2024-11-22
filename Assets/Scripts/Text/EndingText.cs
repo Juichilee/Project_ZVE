@@ -15,8 +15,9 @@ public class EndingText : MonoBehaviour
     private bool fadedOut = false;
 
     private GameObject player;
-    private float monsterLevel = 0f;
-    private float badEndingMonsterLevel = 4f;
+    private PlayerStatus playerStatus;
+    private float monsterPoints = 0f;
+    private float badEndingMonsterPoints = 3f;
 
     public GameObject enemyGroup;
 
@@ -25,8 +26,10 @@ public class EndingText : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            // Monster Level
-            if (monsterLevel >= badEndingMonsterLevel)
+            playerStatus = player.GetComponent<PlayerStatus>();
+            monsterPoints = playerStatus.monsterPoints;
+            Debug.Log("Monster points");
+            if (monsterPoints >= badEndingMonsterPoints)
             {
                 endingText.text = badEndingText;
             } else {
@@ -38,6 +41,17 @@ public class EndingText : MonoBehaviour
 
             SceneManager.MoveGameObjectToScene(player, SceneManager.GetActiveScene());
             Destroy(player);
+        }
+
+        // Time scale is 1f
+        Time.timeScale = 1f;
+    }
+
+    void Update()
+    {
+        if (endingTextAlpha >= 200 && Input.GetKeyDown(KeyCode.Space))
+        {
+            fadedOut = true;
         }
     }
 
