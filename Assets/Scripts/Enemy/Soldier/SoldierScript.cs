@@ -59,12 +59,12 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         aiSensor = GetComponent<AISensor>();
         
         // Weapon
-        // weapon = GetComponentInChildren<RangedWeapon>();
-        // weapon.WeaponName = "Zombie Hand";
-        // weapon.WeaponHolder = this;
-        // weapon.WeaponHolderAnim = anim;
-        // weapon.transform.SetLocalPositionAndRotation(weapon.Hold.localPosition, weapon.Hold.localRotation);
-        // weapon.transform.localScale = Vector3.one;
+        weapon = GetComponentInChildren<RangedWeapon>();
+        weapon.WeaponName = "Soldier AR";
+        weapon.WeaponHolder = this;
+        weapon.WeaponHolderAnim = anim;
+        weapon.transform.SetLocalPositionAndRotation(weapon.Hold.localPosition, weapon.Hold.localRotation);
+        weapon.transform.localScale = Vector3.one;
 
         // Sound
     }
@@ -171,7 +171,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     {
         // TODO: Talk to Juichi on how to shoot the gun
         anim.SetTrigger("attack1");
-        // weapon.Attack();
+        weapon.Attack();
     }
 
     #endregion
