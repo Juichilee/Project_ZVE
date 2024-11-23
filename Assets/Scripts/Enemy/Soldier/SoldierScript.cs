@@ -15,7 +15,9 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     #region Pickup Prefabs 
     public Rigidbody healthPrefab;
     public Rigidbody ammoPrefab;
+    public Rigidbody weaponPrefab;
     public Rigidbody currPickup;
+    public Rigidbody currWeapon;
     public float pickupHealthProb = .5f;
     public float pickupAmmoProb = .5f;
     #endregion
@@ -138,6 +140,14 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     {
         float random = Random.value;
         Debug.Log(random);
+
+        if (weapon)
+        {
+            currWeapon = Instantiate(weaponPrefab, transform);
+            currWeapon.transform.localPosition = new Vector3(.25f, 1f, .25f);
+            currWeapon.isKinematic = true;
+        }
+
         if (random <= pickupHealthProb)
         {
             currPickup = Instantiate(healthPrefab, transform);
@@ -150,6 +160,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
             currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
             currPickup.isKinematic = true;
         }
+
     } 
     #endregion
     
