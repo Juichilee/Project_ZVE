@@ -310,12 +310,12 @@ public class PlayerControlScript : MonoBehaviour
                 Quaternion targetRotation = Quaternion.LookRotation(_inputDir);
 
                 // Handle abrupt direction changes with a slight right rotation offset (prevent ping ponging)
-                if (Vector3.Dot(this.transform.forward, _inputDir) < 0f) // Check for abrupt change in direction
-                {
-                    targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
-                }
-                
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 25f);
+                // if (Vector3.Dot(this.transform.forward, _inputDir) < 0f) // Check for abrupt change in direction
+                // {
+                //     targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
+                // }
+                // this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 25f);
+                this.transform.rotation = targetRotation;
             }
             // When player is facing the camera, set head aim target to forward head
             if (Vector3.Dot(this.transform.forward, cameraForward) <= 0f)
