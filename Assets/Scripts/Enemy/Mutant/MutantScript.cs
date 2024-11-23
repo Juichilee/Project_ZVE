@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -141,7 +142,7 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     }
 
 
-    public bool GoToPlayer()
+    public bool GoToPlayer(float speedModifier = 1f)
     {
         PlayerControlScript player = PlayerControlScript.PlayerInstance;
 
@@ -166,8 +167,15 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
 
         if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
             predictedPosition = hit.position;
-        return GoTo(predictedPosition, MaxSpeed);
+        return GoTo(predictedPosition, MaxSpeed * speedModifier);
     }
+
+    public bool ChargeToPlayer()
+    {
+        return GoToPlayer(5f);
+    }
+
+
     #endregion
 
     #region Death
@@ -270,4 +278,12 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
             }
         }
     } 
+
+    public void Scream() 
+    {
+        anim.SetTrigger("scream");
+    }
+
+
+
 }

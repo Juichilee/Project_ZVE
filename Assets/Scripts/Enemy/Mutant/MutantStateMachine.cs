@@ -13,6 +13,7 @@ public class MutantStateMachine : MonoBehaviour
     public const string PatrolStateName = "Patrol";
     public const string ChaseStateName = "Chase";
     public const string AttackStateName = "Attack";
+    public const string ChargeStateName = "Charge";
     public const string DeathStateName = "Death";
     #endregion
     
@@ -106,7 +107,12 @@ public class MutantStateMachine : MonoBehaviour
         public override StateTransitionBase<MutantFSMData> Update()
         {
             if (Mutant.IsInSight())
-                return ParentFSM.CreateStateTransition(ChaseStateName);
+            {
+                float random = Random.value;
+                if (random <= 0.5)
+                    return ParentFSM.CreateStateTransition(ChaseStateName);
+                return ParentFSM.CreateStateTransition(ChargeStateName);
+            }
 
             if (Mutant.ReachedTarget())
                 currWaypointIndex = (currWaypointIndex + 1) % numWaypoints;
@@ -205,6 +211,40 @@ public class MutantStateMachine : MonoBehaviour
         }
     }
 
+    class ChargeState : MutantState
+    {
+        public override string Name => ChargeStateName;
+
+
+        public override void Init(IFiniteStateMachine<MutantFSMData> parentFSM, MutantFSMData mutantFSMData)
+        {
+            base.Init(parentFSM, mutantFSMData);
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            
+            Mutant.Scream();
+            Mutant.GoToPlayer();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+        }
+
+        public override StateTransitionBase<MutantFSMData> Update()
+        {
+            Mutant.ChargeToPlayer();
+            if (Mutant.IsInAttackRange())
+            {
+                return ParentFSM.CreateStateTransition(AttackStateName);
+            }
+
+            return null;
+        }
+    }
     class DeathState : MutantState
     {
         public override string Name => DeathStateName;
@@ -278,6 +318,7 @@ public class MutantStateMachine : MonoBehaviour
         fsm.AddState(new PatrolState(), true);
         fsm.AddState(new ChaseState());
         fsm.AddState(new AttackState());
+        fsm.AddState(new ChargeState());
         fsm.AddState(new DeathState());
     }
 

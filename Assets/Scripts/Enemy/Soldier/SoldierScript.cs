@@ -186,6 +186,10 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
             weapon.Reload();
         // TODO: Talk to Juichi on how to shoot the gun
         anim.SetTrigger("attack1");
+    }
+
+    public void FireWeapon()
+    {
         weapon.Attack();
     }
 
@@ -197,4 +201,5 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         return this.transform.root;
     }
     #endregion
+
 }
