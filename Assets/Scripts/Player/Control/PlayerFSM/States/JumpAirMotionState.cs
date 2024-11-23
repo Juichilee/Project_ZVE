@@ -6,20 +6,23 @@ public class JumpAirMotionState : BaseState
     public override Enum stateType => MotionStateType.JumpAir;
     private PlayerControlScript player;
 
-    private const float jumpForce = 200f;
-    private const float horizontalBoost = 200f;
-    private const float jumpCooldown = 1f; // Controls when player can change to different states after a jump
-    private const float jumpResetCooldown = 1f; // Controls when player can jump again
+    public float jumpForce = 200f;
+    public float horizontalBoost = 200f;
+    public float jumpCooldown = 1f;
     private bool hasJumped = false;
-    private bool canJump = true;
-    private bool multiJump = false;
-    private const float maxVerticalSpeed = 10f; // Maximum falling speed for falling animation blend
-    private const float maxMidairControlSpeed = 10f;
-    private const float midairControlForce = 2f;
+    public bool multiJump = false;
+    private float maxVerticalSpeed = 10f; // Maximum falling speed for falling animation blend
+    public float maxMidairControlSpeed = 10f;
+    public float midairControlForce = 2f;
 
     public JumpAirMotionState(PlayerControlScript player)
     {
         this.player = player;
+    }
+
+    public override void Enter()
+    {
+        // Debug.Log("Entering Jump Air State");
     }
 
     public override void Execute()
@@ -53,11 +56,10 @@ public class JumpAirMotionState : BaseState
             jumpInput = player.IsGrounded && player.InputJump; // If multi-jump is not enabled, then player must be grounded before jump
         }
 
-        if (canJump && !hasJumped && jumpInput)
+        if (!hasJumped && jumpInput)
         {
             player.Anim.SetTrigger("startJump");
             hasJumped = true;
-            canJump = false;
         }
 
         if (!player.IsGrounded)
@@ -70,10 +72,6 @@ public class JumpAirMotionState : BaseState
     {
         yield return new WaitForSeconds(jumpCooldown);
         hasJumped = false;
-        yield return new WaitForSeconds(jumpResetCooldown);
-        canJump = true;
-        // Update PlayerControlScript canJump
-        player.CanJump = canJump;
     }
 
     // PlayerJump() is called by animation event from the jump animation

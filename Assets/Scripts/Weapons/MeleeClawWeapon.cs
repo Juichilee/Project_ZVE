@@ -12,7 +12,6 @@ public class MeleeClawWeapon : Weapon
     [SerializeField] private Transform hold;
     [SerializeField] private DamageObject hitBoxInstance; // Should have DamageObject component
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private HoldParentType holdParent;
 
     public AudioClip meleeSoundClip;
 
@@ -23,7 +22,6 @@ public class MeleeClawWeapon : Weapon
     public override int WeaponAnimId { get => weaponAnimId; protected set => weaponAnimId = value; }
     public override WeaponType WeaponType { get => weaponType; protected set => weaponType = value; }
     public override Transform Hold { get => hold; }
-    public override HoldParentType HoldParentType { get { return holdParent;} protected set { holdParent = value; } }
     #endregion
     
     void OnEnable()

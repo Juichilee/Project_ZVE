@@ -64,28 +64,28 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: PlayMeleeSound
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0
         functionName: SetIsReady
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.8124416
+      - time: 0.8100775
         functionName: SpawnDamageObject
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9929078
+      - time: 1
         functionName: SetIsReady
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: PlayMeleeSound
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

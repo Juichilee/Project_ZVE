@@ -26,7 +26,7 @@ public class RunMotionState : BaseState
         }
 
         // If player jumps or is not grounded, go to JumpAirMotion state
-        if(!player.IsGrounded || player.CanJump && player.InputJump)
+        if(player.InputJump || !player.IsGrounded)
         {
             player.MotionStateMachine.ChangeState(MotionStateType.JumpAir);
         }
@@ -67,12 +67,8 @@ public class RunMotionState : BaseState
         // Convert the modified local position back to world space
         newRootPosition = player.transform.TransformPoint(localRootPosition);
 
-        // If input is not force disabled, enable changes that modify root motion significantly
-        if (!player.ForceDisableInput)
-        {
-            newRootPosition = player.CalculateSlopeAdjustedPos(newRootPosition);
-        }
-    
+        newRootPosition = player.CalculateSlopeAdjustedPos(newRootPosition);
+
         // Scale the difference in position and rotation to make the character go faster or slower
         newRootPosition = Vector3.LerpUnclamped(player.transform.position, newRootPosition, player.RootMovementSpeed);
 

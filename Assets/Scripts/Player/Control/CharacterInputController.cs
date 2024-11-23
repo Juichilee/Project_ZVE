@@ -36,22 +36,6 @@ public class CharacterInputController : MonoBehaviour {
         private set;
     }
 
-    public bool Ability1
-    {
-        get;
-        private set;
-    }
-    public bool Ability2
-    {
-        get;
-        private set;
-    }
-    public bool Ability3
-    {
-        get;
-        private set;
-    }
-
     public bool Jump
     {
         get;
@@ -153,10 +137,6 @@ public class CharacterInputController : MonoBehaviour {
 
             //Capture "fire" button for action event
             Action = Input.GetButtonDown("Fire1");
-
-            Ability1 = Input.GetButtonDown("Ability1");
-            Ability2 = Input.GetButtonDown("Ability2");
-            Ability3 = Input.GetButtonDown("Ability3");
 
             Jump = Input.GetButton("Jump");
 

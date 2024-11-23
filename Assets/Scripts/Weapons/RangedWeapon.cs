@@ -20,10 +20,10 @@ public class RangedWeapon : Weapon
     [SerializeField] private float effectiveRange;
     [SerializeField] private string holdConfigName;
     [SerializeField] private Transform hold;
-    protected HoldParentType holdParentType = HoldParentType.RightHand;
     [SerializeField] private Transform secondHandTarget;
     [SerializeField] private Transform secondHandHint;
     [SerializeField] private AudioSource audioSource;
+
 
     private Vector3 aimDir;
     public AudioClip gunshot;
@@ -54,7 +54,6 @@ public class RangedWeapon : Weapon
     public override Transform Hold { get => hold; }
     public Transform SecondHandTarget { get => secondHandTarget; }
     public Transform SecondHandHint { get => secondHandHint; }
-    public override HoldParentType HoldParentType { get => holdParentType; protected set => holdParentType = value; }
     #endregion
 
     void OnDisable()
@@ -164,7 +163,7 @@ public class RangedWeapon : Weapon
         hasPlayedGunReady = false;
     }
 
-    public bool gainAmmo(int ammoAmt)
+    public Boolean gainAmmo(int ammoAmt)
     {
         if (currentAmmo == maxAmmo)
             return false;

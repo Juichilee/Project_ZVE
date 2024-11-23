@@ -8,7 +8,6 @@ public abstract class MeleeWeapon : Weapon
     protected int weaponAnimId = 0;
     protected string holdConfigName;
     protected Transform hold;
-    protected HoldParentType holdParentType = HoldParentType.RightHand;
     [SerializeField] protected float hitBoxDuration = 0.1f;
     [SerializeField] protected WeaponType weaponType = WeaponType.Melee;
     [SerializeField] protected DamageData damageAttributes;
@@ -23,13 +22,7 @@ public abstract class MeleeWeapon : Weapon
     public override int WeaponAnimId { get => weaponAnimId; protected set => weaponAnimId = value; }
     public override WeaponType WeaponType { get => weaponType; protected set => weaponType = value; }
     public override Transform Hold { get => hold; }
-    public override HoldParentType HoldParentType { get => holdParentType; protected set => holdParentType = value; }
     #endregion
-
-    public virtual void OnEnable()
-    {
-        return;
-    }
 
     public virtual void OnDisable()
     {
@@ -69,7 +62,7 @@ public abstract class MeleeWeapon : Weapon
         activateHitBox = StartCoroutine(ActivateHitbox(hitBoxInstance));
     }
 
-    public IEnumerator ActivateHitbox(DamageObject hitBoxInstance)
+    private IEnumerator ActivateHitbox(DamageObject hitBoxInstance)
     {
         // Activate the hitbox for a short duration to simulate an attack
         hitBoxInstance.gameObject.SetActive(true);
