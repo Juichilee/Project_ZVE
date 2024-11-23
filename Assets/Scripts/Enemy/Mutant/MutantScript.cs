@@ -175,6 +175,7 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     {
         base.Die();
         aiSensor.enabled = false;
+        DisableHitbox();
         if (enemiesRemaining)
             enemiesRemaining.oneEnemyDefeated();
     }
