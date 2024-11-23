@@ -27,12 +27,25 @@ public class IdleMotionState : BaseState
         }
 
         // If player jumps or is not grounded, go to JumpAirMotion state
-        if(player.InputJump || !player.IsGrounded)
+        if(!player.IsGrounded || player.CanJump && player.InputJump)
         {
             player.MotionStateMachine.ChangeState(MotionStateType.JumpAir);
         }
 
         player.Anim.SetFloat("velz", player.InputForward);
         player.Anim.SetFloat("velStrafe", player.InputRight);
+    }
+
+    public override void OnAnimatorMove()
+    {
+        Vector3 newRootPosition;
+
+        // Use root motion as is if on the ground
+        newRootPosition = player.Anim.rootPosition;
+
+        // Scale the difference in position and rotation to make the character go faster or slower
+        newRootPosition = Vector3.LerpUnclamped(player.transform.position, newRootPosition, player.RootMovementSpeed);
+
+        player.Rbody.MovePosition(newRootPosition);
     }
 }

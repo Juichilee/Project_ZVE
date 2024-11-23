@@ -13,9 +13,8 @@ public class KnifeWeapon : MeleeWeapon
     private int comboStep = 0;
     private int maxComboStep = 3; // Change to match max number of combos for this weapon
  
-    public override void Start()
+    void Awake()
     {
-        base.Start();
         // Setup attributes for this weapon
         weaponName = knifeName;
         coolDownTime = knifeCoolDownTime;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Animations.Rigging;
+using Unity.VisualScripting;
 
 // Require necessary components
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
@@ -54,6 +55,12 @@ public class PlayerControlScript : MonoBehaviour
     private float _inputRight = 0f;
     public bool InputJump { get => _inputJump; private set => _inputJump = value; }
     private bool _inputJump = false;
+    public bool InputAbility1 { get => _inputAbility1; private set => _inputAbility1 = value; }
+    private bool _inputAbility1 = false;
+    public bool InputAbility2 { get => _inputAbility2; private set => _inputAbility2 = value; }
+    private bool _inputAbility2 = false;
+    public bool InputAbility3 { get => _inputAbility3; private set => _inputAbility3 = value; }
+    private bool _inputAbility3 = false;
     public bool InputAimDown { get => _inputAimDown; private set => _inputAimDown = value; }
     private bool _inputAimDown = false;
     public bool InputAttack { get => _inputAttack; private set => _inputAttack = value; }
@@ -68,8 +75,12 @@ public class PlayerControlScript : MonoBehaviour
     private bool _reload = false;
     public Vector3 InputDir { get => _inputDir; private set => _inputDir = value; }
     private Vector3 _inputDir;
+    // Can be set by outside components to force player to strafe
     public bool ForceStrafe { get => forceStrafe; set => forceStrafe = value;}
-    private bool forceStrafe = false; // Can be set by outside components to force player to strafe
+    private bool forceStrafe = false; 
+    // Can be set by outside components to force input to be disabled (e.g, by ability activations)
+    public bool ForceDisableInput { get => _forceDisableInput; set => _forceDisableInput = value;}
+    [SerializeField] private bool _forceDisableInput = false;
     #endregion
 
     #region Movement & Animation Properties
@@ -83,6 +94,8 @@ public class PlayerControlScript : MonoBehaviour
     private bool isMoving = false;
     private float turnStrafeSpeed = 10f;
     public float upgradeMult = .1f;
+    private bool canJump = true;
+    public bool CanJump { get => canJump; set => canJump = value; }
     #endregion
 
     #region Environmental/Sensor Properties
@@ -193,13 +206,16 @@ public class PlayerControlScript : MonoBehaviour
     {
         // Debug.Log("Player velocity: " + WorldVelocity);
 
-        if (cinput.enabled)
+        if (cinput.enabled && !ForceDisableInput)
         {
             _inputForward = cinput.Forward;
             _inputRight = cinput.Right;
             _inputAimDown = cinput.AimDown;
             _inputAttack = cinput.Attack;
             _inputHoldAttack = cinput.HoldAttack;
+            _inputAbility1 = cinput.Ability1;
+            _inputAbility2 = cinput.Ability2;
+            _inputAbility3 = cinput.Ability3;
             _inputJump = cinput.Jump;
             _interact = cinput.Interact;
             _drop = cinput.Drop;
