@@ -175,6 +175,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     {
         // Force disable input during ability activation
         playerControlScript.ForceDisableInput = true;
+        playerControlScript.ForceDisableJump = true;
         currentAbilityIndex = index;
 
         // Deactivate current weapons
@@ -212,6 +213,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     {
         // Turn off force disable after ability ends
         playerControlScript.ForceDisableInput = false;
+        playerControlScript.ForceDisableJump = false;
         
         // Disable ability model
         Weapon ability = abilitySlots[index];
@@ -376,8 +378,10 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         if (currentStateInfo.shortNameHash == statehash)
         {
             playerControlScript.ForceStrafe = false;
+            playerControlScript.ForceDisableJump = false;
         } else {
             playerControlScript.ForceStrafe = true;
+            playerControlScript.ForceDisableJump = true;
         }
     }
 

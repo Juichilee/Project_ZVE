@@ -81,6 +81,8 @@ public class PlayerControlScript : MonoBehaviour
     // Can be set by outside components to force input to be disabled (e.g, by ability activations)
     public bool ForceDisableInput { get => forceDisableInput; set => forceDisableInput = value;}
     private bool forceDisableInput = false;
+    public bool ForceDisableJump { get => _forceDisableJump; set => _forceDisableJump = value;}
+    private bool _forceDisableJump = false;
     #endregion
 
     #region Movement & Animation Properties
@@ -216,7 +218,7 @@ public class PlayerControlScript : MonoBehaviour
             _inputAbility1 = cinput.Ability1;
             _inputAbility2 = cinput.Ability2;
             _inputAbility3 = cinput.Ability3;
-            _inputJump = cinput.Jump;
+            _inputJump = ForceDisableJump ? false : cinput.Jump;
             _interact = cinput.Interact;
             _drop = cinput.Drop;
             _reload = cinput.Reload;
