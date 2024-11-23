@@ -367,8 +367,17 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             {
                 StopCoroutine(weaponsAtReadyCoroutine);
             }
-            weaponsAtReadyCoroutine = StartCoroutine(WeaponsAtReady(0.5f));
             meleeWeapon.Attack();
+        }
+
+        // Force player to strafe (attack in camera direction) while in attack animation
+        AnimatorStateInfo currentStateInfo = playerControlScript.Anim.GetCurrentAnimatorStateInfo(MELEELAYERINDEX);
+        int statehash = Animator.StringToHash("Empty");
+        if (currentStateInfo.shortNameHash == statehash)
+        {
+            playerControlScript.ForceStrafe = false;
+        } else {
+            playerControlScript.ForceStrafe = true;
         }
     }
 
@@ -633,7 +642,6 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         {
             return;
         }
-        
         if(weaponReady == 0)
         {
             currWeapon.IsReady = true;

@@ -79,8 +79,8 @@ public class PlayerControlScript : MonoBehaviour
     public bool ForceStrafe { get => forceStrafe; set => forceStrafe = value;}
     private bool forceStrafe = false; 
     // Can be set by outside components to force input to be disabled (e.g, by ability activations)
-    public bool ForceDisableInput { get => _forceDisableInput; set => _forceDisableInput = value;}
-    [SerializeField] private bool _forceDisableInput = false;
+    public bool ForceDisableInput { get => forceDisableInput; set => forceDisableInput = value;}
+    private bool forceDisableInput = false;
     #endregion
 
     #region Movement & Animation Properties
@@ -206,7 +206,7 @@ public class PlayerControlScript : MonoBehaviour
     {
         // Debug.Log("Player velocity: " + WorldVelocity);
 
-        if (cinput.enabled && !ForceDisableInput)
+        if (cinput.enabled)
         {
             _inputForward = cinput.Forward;
             _inputRight = cinput.Right;
@@ -293,8 +293,9 @@ public class PlayerControlScript : MonoBehaviour
         Transform mainCameraTrans = mainCamera.transform;
         Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
         orientation.forward = cameraForward;
-        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
 
+        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+        
         // forceStrafe is mostly set outside this script (e.g., WeaponHandler)
         if (forceStrafe)
         {
@@ -312,7 +313,7 @@ public class PlayerControlScript : MonoBehaviour
                     targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
                 }
                 
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 15f);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 25f);
             }
             // When player is facing the camera, set head aim target to forward head
             if (Vector3.Dot(this.transform.forward, cameraForward) <= 0f)
