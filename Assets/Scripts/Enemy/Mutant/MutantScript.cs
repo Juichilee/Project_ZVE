@@ -222,13 +222,17 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
         weapon.Attack();
     }
 
+    float aimVelocity = 0.0f;
+
     public void EnableHitbox()
     {
+        aimWeight = Mathf.SmoothDamp(aimWeight, 1.0f, ref aimVelocity, 0.3f);
         weapon.EnableHitbox();
     }
 
     public void DisableHitbox()
     {
+        aimWeight = Mathf.SmoothDamp(aimWeight, 0.0f, ref aimVelocity, 0.1f);
         weapon.DisableHitbox();
     }
     #endregion
@@ -240,6 +244,8 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     }
     #endregion
 
+    float aimWeight = 0f;
+
     private void OnAnimatorIK(int layerIndex)
     {
         if(anim) 
@@ -247,8 +253,6 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
             AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(layerIndex);
             if(astate.IsName("Attack"))
             {
-                float aimWeight = 0.1f;
-
                 // Set the look target position, if one has been assigned
                 if(playerBodyTransform != null)
                 {

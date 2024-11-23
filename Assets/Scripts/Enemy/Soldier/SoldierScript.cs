@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -132,6 +133,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     {
         base.Die();
         aiSensor.enabled = false;
+        weapon.gameObject.SetActive(false);
         if (enemiesRemaining)
             enemiesRemaining.oneEnemyDefeated();
     }
@@ -180,6 +182,8 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
 
     public void AttackTarget()
     {
+        if (weapon.CurrentClip == 0)
+            weapon.Reload();
         // TODO: Talk to Juichi on how to shoot the gun
         anim.SetTrigger("attack1");
         weapon.Attack();

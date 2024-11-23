@@ -1649,10 +1649,6 @@ MonoBehaviour:
   isBleed: 0
   bleedHealth: 20
   isInvincible: 0
-  invincibilityDuration: 1
-  origMaterial: {fileID: 0}
-  onDamageMaterial: {fileID: 2100000, guid: 3eb7b85297fa545f5878b528ed5cd46f, type: 2}
-  meshRenderer: {fileID: 0}
   ragdollOnDeath: {fileID: 726160093790132481}
   deathSound: {fileID: 8300000, guid: 331fa6d65ee7aa04b9e22957061fead6, type: 3}
   damageSound: {fileID: 8300000, guid: bd25ec31566daf145bce4f71ee34c678, type: 3}
