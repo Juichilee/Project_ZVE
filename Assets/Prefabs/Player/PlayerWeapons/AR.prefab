@@ -19491,7 +19491,7 @@ MonoBehaviour:
   shootPos: {fileID: 8810169834640242240}
   maxAmmo: 100
   maxClip: 25
-  currentAmmo: 100
+  currentAmmo: 50
   currentClip: 0
   effectiveRange: 0
   holdConfigName: HoldConfig_AR
