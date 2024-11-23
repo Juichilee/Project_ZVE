@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Animations.Rigging;
+using Unity.VisualScripting;
 
 // Require necessary components
 [RequireComponent(typeof(Animator), typeof(Rigidbody), typeof(CapsuleCollider))]
@@ -54,6 +55,12 @@ public class PlayerControlScript : MonoBehaviour
     private float _inputRight = 0f;
     public bool InputJump { get => _inputJump; private set => _inputJump = value; }
     private bool _inputJump = false;
+    public bool InputAbility1 { get => _inputAbility1; private set => _inputAbility1 = value; }
+    private bool _inputAbility1 = false;
+    public bool InputAbility2 { get => _inputAbility2; private set => _inputAbility2 = value; }
+    private bool _inputAbility2 = false;
+    public bool InputAbility3 { get => _inputAbility3; private set => _inputAbility3 = value; }
+    private bool _inputAbility3 = false;
     public bool InputAimDown { get => _inputAimDown; private set => _inputAimDown = value; }
     private bool _inputAimDown = false;
     public bool InputAttack { get => _inputAttack; private set => _inputAttack = value; }
@@ -68,8 +75,14 @@ public class PlayerControlScript : MonoBehaviour
     private bool _reload = false;
     public Vector3 InputDir { get => _inputDir; private set => _inputDir = value; }
     private Vector3 _inputDir;
+    // Can be set by outside components to force player to strafe
     public bool ForceStrafe { get => forceStrafe; set => forceStrafe = value;}
-    private bool forceStrafe = false; // Can be set by outside components to force player to strafe
+    private bool forceStrafe = false; 
+    // Can be set by outside components to force input to be disabled (e.g, by ability activations)
+    public bool ForceDisableInput { get => forceDisableInput; set => forceDisableInput = value;}
+    private bool forceDisableInput = false;
+    public bool ForceDisableJump { get => _forceDisableJump; set => _forceDisableJump = value;}
+    private bool _forceDisableJump = false;
     #endregion
 
     #region Movement & Animation Properties
@@ -83,6 +96,8 @@ public class PlayerControlScript : MonoBehaviour
     private bool isMoving = false;
     private float turnStrafeSpeed = 10f;
     public float upgradeMult = .1f;
+    private bool canJump = true;
+    public bool CanJump { get => canJump; set => canJump = value; }
     #endregion
 
     #region Environmental/Sensor Properties
@@ -200,7 +215,10 @@ public class PlayerControlScript : MonoBehaviour
             _inputAimDown = cinput.AimDown;
             _inputAttack = cinput.Attack;
             _inputHoldAttack = cinput.HoldAttack;
-            _inputJump = cinput.Jump;
+            _inputAbility1 = cinput.Ability1;
+            _inputAbility2 = cinput.Ability2;
+            _inputAbility3 = cinput.Ability3;
+            _inputJump = ForceDisableJump ? false : cinput.Jump;
             _interact = cinput.Interact;
             _drop = cinput.Drop;
             _reload = cinput.Reload;
@@ -277,8 +295,9 @@ public class PlayerControlScript : MonoBehaviour
         Transform mainCameraTrans = mainCamera.transform;
         Vector3 cameraForward = new Vector3(mainCameraTrans.forward.x, 0f, mainCameraTrans.forward.z);
         orientation.forward = cameraForward;
-        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
 
+        _inputDir = orientation.forward * _inputForward + orientation.right * _inputRight;
+        
         // forceStrafe is mostly set outside this script (e.g., WeaponHandler)
         if (forceStrafe)
         {
@@ -291,12 +310,12 @@ public class PlayerControlScript : MonoBehaviour
                 Quaternion targetRotation = Quaternion.LookRotation(_inputDir);
 
                 // Handle abrupt direction changes with a slight right rotation offset (prevent ping ponging)
-                if (Vector3.Dot(this.transform.forward, _inputDir) < 0f) // Check for abrupt change in direction
-                {
-                    targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
-                }
-                
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 15f);
+                // if (Vector3.Dot(this.transform.forward, _inputDir) < 0f) // Check for abrupt change in direction
+                // {
+                //     targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
+                // }
+                // this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 25f);
+                this.transform.rotation = targetRotation;
             }
             // When player is facing the camera, set head aim target to forward head
             if (Vector3.Dot(this.transform.forward, cameraForward) <= 0f)
