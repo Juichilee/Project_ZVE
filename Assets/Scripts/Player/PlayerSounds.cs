@@ -8,6 +8,8 @@ public class PlayerSounds : MonoBehaviour
 
     public AudioClip runningClip;
     public AudioClip jumpGrunt;
+    public AudioClip specialJumpGrunt;
+    public AudioClip slamDunk;
     public AudioClip landingClip;
     public AudioClip deathClip;
     public AudioClip hurtClip;
@@ -45,6 +47,22 @@ public class PlayerSounds : MonoBehaviour
         if (jumpGrunt != null)
         {
             audioSource.PlayOneShot(jumpGrunt);
+        }
+    }
+
+    public void JumpAttackGrunt()
+    {
+        if (specialJumpGrunt != null)
+        {
+            audioSource.PlayOneShot(specialJumpGrunt);
+        }
+    }
+
+    public void SlamSound()
+    {
+        if (slamDunk != null)
+        {
+            audioSource.PlayOneShot(slamDunk);
         }
     }
 

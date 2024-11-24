@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    private AudioSource audioSource;
+    public AudioClip pauseSound;
+
     public GameObject settingsMenu;
     public GameObject pauseMenu;
     public GameObject mainUI;
@@ -25,6 +28,11 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
         crosshair = GameObject.FindWithTag("crosshair");
         Unpause();
     }
@@ -55,6 +63,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         isPaused = true;
+        audioSource.PlayOneShot(pauseSound, 0.3f);
     }
 
     public void Unpause()
