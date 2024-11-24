@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class DNA : MonoBehaviour
 {
-    static int DNAPoints = 0;
+    public static int DNAPoints = 0;
     int startPoints = 0;
     public TMP_Text dnaText;
     public GameObject PanelPrompt;
@@ -34,7 +34,7 @@ public class DNA : MonoBehaviour
         dnaText.text = "" + DNAPoints;
         if(PanelPrompt != null)
         {
-            if (DNAPoints >= Shop.HealthCost || DNAPoints >= Shop.SpeedCost || DNAPoints >= Shop.StrengthCost || DNAPoints >= Shop.UnstableCost)
+            if (DNAPoints >= Shop.SwordCost || DNAPoints >= Shop.SlamCost || DNAPoints >= Shop.ScreamCost || DNAPoints >= Shop.UnstableCost)
             {
                 PanelPrompt.SetActive(true);
             }

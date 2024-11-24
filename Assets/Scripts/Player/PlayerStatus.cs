@@ -10,12 +10,18 @@ public class PlayerStatus : BasicDamageable
     public int speedUpgrade = 0;
     public int strengthUpgrade = 0;
     public int hpUpgrade = 0;
+    public bool sword;
+    public bool slam;
+    public bool scream;
     public int monsterPoints = 0;
     private PlayerSounds playerSounds;
     private int startSpeed;
     private int startStrength;
     private int startHp;
     private int startMonster;
+    private bool startSword;
+    private bool startSlam;
+    private bool startScream;
     // TODO: public float iframes;
 
     private bool isDead = false;
@@ -35,6 +41,9 @@ public class PlayerStatus : BasicDamageable
         startStrength = strengthUpgrade;
         startHp = hpUpgrade;
         startMonster = monsterPoints;
+        startSword = sword;
+        startSlam = slam;
+        startScream = scream;
     }
 
     private void FixedUpdate()
@@ -46,6 +55,9 @@ public class PlayerStatus : BasicDamageable
             strengthUpgrade = startStrength;
             hpUpgrade = startHp;
             monsterPoints = startMonster;
+            sword = startSword;
+            slam = startSlam;
+            scream = startScream;
         }
     }
 

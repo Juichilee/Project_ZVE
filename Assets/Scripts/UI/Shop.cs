@@ -10,17 +10,28 @@ public class Shop : MonoBehaviour
     public AudioClip healthUpgrade;
     public AudioClip speedUpgrade;
     public AudioClip strengthUpgrade;
+    public AudioClip gunPurchase;
     public AudioClip unstableUpgrade;
+    private GameObject exchange;
 
+    public GameObject gunPrefab;
     public static int HealthCost = 2;
     public static int SpeedCost = 2;
     public static int StrengthCost = 2;
+    public static int GunCost = 5;
+    public static int SwordCost = 5;
+    public static int SlamCost = 5;
+    public static int ScreamCost = 5;
     public static int UnstableCost = 2;
     public int costIncrease = 2;
     PlayerStatus playerStatus;
     public TMP_Text HealthText;
     public TMP_Text SpeedText;
     public TMP_Text StrengthText;
+    public TMP_Text GunText;
+    public TMP_Text SwordText;
+    public TMP_Text SlamText;
+    public TMP_Text ScreamText;
     public TMP_Text UnstableText;
     public Slider MonsterLevel;
     public int MaxHumanity = 5;
@@ -41,15 +52,20 @@ public class Shop : MonoBehaviour
         SpeedCost = 2 + costIncrease * playerStatus.speedUpgrade;
         StrengthCost = 2 + costIncrease * playerStatus.strengthUpgrade;
         UnstableCost = 2 + costIncrease * playerStatus.monsterPoints;
+        exchange = GameObject.Find("MutationExchange");
     }
 
     // Update is called once per frame
     void Update()
     {
-        HealthText.text = HealthCost.ToString();
-        SpeedText.text = SpeedCost.ToString();
-        StrengthText.text = StrengthCost.ToString();
-        UnstableText.text = UnstableCost.ToString();
+        if(HealthText != null) HealthText.text = HealthCost.ToString();
+        if (SpeedText != null) SpeedText.text = SpeedCost.ToString();
+        if (StrengthText != null) StrengthText.text = StrengthCost.ToString();
+        if (GunText != null) GunText.text = GunCost.ToString();
+        if (SwordText != null) SwordText.text = SwordCost.ToString();
+        if (SlamText != null) SlamText.text = SlamCost.ToString();
+        if (ScreamText != null) ScreamText.text = ScreamCost.ToString();
+        if (UnstableText != null) UnstableText.text = UnstableCost.ToString();
         MonsterLevel.value = MaxHumanity - playerStatus.monsterPoints;
     }
 
@@ -95,6 +111,19 @@ public class Shop : MonoBehaviour
         }
     }
 
+    public void Gun()
+    {
+        if (DNA.GetPoints() >= GunCost)
+        {
+            if (gunPurchase != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(gunPurchase);
+            }
+            DNA.Addpoints(-1 * GunCost);
+            Object.Instantiate(gunPrefab, position: new Vector3(exchange.transform.position.x + 2, exchange.transform.position.y, exchange.transform.position.z), rotation: exchange.transform.rotation);
+        }
+    }
+
     public void UnstableMutation()
     {
         if (DNA.GetPoints() >= UnstableCost)
@@ -133,19 +162,46 @@ public class Shop : MonoBehaviour
         }
     }
 
-    public void UnlockAbility1()
+    public void UnlockSword()
     {
-
+        if (DNA.GetPoints() >= SwordCost && !playerStatus.sword)
+        {
+            if (unstableUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(unstableUpgrade);
+            }
+            DNA.Addpoints(-1 * UnstableCost);
+            playerStatus.sword = true;
+            playerStatus.monsterPoints += 1;
+        }
     }
 
-    public void UnlockAbility2()
+    public void UnlockSlam()
     {
-        
+        if (DNA.GetPoints() >= SwordCost && !playerStatus.slam)
+        {
+            if (unstableUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(unstableUpgrade);
+            }
+            DNA.Addpoints(-1 * UnstableCost);
+            playerStatus.slam = true;
+            playerStatus.monsterPoints += 1;
+        }
     }
 
-    public void UnlockAbility3()
+    public void UnlockScream()
     {
-        
+        if (DNA.GetPoints() >= SwordCost && !playerStatus.scream)
+        {
+            if (unstableUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(unstableUpgrade);
+            }
+            DNA.Addpoints(-1 * UnstableCost);
+            playerStatus.scream = true;
+            playerStatus.monsterPoints += 1;
+        }
     }
 }
 
