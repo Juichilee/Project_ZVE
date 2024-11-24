@@ -10,6 +10,7 @@ public class ShopMenu : MonoBehaviour
     public GameObject ExchangeMenu;
     PauseMenu pause;
     public bool shopping = false;
+    public bool exShopping = false;
     MutationExchange exchange;
 
     // Start is called before the first frame update
@@ -29,22 +30,22 @@ public class ShopMenu : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.E) && exchange.getInTrigger())
         {
-            if (shopping)
+            if (exShopping && !shopping)
             {
                 ExContinue();
             }
-            else
+            else if (!shopping)
             {
                 ExShop();
             }
         }
         if (Input.GetButtonDown("Shop"))
         {
-            if (shopping)
+            if (shopping && !exShopping)
             {
                 Continue();
             }
-            else
+            else if(!exShopping)
             {
                 Shop();
             }
@@ -80,7 +81,7 @@ public class ShopMenu : MonoBehaviour
         pause.enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        shopping = false;
+        exShopping = false;
         PauseMenu.SetIsPaused(false);
     }
 
@@ -91,7 +92,7 @@ public class ShopMenu : MonoBehaviour
         pause.enabled = false;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        shopping = true;
+        exShopping = true;
         PauseMenu.SetIsPaused(true);
     }
 

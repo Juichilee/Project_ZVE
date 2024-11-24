@@ -25,11 +25,12 @@ public class MutationExchange : MonoBehaviour
         {
             interactGuide = GameObject.Find("InteractPanel");
         }
+        ShopMenu shopMenu = GameObject.Find("UICanvas").GetComponent<ShopMenu>();
         if (interactGuide == null)
         {
             Debug.LogError("MutationExchange needs an interact panel UI");
         }
-        else interactGuide.SetActive(inTrigger);
+        else interactGuide.SetActive(inTrigger && !(shopMenu.shopping || shopMenu.exShopping));
     }
 
     void OnTriggerEnter(Collider other)
