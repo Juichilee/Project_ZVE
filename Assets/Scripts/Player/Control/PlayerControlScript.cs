@@ -21,6 +21,7 @@ public class PlayerControlScript : MonoBehaviour
     private Animator anim;
     public Rigidbody Rbody { get => rbody; private set => rbody = value;}
     private Rigidbody rbody;
+    public Transform enemyTarget;
     // NOTE: Still need to figure out some way to find and set in awake the below references
     public Camera mainCamera;
     public Transform orientation;
