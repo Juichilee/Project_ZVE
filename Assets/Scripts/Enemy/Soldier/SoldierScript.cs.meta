@@ -3,7 +3,16 @@ guid: 4e416e80b7526b74394ba2926a1015db
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - aiSensor: {instanceID: 0}
+  - weapon: {instanceID: 0}
+  - healthPrefab: {instanceID: 0}
+  - ammoPrefab: {instanceID: 0}
+  - weaponPrefab: {instanceID: 0}
+  - currPickup: {instanceID: 0}
+  - currWeapon: {instanceID: 0}
+  - footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
+  - attackSound: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
