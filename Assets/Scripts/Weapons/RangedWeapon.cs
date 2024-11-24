@@ -26,6 +26,7 @@ public class RangedWeapon : Weapon
     [SerializeField] private AudioSource audioSource;
 
     private Vector3 aimDir;
+    private Ray aimRay;
     public AudioClip gunshot;
     public AudioClip gunClick;
     private bool hasPlayedGunReady = false;
@@ -77,7 +78,7 @@ public class RangedWeapon : Weapon
 
     public override void Attack()
     {
-        WeaponHolderAnim.SetTrigger("attack");
+        // WeaponHolderAnim.SetTrigger("attack");
         if (IsReady && CurrentClip > 0)
         {
             FireWeapon();
@@ -124,6 +125,8 @@ public class RangedWeapon : Weapon
     {
         if (WeaponHolder == null) return;
 
+        aimRay = new Ray(ShootPos.position, aimDir);
+
         aimDir = (aimTarget.position - ShootPos.position).normalized;
     }
 
@@ -143,14 +146,16 @@ public class RangedWeapon : Weapon
         Instantiate(ProjectileObj, ShootPos.position, Quaternion.LookRotation(aimDir, Vector3.up));
 
         // Hitscan based damage
-        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+        // Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        // Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+
         int fixedDistance = 99;
         Collider damageableCollider = null;
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, fixedDistance, hitLayer))
+        if (Physics.Raycast(aimRay, out RaycastHit raycastHit, fixedDistance, hitLayer))
         {
             damageableCollider = raycastHit.collider;
         }
+        // Debug.Log("Damageable Collider: " + damageableCollider.gameObject.name);
 
         if (damageableCollider != null)
         {

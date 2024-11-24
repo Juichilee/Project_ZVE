@@ -121,7 +121,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 4786849756602369350}
-    m_Position: {x: 390, y: 100, z: 0}
+    m_Position: {x: 380, y: 110, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -141,7 +141,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: attack1
+    m_ConditionEvent: attack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7260007859559123721}
@@ -196,19 +196,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: attack1
+  - m_Name: attack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   - m_Name: screamTrigger
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: attack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -230,7 +224,7 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: Shoot Layer
     m_StateMachine: {fileID: -8266499557266434362}
-    m_Mask: {fileID: 31900000, guid: 34d50e25b6ac3fe4dae28e3c8ded42c2, type: 2}
+    m_Mask: {fileID: 31900000, guid: db96192d4c4763a4c8bcc42f39f31a35, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0

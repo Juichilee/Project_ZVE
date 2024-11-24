@@ -105,6 +105,7 @@ public class SoldierStateMachine : MonoBehaviour
 
         public override StateTransitionBase<SoldierFSMData> Update()
         {
+
             if (Soldier.IsInSight())
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
@@ -192,12 +193,15 @@ public class SoldierStateMachine : MonoBehaviour
 
         public override StateTransitionBase<SoldierFSMData> Update()
         {
+
             Soldier.GoToPlayer();
 
             if (!Soldier.IsInAttackRange())
             {
                 return ParentFSM.CreateStateTransition(ChaseStateName);
             }
+
+            Soldier.LookAtPlayer();
 
             Soldier.AttackTarget();
 

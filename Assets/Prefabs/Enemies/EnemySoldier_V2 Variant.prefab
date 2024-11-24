@@ -3351,8 +3351,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.2
-  m_Speed: 3
-  m_Acceleration: 8
+  m_Speed: 1
+  m_Acceleration: 1
   avoidancePriority: 50
   m_AngularSpeed: 540
   m_StoppingDistance: 10
@@ -3430,7 +3430,7 @@ MonoBehaviour:
   currWeapon: {fileID: 0}
   pickupHealthProb: 0.2
   pickupAmmoProb: 0.8
-  MaxSpeed: 1.000002
+  MaxSpeed: 0.5
   footstepClip: {fileID: 0}
   attackSound: {fileID: 0}
   maxLookAheadTime: 0.5
@@ -3473,9 +3473,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6df80c7e59e0a4e934881613d57fd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRange: 30
-  chaseRange: 10
-  angle: 50
+  sightRange: 15
+  chaseRange: 5
+  angle: 15
   height: 2
   scanFrequency: 30
   layers:
