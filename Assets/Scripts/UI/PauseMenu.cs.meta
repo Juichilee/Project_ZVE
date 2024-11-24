@@ -3,7 +3,12 @@ guid: 0c8c5945033ce924ba2eb43a715dbaf3
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - pauseSound: {instanceID: 0}
+  - settingsMenu: {instanceID: 0}
+  - pauseMenu: {instanceID: 0}
+  - mainUI: {instanceID: 0}
+  - crosshair: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

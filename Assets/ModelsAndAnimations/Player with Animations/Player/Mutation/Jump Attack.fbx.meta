@@ -70,13 +70,6 @@ ModelImporter:
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.89598113
-        functionName: SetIsAbilityReady
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
       - time: 0.23397437
         functionName: PlayerJump
         data: 
@@ -84,8 +77,29 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.69112945
+      - time: 0.23397437
+        functionName: JumpAttackGrunt
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.65604174
         functionName: SpawnDamageObject
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.6818625
+        functionName: SlamSound
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.89598113
+        functionName: SetIsAbilityReady
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

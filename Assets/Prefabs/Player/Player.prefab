@@ -1609,6 +1609,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runningClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
   jumpGrunt: {fileID: 8300000, guid: ae2d1591bb3583f49b2650e40eeb1ff4, type: 3}
+  specialJumpGrunt: {fileID: 8300000, guid: 6f9d6c16da6eb3b46a658431364168a7, type: 3}
+  slamDunk: {fileID: 8300000, guid: 23c46d0063c88e24388a025b8096a74d, type: 3}
   landingClip: {fileID: 8300000, guid: 6d83fca48a6177f4aa73859bf2039f86, type: 3}
   deathClip: {fileID: 8300000, guid: 68bc78c9c11f947479eede8841994bf8, type: 3}
   hurtClip: {fileID: 8300000, guid: f1e641456229f1e439b533ba35cfbbbf, type: 3}
