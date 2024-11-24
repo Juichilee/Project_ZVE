@@ -72,16 +72,22 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        GameObject ammoCountGameObject = GameObject.Find("AmmoCount");
-        if (ammoCountGameObject)
-        {
-            ammoCountText = ammoCountGameObject.GetComponent<TextMeshProUGUI>();
-        }
         pickupGuide = GameObject.FindGameObjectWithTag("PickupPanel");
     }
 
     void Update()
     {
+        GameObject ammoCountGameObject = GameObject.Find("AmmoCount");
+        if (ammoCountGameObject)
+        {
+            ammoCountText = ammoCountGameObject.GetComponent<TextMeshProUGUI>();
+        }
+
+        if (pickupGuide == null)
+        {
+            pickupGuide = GameObject.Find("PickupPanel");
+        }
+
         // Debug.Log("Current Ability: " + GetActiveAbility()?.WeaponName);
 
         HandleAbilityInput();
