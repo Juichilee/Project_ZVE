@@ -62,8 +62,12 @@ public class Shop : MonoBehaviour
         SpeedCost = 2 + costIncrease * playerStatus.speedUpgrade;
         StrengthCost = 2 + costIncrease * playerStatus.strengthUpgrade;
         UnstableCost = 2 + costIncrease * playerStatus.monsterPoints;
+
         exchange = GameObject.Find("MutationExchange");
-        exchangeItemDropPos = exchange.transform.Find("ItemDropPos");
+        if(exchange)
+        {
+            exchangeItemDropPos = exchange.transform.Find("ItemDropPos");
+        }
     }
 
     // Update is called once per frame
