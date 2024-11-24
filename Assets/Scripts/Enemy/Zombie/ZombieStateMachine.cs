@@ -85,7 +85,10 @@ public class ZombieStateMachine : MonoBehaviour
         private List<Vector3> waypoints;
         private int currWaypointIndex = 0;
         private int numWaypoints = 3;
-        private float patrolRange = 20f; 
+        private float patrolRange = 20f;
+
+        private float idleSoundTimer;
+        private float idleSoundInterval = 8f;
 
         public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
         {
@@ -96,6 +99,7 @@ public class ZombieStateMachine : MonoBehaviour
         {
             base.Enter();
             CreateWaypoints();
+            idleSoundTimer = 0f;
         }
 
         public override void Exit()
@@ -105,6 +109,14 @@ public class ZombieStateMachine : MonoBehaviour
 
         public override StateTransitionBase<ZombieFSMData> Update()
         {
+            idleSoundTimer += Time.deltaTime;
+
+            if (idleSoundTimer >= idleSoundInterval)
+            {
+                Zombie.PlayIdleSound();
+                idleSoundTimer = 0f;
+            }
+
             if (Zombie.IsInSight())
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
@@ -137,6 +149,7 @@ public class ZombieStateMachine : MonoBehaviour
 
     class ChaseState : ZombieState
     {
+        private bool hasPlayedAlertSound = false;
         public override string Name => ChaseStateName;
 
         public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
@@ -147,6 +160,7 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            hasPlayedAlertSound = false;
         }
 
         public override void Exit()
@@ -156,6 +170,12 @@ public class ZombieStateMachine : MonoBehaviour
 
         public override StateTransitionBase<ZombieFSMData> Update()
         {
+            if (!hasPlayedAlertSound)
+            {
+                Zombie.AlertPlayerSpotted(); // Play alert sound
+                hasPlayedAlertSound = true;
+            }
+
             Zombie.GoToPlayer();
 
             if (Zombie.IsInAttackRange())

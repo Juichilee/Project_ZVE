@@ -4,49 +4,73 @@ using UnityEngine;
 
 public class ZombieSounds : MonoBehaviour
 {
-    private AudioClip thudSound;
-    private AudioClip attackSound;
-    // public AudioClip deathSoundClip;    // Assign the death sound in the inspector
-    private AudioSource audioSource;    // AudioSource for playing sounds
+    // public AudioClip thudSound;
+    public AudioClip footstepClip;
+    public AudioClip attackSound;
+    public AudioClip zombieClose;
+    public AudioClip alertSound;  // Sound for spotting the player
+    public AudioClip idleSound;   // Sound for idle state
 
-   // private bool isDead = false;        // To prevent playing sounds after death
+    private AudioSource audioSource;
 
     void Start()
     {
-        // Initialize the AudioSource component
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
     }
-    
+    public void ZombieWalk()
+    {
+        if (footstepClip != null && !audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(footstepClip, 0.8f);
+        }
+    }
+
     public void ZombieAttack()
     {
         if (attackSound != null && !audioSource.isPlaying)
         {
             Debug.Log("ZombieAttack event triggered.");
-            audioSource.PlayOneShot(attackSound); 
-        }        
+            audioSource.PlayOneShot(attackSound, 0.7f);
+        }
+    }
+    public void ZombieCloseToPlayer()
+    {
+        if (zombieClose != null && !audioSource.isPlaying)
+        {
+            Debug.Log("ZombieAttack event triggered.");
+            audioSource.PlayOneShot(zombieClose, 0.5f);
+        }
     }
 
+    public void ZombieAlert()
+    {
+        if (alertSound != null && !audioSource.isPlaying)
+        {
+            Debug.Log("ZombieAlert event triggered.");
+            audioSource.PlayOneShot(alertSound, 1.0f);
+        }
+    }
 
-    public void Thud()
+    public void ZombieIdle()
+    {
+        if (idleSound != null && !audioSource.isPlaying)
+        {
+            Debug.Log("ZombieIdle event triggered.");
+            audioSource.PlayOneShot(idleSound);
+        }
+    }
+
+    /*public void Thud()
     {
         if (thudSound != null)
         {
             Debug.Log("Thud event triggered.");
-            audioSource.PlayOneShot(thudSound);  // Play the footstep sound when the zombie walks
+            audioSource.PlayOneShot(thudSound);
         }
-    }
-
-    // Call this method when the zombie dies to play the death sound
-   /* public void PlayDeathSound()
-    {
-        if (!isDead && deathSoundClip != null)
-        {
-            audioSource.PlayOneShot(deathSoundClip); // Play the death sound
-            isDead = true; // Mark the zombie as dead so no other sounds play after this
-        }
-    } */
+    }*/
 }
+

@@ -10,6 +10,8 @@ public class PlayerSounds : MonoBehaviour
     public AudioClip jumpGrunt;
     public AudioClip specialJumpGrunt;
     public AudioClip slamDunk;
+    public AudioClip doTheRoar;
+    public AudioClip mutantRoar;
     public AudioClip landingClip;
     public AudioClip deathClip;
     public AudioClip hurtClip;
@@ -66,6 +68,22 @@ public class PlayerSounds : MonoBehaviour
         }
     }
 
+    public void PlayerRoar()
+    {
+        if (doTheRoar != null)
+        {
+            audioSource.PlayOneShot(doTheRoar);
+        }
+    }
+
+    public void PlayerMutantRoar()
+    {
+        if (mutantRoar != null)
+        {
+            audioSource.PlayOneShot(mutantRoar);
+        }
+    }
+
     public void Landing()
     {
         if (landingClip != null)
@@ -78,7 +96,7 @@ public class PlayerSounds : MonoBehaviour
     {
         if (deathClip != null)
         {
-            audioSource.PlayOneShot(deathClip);
+            audioSource.PlayOneShot(deathClip, 0.5f);
         }
     }
 

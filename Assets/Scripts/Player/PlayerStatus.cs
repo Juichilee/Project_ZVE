@@ -14,7 +14,6 @@ public class PlayerStatus : BasicDamageable
     public bool slam;
     public bool scream;
     public int monsterPoints = 0;
-    private PlayerSounds playerSounds;
     private int startSpeed;
     private int startStrength;
     private int startHp;
@@ -25,6 +24,10 @@ public class PlayerStatus : BasicDamageable
     // TODO: public float iframes;
 
     private bool isDead = false;
+
+    #region Sound
+    private PlayerSounds playerSounds;
+    #endregion
 
     void Awake()
     {
@@ -91,7 +94,7 @@ public class PlayerStatus : BasicDamageable
         if (isDead) return; // returns dead status
 
         isDead = true;
-        Debug.Log($"The Player has died.");
+        Debug.Log($"You died.");
         if (playerSounds != null)
         {
             playerSounds.PlayDeathSound();
