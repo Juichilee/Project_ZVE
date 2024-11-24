@@ -19406,7 +19406,7 @@ GameObject:
   - component: {fileID: 4810499662884166845}
   - component: {fileID: -4605851996556465678}
   - component: {fileID: 1364441382}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
