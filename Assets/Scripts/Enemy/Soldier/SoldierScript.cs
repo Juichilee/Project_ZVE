@@ -25,7 +25,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
 
     #region Animation Speed Variables
-    public float MaxSpeed = 1;
+    public float MaxSpeed = 0;
     private Transform playerBodyTransform;
     private float soldierLookAtSpeed = 3f;
     #endregion
@@ -94,7 +94,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         isGrounded = IsGrounded || Physics.CheckSphere(pos, radius, groundLayer);
         anim.SetBool("isFalling", !isGrounded);
 
-        // MaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
+        MaxSpeed = aiAgent.velocity.magnitude / aiAgent.speed;
     }
 
     #region Movement
