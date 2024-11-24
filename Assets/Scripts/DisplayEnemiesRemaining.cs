@@ -26,14 +26,20 @@ public class DisplayEnemiesRemaining : MonoBehaviour
             enemiesRemaining = GameObject.Find("EnemiesRemaining");
         }
         
-        enemiesRemainingScript = enemiesRemaining.GetComponent<EnemiesRemaining>();
-        enemiesRemainingNumber = enemiesRemainingScript.obtainEnemiesRemaining();
+        if (enemiesRemaining != null)
+        {
+            enemiesRemainingScript = enemiesRemaining.GetComponent<EnemiesRemaining>();
+            enemiesRemainingNumber = enemiesRemainingScript.obtainEnemiesRemaining();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        enemiesRemainingNumber = enemiesRemainingScript.obtainEnemiesRemaining();
+        if (enemiesRemainingScript)
+        {
+            enemiesRemainingNumber = enemiesRemainingScript.obtainEnemiesRemaining();
+        }
         if (enemiesRemainingNumber < 0)
         {
             enemiesRemainingNumber = 0;
