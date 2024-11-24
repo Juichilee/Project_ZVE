@@ -31,8 +31,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
 
     #region Sound
-    public AudioClip footstepClip;
-    public AudioClip attackSound;
+    private SoldierSounds soldierSounds; // Reference to SoldierSounds
     #endregion
 
     #region Attack Variables
@@ -75,6 +74,11 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         weapon.transform.localScale = Vector3.one;
 
         // Sound
+        soldierSounds = GetComponent<SoldierSounds>();
+        if (soldierSounds == null)
+        {
+            Debug.LogWarning("SoldierSounds component not found.");
+        }
     }
 
     protected override void Start() 
@@ -82,6 +86,11 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         base.Start();
         playerInstance = PlayerControlScript.PlayerInstance;
         playerBodyTransform = playerInstance.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
+        
+        if (IsInSight())
+        {
+            soldierSounds.PlayAlertSound();
+        }
     }
 
     void FixedUpdate()
@@ -223,4 +232,25 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     }
     #endregion
 
+    #region Sound
+    public void PlayFootstep()
+    {
+        soldierSounds.PlayFootstepSound();
+    }
+
+    public void PlayAttack()
+    {
+        soldierSounds.PlayAttackSound();
+    }
+
+    public void PlayAlert()
+    {
+        soldierSounds.PlayAlertSound();
+    }
+
+    public void OutOfRange()
+    {
+        soldierSounds.PlayerOutOfRange();
+    }
+    #endregion
 }

@@ -107,8 +107,10 @@ public class SoldierStateMachine : MonoBehaviour
         {
 
             if (Soldier.IsInSight())
+            {
+                Soldier.PlayAlert();
                 return ParentFSM.CreateStateTransition(ChaseStateName);
-
+            }
             if (Soldier.ReachedTarget())
                 currWaypointIndex = (currWaypointIndex + 1) % waypoints.Count;
             GoToWaypoint();   
@@ -148,6 +150,7 @@ public class SoldierStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            Soldier.PlayAlert();
         }
 
         public override void Exit()
@@ -182,6 +185,7 @@ public class SoldierStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            Soldier.PlayAttack();
             
             Soldier.GoToPlayer();
         }
@@ -198,6 +202,7 @@ public class SoldierStateMachine : MonoBehaviour
 
             if (!Soldier.IsInAttackRange())
             {
+                Soldier.OutOfRange();
                 return ParentFSM.CreateStateTransition(ChaseStateName);
             }
 
