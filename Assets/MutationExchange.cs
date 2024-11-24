@@ -10,11 +10,7 @@ public class MutationExchange : MonoBehaviour
 
     void Awake()
     {
-        interactGuide = GameObject.Find("InteractPanel");
-        if (interactGuide == null)
-        {
-            Debug.LogError("MutationExchange needs an interact panel UI");
-        }
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -25,7 +21,15 @@ public class MutationExchange : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (interactGuide == null)
+        {
+            interactGuide = GameObject.Find("InteractPanel");
+        }
+        if (interactGuide == null)
+        {
+            Debug.LogError("MutationExchange needs an interact panel UI");
+        }
+        else interactGuide.SetActive(inTrigger);
     }
 
     void OnTriggerEnter(Collider other)
@@ -42,5 +46,10 @@ public class MutationExchange : MonoBehaviour
         {
             inTrigger = false;
         }
+    }
+
+    public bool getInTrigger()
+    {
+        return inTrigger;
     }
 }
