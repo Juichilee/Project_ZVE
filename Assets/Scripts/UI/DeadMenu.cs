@@ -36,6 +36,8 @@ public class DeadMenu : MonoBehaviour
 
     public void RestartLevel()
     {
+        WeaponHandler weaponHandler = GameObject.Find("Player").GetComponent<WeaponHandler>();
+        weaponHandler.ResetWeapons();
         PauseMenu.SetIsPaused(false);
         dna.GetComponent<DNA>().ResetPoints();
         playerStatus.CurrentHealth = playerStatus.MaxHealth;

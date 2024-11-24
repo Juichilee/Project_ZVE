@@ -80,6 +80,8 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
+        WeaponHandler weaponHandler = GameObject.Find("Player").GetComponent<WeaponHandler>();
+        weaponHandler.ResetStarts();
         DNA.SetPoints(0);
         SceneManager.LoadScene("Main Menu");
     }

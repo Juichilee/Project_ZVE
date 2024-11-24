@@ -36,6 +36,10 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     private const int MELEELAYERINDEX = 3;
     private const int ABILITYLAYERINDEX = 4;
     private const float LAYERTRANSITIONDURATION = 0.2f;
+    [SerializeField] private static Weapon[] startWeaponSlots = new Weapon[3];
+    [SerializeField] private static int[] startWeaponAmmo = new int[3];
+    [SerializeField] private static int[] startWeaponClip = new int[3];
+    private string lastSceneLoaded = "";
 
     void Awake()
     {
@@ -58,6 +62,45 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         }
     }
 
+    public void RecordWeapons()
+    {
+        startWeaponSlots[0] = weaponSlots[0];
+        startWeaponSlots[1] = weaponSlots[1];
+        startWeaponSlots[2] = weaponSlots[2];
+        if (weaponSlots[0] is RangedWeapon) startWeaponAmmo[0] = ((RangedWeapon)weaponSlots[0]).getCurrentAmmo();
+        if (weaponSlots[1] is RangedWeapon) startWeaponAmmo[1] = ((RangedWeapon)weaponSlots[1]).getCurrentAmmo();
+        if (weaponSlots[2] is RangedWeapon) startWeaponAmmo[2] = ((RangedWeapon)weaponSlots[2]).getCurrentAmmo();
+        if (weaponSlots[0] is RangedWeapon) startWeaponClip[0] = ((RangedWeapon)weaponSlots[0]).getCurrentClip();
+        if (weaponSlots[1] is RangedWeapon) startWeaponClip[1] = ((RangedWeapon)weaponSlots[1]).getCurrentClip();
+        if (weaponSlots[2] is RangedWeapon) startWeaponClip[2] = ((RangedWeapon)weaponSlots[2]).getCurrentClip();
+
+    }
+
+    public void ResetStarts()
+    {
+        startWeaponSlots = new Weapon[3];
+        startWeaponAmmo = new int[3];
+        startWeaponClip = new int[3];
+    }
+
+    public void ResetWeapons()
+    {
+        DropAllWeapons();
+        weaponSlots[0] = startWeaponSlots[0];
+        weaponSlots[1] = startWeaponSlots[1];
+        weaponSlots[2] = startWeaponSlots[2];
+        if (weaponSlots[0] != null) ParentWeapon(weaponSlots[0]);
+        if (weaponSlots[1] != null) ParentWeapon(weaponSlots[1]);
+        if (weaponSlots[2] != null) ParentWeapon(weaponSlots[2]);
+        if (weaponSlots[0] is RangedWeapon) ((RangedWeapon)weaponSlots[0]).setCurrentAmmo(startWeaponAmmo[0]);
+        if (weaponSlots[1] is RangedWeapon) ((RangedWeapon)weaponSlots[1]).setCurrentAmmo(startWeaponAmmo[1]);
+        if (weaponSlots[2] is RangedWeapon) ((RangedWeapon)weaponSlots[2]).setCurrentAmmo(startWeaponAmmo[2]);
+        if (weaponSlots[0] is RangedWeapon) ((RangedWeapon)weaponSlots[0]).setCurrentClip(startWeaponClip[0]);
+        if (weaponSlots[1] is RangedWeapon) ((RangedWeapon)weaponSlots[1]).setCurrentClip(startWeaponClip[1]);
+        if (weaponSlots[2] is RangedWeapon) ((RangedWeapon)weaponSlots[2]).setCurrentClip(startWeaponClip[2]);
+        EquipWeapon(currentWeaponIndex);
+    }
+
     public void DropAllWeapons()
     {
         DropWeapon(0);
@@ -73,10 +116,16 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         pickupGuide = GameObject.FindGameObjectWithTag("PickupPanel");
+        RecordWeapons();
     }
 
     void Update()
     {
+        if (lastSceneLoaded != SceneManager.GetActiveScene().name)
+        {
+            RecordWeapons();
+            lastSceneLoaded = SceneManager.GetActiveScene().name;
+        }
         GameObject ammoCountGameObject = GameObject.Find("AmmoCount");
         if (ammoCountGameObject)
         {

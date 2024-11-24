@@ -189,4 +189,14 @@ public class RangedWeapon : Weapon
     {
         return currentAmmo;
     }
+
+    public void setCurrentClip(int clip)
+    {
+        currentClip = clip;
+    }
+
+    public void setCurrentAmmo(int ammo)
+    {
+        currentAmmo = ammo;
+    }
 }
