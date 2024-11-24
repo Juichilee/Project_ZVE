@@ -31225,7 +31225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2472201043533174176, guid: f4d201db58f021041991bdb6057028f1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.927
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 2472201043533174176, guid: f4d201db58f021041991bdb6057028f1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -31233,7 +31233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2472201043533174176, guid: f4d201db58f021041991bdb6057028f1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -40.274467
+      value: -28
       objectReference: {fileID: 0}
     - target: {fileID: 2472201043533174176, guid: f4d201db58f021041991bdb6057028f1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -36380,7 +36380,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1072002600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 632e52a72048a7e4a95957b5793daaf4, type: 3}
+  m_Script: {fileID: 11500000, guid: e6c358f130ecb37448d27c6d0180be8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1073393097
@@ -73687,7 +73687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1135256880168237590, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 7.2725525
+      value: 7.272545
       objectReference: {fileID: 0}
     - target: {fileID: 1135256880168237590, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -73708,6 +73708,10 @@ PrefabInstance:
     - target: {fileID: 1135256880862621522, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1135256880862621522, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -4.735916
       objectReference: {fileID: 0}
     - target: {fileID: 1135256880940825566, guid: 1a16443fad82b544199e3de262bbdbc7, type: 3}
       propertyPath: m_AnchoredPosition.y

@@ -132,6 +132,21 @@ public class Shop : MonoBehaviour
                 break;
         }
     }
+
+    public void UnlockAbility1()
+    {
+
+    }
+
+    public void UnlockAbility2()
+    {
+        
+    }
+
+    public void UnlockAbility3()
+    {
+        
+    }
 }
 
 

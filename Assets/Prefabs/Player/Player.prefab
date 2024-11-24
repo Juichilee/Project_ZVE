@@ -1384,11 +1384,11 @@ MonoBehaviour:
   isBleed: 0
   bleedHealth: 20
   isInvincible: 0
+  baseHealth: 100
   speedUpgrade: 0
   strengthUpgrade: 0
   hpUpgrade: 0
   monsterPoints: 0
-  baseHealth: 200
 --- !u!114 &7601325570357662445
 MonoBehaviour:
   m_ObjectHideFlags: 0
