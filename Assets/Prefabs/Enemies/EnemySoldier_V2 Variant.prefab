@@ -3264,6 +3264,7 @@ GameObject:
   - component: {fileID: 3577907604552492344}
   - component: {fileID: 3577907604552492342}
   - component: {fileID: 3577907604552492345}
+  - component: {fileID: 2571568131268998409}
   - component: {fileID: 5260712913348601035}
   m_Layer: 7
   m_Name: EnemySoldier_V2 Variant
@@ -3431,8 +3432,6 @@ MonoBehaviour:
   pickupHealthProb: 0.2
   pickupAmmoProb: 0.8
   MaxSpeed: 0.5
-  footstepClip: {fileID: 0}
-  attackSound: {fileID: 0}
   maxLookAheadTime: 0.5
 --- !u!114 &3577907604552492342
 MonoBehaviour:
@@ -3458,8 +3457,8 @@ MonoBehaviour:
   bleedHealth: 10
   isInvincible: 0
   ragdollOnDeath: {fileID: 572332065}
-  deathSound: {fileID: 0}
-  damageSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: 952c5c56ad47cbd45a1dcefd466b6b90, type: 3}
+  damageSound: {fileID: 8300000, guid: 8c694fc99d2e6944691564e47ad44829, type: 3}
   damage: {fileID: 11400000, guid: 5e5716bf0504ac046bc26f8b381a5d04, type: 2}
 --- !u!114 &3577907604552492345
 MonoBehaviour:
@@ -3536,6 +3535,23 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+--- !u!114 &2571568131268998409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617355058431448734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd137c8c457b154c823076391540dd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
+  attackSound: {fileID: 8300000, guid: a1c234ae61e4e3d4f96cae64bd2f6e9f, type: 3}
+  alertSound: {fileID: 8300000, guid: 4e3b2926e93c4414c9614aa02b0e75ad, type: 3}
+  outOfRange: {fileID: 8300000, guid: 5d8a26f8b9dc7cb4db82983c7de13c49, type: 3}
+  outOfRangeCooldown: 5
 --- !u!82 &5260712913348601035
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3545,7 +3561,7 @@ AudioSource:
   m_GameObject: {fileID: 6617355058431448734}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 950c9c8a773cba148b44d336b5808688, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -3592,7 +3608,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
