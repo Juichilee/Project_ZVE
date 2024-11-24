@@ -13,6 +13,7 @@ public class ExitLevel2 : MonoBehaviour
         {
             if (c.attachedRigidbody.gameObject.tag == "Player")
             {
+                c.transform.root.position = new Vector3(0, 0, 60);
                 SceneManager.LoadScene(nextLevelName);
             }
         }
