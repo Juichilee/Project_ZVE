@@ -1748,9 +1748,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
-  attackSound: {fileID: 8300000, guid: 02f9373f3d02d9d4abbc7b59c319ba34, type: 3}
+  attackSound: {fileID: 8300000, guid: 590e39cc7b3f50542856eeca6b05880f, type: 3}
+  zombieClose: {fileID: 8300000, guid: 02f9373f3d02d9d4abbc7b59c319ba34, type: 3}
   alertSound: {fileID: 8300000, guid: 4089448e831b22543b9f6c49aa153c0c, type: 3}
-  idleSound: {fileID: 8300000, guid: 73711505c7557b94885ec917772e41e0, type: 3}
+  idleSound: {fileID: 8300000, guid: 15c9930594ed67247a01a87f2c086484, type: 3}
 --- !u!114 &3269064097985217135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1775,7 +1776,7 @@ MonoBehaviour:
   bleedHealth: 20
   isInvincible: 0
   ragdollOnDeath: {fileID: 726160093790132481}
-  deathSound: {fileID: 8300000, guid: 331fa6d65ee7aa04b9e22957061fead6, type: 3}
+  deathSound: {fileID: 8300000, guid: 24a8f1e7e49335a4b808bf3db69710ea, type: 3}
   damageSound: {fileID: 8300000, guid: bd25ec31566daf145bce4f71ee34c678, type: 3}
   damage: {fileID: 11400000, guid: 00e40074c337bc14cb9f79d88ad4620a, type: 2}
 --- !u!114 &1522734564

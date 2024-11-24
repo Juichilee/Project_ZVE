@@ -38,7 +38,7 @@ public class GeneticPickup : MonoBehaviour
             AudioSource playerAudio = c.gameObject.GetComponent<AudioSource>();
             if (playerAudio != null && pickupSound != null)
             {
-                playerAudio.PlayOneShot(pickupSound);
+                playerAudio.PlayOneShot(pickupSound, 0.5f);
             }
         }
     }

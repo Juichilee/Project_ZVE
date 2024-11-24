@@ -125,6 +125,14 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         }
     }
 
+    public void ZombieNear()
+    {
+        if (zombieSounds != null && !sound.isPlaying)
+        {
+            zombieSounds.ZombieCloseToPlayer();
+        }
+    }
+
     public void AlertPlayerSpotted()
     {
         if (zombieSounds != null)
@@ -238,7 +246,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     {
         anim.SetTrigger("attack1");
         weapon.Attack();
-        ZombieAttacking();
+        ZombieNear();
     }
 
 

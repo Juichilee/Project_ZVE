@@ -7,6 +7,7 @@ public class ZombieSounds : MonoBehaviour
     // public AudioClip thudSound;
     public AudioClip footstepClip;
     public AudioClip attackSound;
+    public AudioClip zombieClose;
     public AudioClip alertSound;  // Sound for spotting the player
     public AudioClip idleSound;   // Sound for idle state
 
@@ -33,7 +34,15 @@ public class ZombieSounds : MonoBehaviour
         if (attackSound != null && !audioSource.isPlaying)
         {
             Debug.Log("ZombieAttack event triggered.");
-            audioSource.PlayOneShot(attackSound, 0.5f);
+            audioSource.PlayOneShot(attackSound, 0.7f);
+        }
+    }
+    public void ZombieCloseToPlayer()
+    {
+        if (zombieClose != null && !audioSource.isPlaying)
+        {
+            Debug.Log("ZombieAttack event triggered.");
+            audioSource.PlayOneShot(zombieClose, 0.5f);
         }
     }
 

@@ -96,7 +96,7 @@ public class PlayerSounds : MonoBehaviour
     {
         if (deathClip != null)
         {
-            audioSource.PlayOneShot(deathClip);
+            audioSource.PlayOneShot(deathClip, 0.5f);
         }
     }
 

@@ -88,7 +88,7 @@ public class ZombieStateMachine : MonoBehaviour
         private float patrolRange = 20f;
 
         private float idleSoundTimer;
-        private float idleSoundInterval = 10f;
+        private float idleSoundInterval = 8f;
 
         public override void Init(IFiniteStateMachine<ZombieFSMData> parentFSM, ZombieFSMData zombieFSMData)
         {
