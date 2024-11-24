@@ -3358,6 +3358,7 @@ GameObject:
   - component: {fileID: 3577907604552492342}
   - component: {fileID: 3577907604552492345}
   - component: {fileID: 5260712913348601035}
+  - component: {fileID: -6367747854234615716}
   m_Layer: 7
   m_Name: EnemyRoofSoldier
   m_TagString: Untagged
@@ -3723,6 +3724,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-6367747854234615716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617355058431448734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd137c8c457b154c823076391540dd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footstepClip: {fileID: 8300000, guid: d6a587335b408e346b096c26b147c31f, type: 3}
+  attackSound: {fileID: 8300000, guid: a1c234ae61e4e3d4f96cae64bd2f6e9f, type: 3}
+  alertSound: {fileID: 8300000, guid: 4e3b2926e93c4414c9614aa02b0e75ad, type: 3}
+  outOfRange: {fileID: 8300000, guid: 5d8a26f8b9dc7cb4db82983c7de13c49, type: 3}
+  outOfRangeCooldown: 5
 --- !u!1 &6931729862165467347
 GameObject:
   m_ObjectHideFlags: 0
