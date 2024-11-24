@@ -6,11 +6,11 @@ using UnityEngine.Events;
 
 public class PlayerStatus : BasicDamageable
 {
+    public int baseHealth = 100;
     public int speedUpgrade = 0;
     public int strengthUpgrade = 0;
     public int hpUpgrade = 0;
     public int monsterPoints = 0;
-    public int baseHealth = 100;
     private PlayerSounds playerSounds;
     private int startSpeed;
     private int startStrength;

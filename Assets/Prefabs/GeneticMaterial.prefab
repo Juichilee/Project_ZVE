@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5900966277825252654}
   - component: {fileID: 5891787568422547996}
   - component: {fileID: 5878903645381599397}
-  - component: {fileID: 5878903645381599398}
+  - component: {fileID: 6195728903421835264}
   - component: {fileID: 7373850764300426978}
   - component: {fileID: 4431712914252861473}
   m_Layer: 0
@@ -102,8 +102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pickupSound: {fileID: 8300000, guid: 894c6d646a8c9e74b825e1cb5eb6ca1c, type: 3}
   PointAmt: 1
---- !u!64 &5878903645381599398
-MeshCollider:
+--- !u!65 &6195728903421835264
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -112,10 +112,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300006, guid: 4568c0d01b7fb471ca349f46e97057d9, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.24337684, y: 0.4497348, z: 0.2420436}
+  m_Center: {x: 0, y: 0.0000005066395, z: 0.000002503395}
 --- !u!54 &7373850764300426978
 Rigidbody:
   m_ObjectHideFlags: 0
