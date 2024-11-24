@@ -40,7 +40,7 @@ public class AmmoPickup : MonoBehaviour
 
             if (weapon is RangedWeapon rangedWeapon) {         //TODO: check if player can hold more ammo
                 //TODO: Give the player more ammo
-                if (rangedWeapon.gainAmmo(AmmoAmt))
+                if (rangedWeapon.gainAmmo(rangedWeapon.MaxClip))
                 {
                     // Play the pickup sound from the player's AudioSource
                     AudioSource playerAudio = c.gameObject.GetComponent<AudioSource>();

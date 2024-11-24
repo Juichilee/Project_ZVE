@@ -318,7 +318,7 @@ PrefabInstance:
     - target: {fileID: 834479714011839760, guid: bca8562c421fe384c8b871e28da5b8a7, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: b0514d37bda579d4199d8aef0d336c00, type: 3}
+      objectReference: {fileID: 8300000, guid: eafcff832c5dfe74096a43b403d26767, type: 3}
     - target: {fileID: 834479714011839762, guid: bca8562c421fe384c8b871e28da5b8a7, type: 3}
       propertyPath: m_Name
       value: Background Music
@@ -8865,7 +8865,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.034, y: 0.119893655}
   m_AnchorMax: {x: 0.966, y: 0.9144469}
-  m_AnchoredPosition: {x: 0.2118988, y: -1.0818024}
+  m_AnchoredPosition: {x: 0.21191406, y: -1.0817871}
   m_SizeDelta: {x: -1.5772018, y: -1.3264008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1627562497

@@ -20,8 +20,9 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     public Rigidbody dnaPrefab;
     public Rigidbody currPickup;
     public Rigidbody currPickup2;
-    public float pickupHealthProb = .5f;
-    public float pickupAmmoProb = .5f;
+    public float extraPickupProb = .4f;
+    public float pickupHealthProb = .6f;
+    public float pickupAmmoProb = .4f;
     #endregion
 
     #region Animation Speed Variables
@@ -174,18 +175,24 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     public override void SpawnPickUp()
     {
         float random = Random.value;
-        Debug.Log(random);
-        if (random <= pickupHealthProb)
+
+        if (random <= extraPickupProb)
         {
-            currPickup = Instantiate(healthPrefab, transform);
-            currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
-            currPickup.isKinematic = true;
-        }
-        else if (random > pickupHealthProb && random <= pickupHealthProb + pickupAmmoProb)
-        {
-            currPickup = Instantiate(ammoPrefab, transform);
-            currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
-            currPickup.isKinematic = true;
+            random = Random.value;
+
+            if (random <= pickupHealthProb)
+            {
+                currPickup = Instantiate(healthPrefab, transform);
+                currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
+                currPickup.isKinematic = true;
+            }
+            else if (random > pickupHealthProb && random <= pickupHealthProb + pickupAmmoProb)
+            {
+                currPickup = Instantiate(ammoPrefab, transform);
+                currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
+                currPickup.isKinematic = true;
+            }
+
         }
         currPickup2 = Instantiate(dnaPrefab, transform);
         currPickup2.transform.localPosition = new Vector3(.25f, 1f, .25f);

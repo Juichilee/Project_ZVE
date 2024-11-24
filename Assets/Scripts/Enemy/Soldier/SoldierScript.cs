@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,7 +16,9 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     #region Pickup Prefabs 
     public Rigidbody healthPrefab;
     public Rigidbody ammoPrefab;
+    public Rigidbody weaponPrefab;
     public Rigidbody currPickup;
+    public Rigidbody currWeapon;
     public float pickupHealthProb = .5f;
     public float pickupAmmoProb = .5f;
     #endregion
@@ -59,12 +62,12 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         aiSensor = GetComponent<AISensor>();
         
         // Weapon
-        // weapon = GetComponentInChildren<RangedWeapon>();
-        // weapon.WeaponName = "Zombie Hand";
-        // weapon.WeaponHolder = this;
-        // weapon.WeaponHolderAnim = anim;
-        // weapon.transform.SetLocalPositionAndRotation(weapon.Hold.localPosition, weapon.Hold.localRotation);
-        // weapon.transform.localScale = Vector3.one;
+        weapon = GetComponentInChildren<RangedWeapon>();
+        weapon.WeaponName = "Soldier AR";
+        weapon.WeaponHolder = this;
+        weapon.WeaponHolderAnim = anim;
+        weapon.transform.SetLocalPositionAndRotation(weapon.Hold.localPosition, weapon.Hold.localRotation);
+        weapon.transform.localScale = Vector3.one;
 
         // Sound
     }
@@ -130,6 +133,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     {
         base.Die();
         aiSensor.enabled = false;
+        weapon.gameObject.SetActive(false);
         if (enemiesRemaining)
             enemiesRemaining.oneEnemyDefeated();
     }
@@ -138,6 +142,14 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     {
         float random = Random.value;
         Debug.Log(random);
+
+        if (weapon)
+        {
+            currWeapon = Instantiate(weaponPrefab, transform);
+            currWeapon.transform.localPosition = new Vector3(.25f, 1f, .25f);
+            currWeapon.isKinematic = true;
+        }
+
         if (random <= pickupHealthProb)
         {
             currPickup = Instantiate(healthPrefab, transform);
@@ -150,6 +162,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
             currPickup.transform.localPosition = new Vector3(-.25f, 1f, -.25f);
             currPickup.isKinematic = true;
         }
+
     } 
     #endregion
     
@@ -169,9 +182,15 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
 
     public void AttackTarget()
     {
+        if (weapon.CurrentClip == 0)
+            weapon.Reload();
         // TODO: Talk to Juichi on how to shoot the gun
         anim.SetTrigger("attack1");
-        // weapon.Attack();
+    }
+
+    public void FireWeapon()
+    {
+        weapon.Attack();
     }
 
     #endregion
@@ -182,4 +201,5 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         return this.transform.root;
     }
     #endregion
+
 }

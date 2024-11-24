@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -5,7 +6,7 @@ using UnityEngine.AI;
 public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
 {
     #region Component Reference
-    private AudioSource sound;
+    private AudioSource audioSource;
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor;
     public MeleeClawWeapon weapon;
@@ -34,6 +35,8 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     #region Sound
     public AudioClip footstepClip;
     public AudioClip attackSound;
+    public AudioClip roarSound;
+    public AudioClip idleSound;
     #endregion
 
     // Start is called before the first frame update
@@ -43,7 +46,14 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
         anim = GetComponent<Animator>();
         anim.enabled = true;
         anim.applyRootMotion = true;
-        
+
+        // Sound
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
         // RigidBody
         rb = GetComponent<Rigidbody>();
 
@@ -113,17 +123,33 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     // This method is called by the animation event 'ZombieWalk'
     public void ZombieWalk()
     {
-        if (footstepClip != null && !sound.isPlaying)
+        if (footstepClip != null && !audioSource.isPlaying)
         {
-            sound.PlayOneShot(footstepClip, 0.5f); //temp drop to half volume b/c everything's loud
+            audioSource.PlayOneShot(footstepClip); //temp drop to half volume b/c everything's loud
         }
     }
 
     public void ZombieAttack()
     {
-        if (attackSound != null && !sound.isPlaying)
+        if (attackSound != null)
         {
-            sound.PlayOneShot(attackSound);
+            audioSource.PlayOneShot(attackSound);
+        }
+    }
+
+    public void ZombieRoar()
+    {
+        if (roarSound != null)
+        {
+            audioSource.PlayOneShot(roarSound);
+        }
+    }
+
+    public void MutantIdleBreath()
+    {
+        if (roarSound != null)
+        {
+            audioSource.PlayOneShot(idleSound);
         }
     }
 
@@ -141,7 +167,7 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     }
 
 
-    public bool GoToPlayer()
+    public bool GoToPlayer(float speedModifier = 1f)
     {
         PlayerControlScript player = PlayerControlScript.PlayerInstance;
 
@@ -166,8 +192,15 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
 
         if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
             predictedPosition = hit.position;
-        return GoTo(predictedPosition, MaxSpeed);
+        return GoTo(predictedPosition, MaxSpeed * speedModifier);
     }
+
+    public bool ChargeToPlayer()
+    {
+        return GoToPlayer(5f);
+    }
+
+
     #endregion
 
     #region Death
@@ -175,6 +208,7 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     {
         base.Die();
         aiSensor.enabled = false;
+        DisableHitbox();
         if (enemiesRemaining)
             enemiesRemaining.oneEnemyDefeated();
     }
@@ -221,13 +255,17 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
         weapon.Attack();
     }
 
+    float aimVelocity = 0.0f;
+
     public void EnableHitbox()
     {
+        aimWeight = Mathf.SmoothDamp(aimWeight, 1.0f, ref aimVelocity, 0.3f);
         weapon.EnableHitbox();
     }
 
     public void DisableHitbox()
     {
+        aimWeight = Mathf.SmoothDamp(aimWeight, 0.0f, ref aimVelocity, 0.1f);
         weapon.DisableHitbox();
     }
     #endregion
@@ -239,6 +277,8 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     }
     #endregion
 
+    float aimWeight = 0f;
+
     private void OnAnimatorIK(int layerIndex)
     {
         if(anim) 
@@ -246,8 +286,6 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
             AnimatorStateInfo astate = anim.GetCurrentAnimatorStateInfo(layerIndex);
             if(astate.IsName("Attack"))
             {
-                float aimWeight = 0.1f;
-
                 // Set the look target position, if one has been assigned
                 if(playerBodyTransform != null)
                 {
@@ -265,4 +303,12 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
             }
         }
     } 
+
+    public void Scream() 
+    {
+        anim.SetTrigger("scream");
+    }
+
+
+
 }
