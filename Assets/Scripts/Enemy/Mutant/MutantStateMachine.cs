@@ -115,7 +115,7 @@ public class MutantStateMachine : MonoBehaviour
             }
 
             if (Mutant.ReachedTarget())
-                currWaypointIndex = (currWaypointIndex + 1) % numWaypoints;
+                currWaypointIndex = (currWaypointIndex + 1) % waypoints.Count;
             GoToWaypoint();   
             return null;
         }

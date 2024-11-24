@@ -109,7 +109,7 @@ public class ZombieStateMachine : MonoBehaviour
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
             if (Zombie.ReachedTarget())
-                currWaypointIndex = (currWaypointIndex + 1) % numWaypoints;
+                currWaypointIndex = (currWaypointIndex + 1) % waypoints.Count;
             GoToWaypoint();   
             return null;
         }

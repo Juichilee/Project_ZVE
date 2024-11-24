@@ -109,7 +109,7 @@ public class SoldierStateMachine : MonoBehaviour
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
             if (Soldier.ReachedTarget())
-                currWaypointIndex = (currWaypointIndex + 1) % numWaypoints;
+                currWaypointIndex = (currWaypointIndex + 1) % waypoints.Count;
             GoToWaypoint();   
             return null;
         }
