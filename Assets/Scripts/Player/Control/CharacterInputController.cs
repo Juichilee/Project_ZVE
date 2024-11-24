@@ -17,6 +17,7 @@ public class CharacterInputController : MonoBehaviour {
     private float forwardSpeedLimit = 1f;
     private float rightSpeedLimit = 1f;
 
+    private PlayerStatus status;
 
     public float Forward
     {
@@ -96,7 +97,8 @@ public class CharacterInputController : MonoBehaviour {
 
 
 	void Update () {
-		
+        status = GetComponent<PlayerStatus>();
+
         //GetAxisRaw() so we can do filtering here instead of the InputManager
         float h = Input.GetAxisRaw("Horizontal");// setup h variable as our horizontal input axis
         float v = Input.GetAxisRaw("Vertical"); // setup v variables as our vertical input axis
@@ -154,9 +156,9 @@ public class CharacterInputController : MonoBehaviour {
             //Capture "fire" button for action event
             Action = Input.GetButtonDown("Fire1");
 
-            Ability1 = Input.GetButtonDown("Ability1");
-            Ability2 = Input.GetButtonDown("Ability2");
-            Ability3 = Input.GetButtonDown("Ability3");
+            Ability1 = Input.GetButtonDown("Ability1") && status.sword;
+            Ability2 = Input.GetButtonDown("Ability2") && status.slam;
+            Ability3 = Input.GetButtonDown("Ability3") && status.scream;
 
             Jump = Input.GetButton("Jump");
 

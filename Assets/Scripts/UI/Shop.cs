@@ -19,6 +19,9 @@ public class Shop : MonoBehaviour
     public static int SpeedCost = 2;
     public static int StrengthCost = 2;
     public static int GunCost = 5;
+    public static int SwordCost = 5;
+    public static int SlamCost = 5;
+    public static int ScreamCost = 5;
     public static int UnstableCost = 2;
     public int costIncrease = 2;
     PlayerStatus playerStatus;
@@ -26,6 +29,9 @@ public class Shop : MonoBehaviour
     public TMP_Text SpeedText;
     public TMP_Text StrengthText;
     public TMP_Text GunText;
+    public TMP_Text SwordText;
+    public TMP_Text SlamText;
+    public TMP_Text ScreamText;
     public TMP_Text UnstableText;
     public Slider MonsterLevel;
     public int MaxHumanity = 5;
@@ -56,6 +62,9 @@ public class Shop : MonoBehaviour
         if (SpeedText != null) SpeedText.text = SpeedCost.ToString();
         if (StrengthText != null) StrengthText.text = StrengthCost.ToString();
         if (GunText != null) GunText.text = GunCost.ToString();
+        if (SwordText != null) SwordText.text = SwordCost.ToString();
+        if (SlamText != null) SlamText.text = SlamCost.ToString();
+        if (ScreamText != null) ScreamText.text = ScreamCost.ToString();
         if (UnstableText != null) UnstableText.text = UnstableCost.ToString();
         MonsterLevel.value = MaxHumanity - playerStatus.monsterPoints;
     }
@@ -153,19 +162,46 @@ public class Shop : MonoBehaviour
         }
     }
 
-    public void UnlockAbility1()
+    public void UnlockSword()
     {
-
+        if (DNA.GetPoints() >= SwordCost && !playerStatus.sword)
+        {
+            if (unstableUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(unstableUpgrade);
+            }
+            DNA.Addpoints(-1 * UnstableCost);
+            playerStatus.sword = true;
+            playerStatus.monsterPoints += 1;
+        }
     }
 
-    public void UnlockAbility2()
+    public void UnlockSlam()
     {
-        
+        if (DNA.GetPoints() >= SwordCost && !playerStatus.slam)
+        {
+            if (unstableUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(unstableUpgrade);
+            }
+            DNA.Addpoints(-1 * UnstableCost);
+            playerStatus.slam = true;
+            playerStatus.monsterPoints += 1;
+        }
     }
 
-    public void UnlockAbility3()
+    public void UnlockScream()
     {
-        
+        if (DNA.GetPoints() >= SwordCost && !playerStatus.scream)
+        {
+            if (unstableUpgrade != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(unstableUpgrade);
+            }
+            DNA.Addpoints(-1 * UnstableCost);
+            playerStatus.scream = true;
+            playerStatus.monsterPoints += 1;
+        }
     }
 }
 
