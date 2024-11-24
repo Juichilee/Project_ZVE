@@ -79,10 +79,11 @@ public class JumpAirMotionState : BaseState
     // PlayerJump() is called by animation event from the jump animation
     public void PlayerJump()
     {
+        float speedUpgrade = player.speedMultiplier + (player.playerStatus.speedUpgrade * player.upgradeMult);
         Vector3 verticalForce = Vector3.up * jumpForce;
         player.Rbody.velocity = new Vector3(player.Rbody.velocity.x, 0f, player.Rbody.velocity.z); // reset y velocity before jump
-        Vector3 horizontalForce = player.InputDir * horizontalBoost;
-        Vector3 totalForce = (verticalForce + horizontalForce) * player.speedMultiplier * 2; 
+        Vector3 horizontalForce = player.InputDir * horizontalBoost * speedUpgrade;
+        Vector3 totalForce = (verticalForce + horizontalForce) * player.speedMultiplier * 2;
         player.Rbody.AddForce(totalForce, ForceMode.Impulse);
         player.StartCoroutine(JumpResetDelay()); // Reference StartCoroutine that belongs to player MonoBehavior class
     }

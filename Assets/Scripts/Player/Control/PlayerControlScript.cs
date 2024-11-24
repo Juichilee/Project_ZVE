@@ -33,7 +33,7 @@ public class PlayerControlScript : MonoBehaviour
     private float slopeCheckDistance = 1f; // Adjust based on player height
     public Rig headRig; 
     private MultiAimConstraint headAim;
-    private PlayerStatus playerStatus;
+    public PlayerStatus playerStatus;
 
     /* State Machines:
         PlayerControlScript handles 3 states machines that each store a separate state.
