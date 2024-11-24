@@ -13,6 +13,7 @@ public class DisplayEnemiesRemaining : MonoBehaviour
     private int enemiesRemainingNumber;
     private string beforeNumberPart = "Goal: Defeat ";
     private string afterNumberPart = " enemies to open this level's exit door";
+    private string afterNumberOnePart = " enemy to open this level's exit door";
     private string openedExitDoorText = "Goal: Reach this level's opened exit door";
 
     // Start is called before the first frame update
@@ -41,7 +42,13 @@ public class DisplayEnemiesRemaining : MonoBehaviour
         {
             goalText.text = openedExitDoorText;
         } else {
-            goalText.text = beforeNumberPart + enemiesRemainingNumber.ToString() + afterNumberPart;
+            if (enemiesRemainingNumber == 1)
+            {
+                goalText.text = beforeNumberPart + enemiesRemainingNumber.ToString() + afterNumberOnePart;
+            } else {
+                goalText.text = beforeNumberPart + enemiesRemainingNumber.ToString() + afterNumberPart;
+            }
+            
         }
     }
 }
