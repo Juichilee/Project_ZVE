@@ -3512,8 +3512,10 @@ MonoBehaviour:
   currPickup2: {fileID: 0}
   pickupHealthProb: 0.5
   pickupAmmoProb: 0.5
-  footstepClip: {fileID: 0}
-  attackSound: {fileID: 0}
+  footstepClip: {fileID: 8300000, guid: 54851d95d66a88048b3363148abbd14a, type: 3}
+  attackSound: {fileID: 8300000, guid: 590e39cc7b3f50542856eeca6b05880f, type: 3}
+  roarSound: {fileID: 8300000, guid: 44f123769fc056040b900e6c500549c8, type: 3}
+  idleSound: {fileID: 8300000, guid: 73711505c7557b94885ec917772e41e0, type: 3}
   maxLookAheadTime: 0.5
   MovementPredictionThreshold: 0.25
 --- !u!114 &6492570869657490946

@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
 {
     #region Component Reference
-    private AudioSource sound;
+    private AudioSource audioSource;
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor;
     public MeleeClawWeapon weapon;
@@ -35,6 +35,8 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     #region Sound
     public AudioClip footstepClip;
     public AudioClip attackSound;
+    public AudioClip roarSound;
+    public AudioClip idleSound;
     #endregion
 
     // Start is called before the first frame update
@@ -44,7 +46,14 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
         anim = GetComponent<Animator>();
         anim.enabled = true;
         anim.applyRootMotion = true;
-        
+
+        // Sound
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
         // RigidBody
         rb = GetComponent<Rigidbody>();
 
@@ -114,17 +123,33 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     // This method is called by the animation event 'ZombieWalk'
     public void ZombieWalk()
     {
-        if (footstepClip != null && !sound.isPlaying)
+        if (footstepClip != null && !audioSource.isPlaying)
         {
-            sound.PlayOneShot(footstepClip, 0.5f); //temp drop to half volume b/c everything's loud
+            audioSource.PlayOneShot(footstepClip); //temp drop to half volume b/c everything's loud
         }
     }
 
     public void ZombieAttack()
     {
-        if (attackSound != null && !sound.isPlaying)
+        if (attackSound != null)
         {
-            sound.PlayOneShot(attackSound);
+            audioSource.PlayOneShot(attackSound);
+        }
+    }
+
+    public void ZombieRoar()
+    {
+        if (roarSound != null)
+        {
+            audioSource.PlayOneShot(roarSound);
+        }
+    }
+
+    public void MutantIdleBreath()
+    {
+        if (roarSound != null)
+        {
+            audioSource.PlayOneShot(idleSound);
         }
     }
 
