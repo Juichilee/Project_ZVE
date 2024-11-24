@@ -91,6 +91,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
         // Debug.Log("Current Ability: " + GetActiveAbility()?.WeaponName);
 
         HandleAbilityInput();
+        ShopMenu shopMenu = GameObject.Find("UICanvas").GetComponent<ShopMenu>();
 
         // No abilities can be active for regular weapon handling to occur
         if (GetActiveAbility() == null) 
@@ -99,7 +100,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             HandleWeaponSwitching();
             HandleWeaponInput();
             HandleWeaponDrop();
-            pickupGuide.SetActive(currentPickupCollider != null);
+            pickupGuide.SetActive((currentPickupCollider != null) && !(shopMenu.shopping || shopMenu.exShopping));
         }
 
         UpdateAmmoCountDisplay();
