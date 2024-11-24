@@ -32,8 +32,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
 
     #region Sound
-    public AudioClip footstepClip;
-    public AudioClip attackSound;
+    private ZombieSounds zombieSounds; // Reference to ZombieSounds
     #endregion
 
     void Awake()
@@ -78,6 +77,11 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         {
             sound = gameObject.AddComponent<AudioSource>();
         }
+        zombieSounds = GetComponent<ZombieSounds>();
+        if (zombieSounds == null)
+        {
+            Debug.LogWarning("ZombieSounds component not found on Zombie.");
+        }
 
     }
 
@@ -107,17 +111,33 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     // This method is called by the animation event 'ZombieWalk'
     public void ZombieWalk()
     {
-        if (footstepClip != null && !sound.isPlaying)
+        if (zombieSounds != null && !sound.isPlaying)
         {
-            sound.PlayOneShot(footstepClip, 0.5f); //temp drop to half volume b/c everything's loud
+            zombieSounds.ZombieWalk();
         }
     }
 
-    public void ZombieAttack()
+    public void ZombieAttacking()
     {
-        if (attackSound != null && !sound.isPlaying)
+        if (zombieSounds != null && !sound.isPlaying)
         {
-            sound.PlayOneShot(attackSound);
+            zombieSounds.ZombieAttack();
+        }
+    }
+
+    public void AlertPlayerSpotted()
+    {
+        if (zombieSounds != null)
+        {
+            zombieSounds.ZombieAlert();
+        }
+    }
+
+    public void PlayIdleSound()
+    {
+        if (zombieSounds != null)
+        {
+            zombieSounds.ZombieIdle();
         }
     }
     #endregion
@@ -218,7 +238,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     {
         anim.SetTrigger("attack1");
         weapon.Attack();
-        ZombieAttack();
+        ZombieAttacking();
     }
 
 
