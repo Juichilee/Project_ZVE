@@ -10,7 +10,7 @@ public class PlayerStatus : BasicDamageable
     public int strengthUpgrade = 0;
     public int hpUpgrade = 0;
     public int monsterPoints = 0;
-    public int baseHealth = 200;
+    public int baseHealth = 100;
     private PlayerSounds playerSounds;
     private int startSpeed;
     private int startStrength;

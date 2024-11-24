@@ -9912,7 +9912,7 @@ MonoBehaviour:
   knifeCoolDownTime: 1
   knifeWeaponAnimId: 0
   knifeHoldConfigName: HoldConfig_Knife
-  comboDelay: 0.2
+  comboDelay: 0.4
 --- !u!82 &3057083976559277498
 AudioSource:
   m_ObjectHideFlags: 0
