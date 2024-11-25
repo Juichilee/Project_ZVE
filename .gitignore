@@ -76,3 +76,5 @@ crashlytics-build.properties
 .vsconfig
 /Assets/Scenes/Audio/Audio.unity
 /Assets/Scenes/Audio/Audio.unity.meta
+/Assets/Scenes/Audio/AudioTest.unity
+/Assets/Scenes/Audio
