@@ -13,6 +13,8 @@ public class ExitLevel3 : MonoBehaviour
         {
             if (c.attachedRigidbody.gameObject.tag == "Player")
             {
+                WeaponHandler weaponHandler = GameObject.Find("Player").GetComponent<WeaponHandler>();
+                weaponHandler.ResetStarts();
                 SceneManager.LoadScene(nextSceneName);
             }
         }

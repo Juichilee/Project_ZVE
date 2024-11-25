@@ -18,17 +18,13 @@ public class ShopMenu : MonoBehaviour
     {
         Menu.SetActive(false);
         pause = this.GetComponent<PauseMenu>();
+        exchange = GameObject.Find("ExchangeTrigger")?.GetComponent<MutationExchange>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        exchange = GameObject.Find("ExchangeTrigger").GetComponent<MutationExchange>();
-        if (exchange == null)
-        {
-            Debug.LogError("MutationExchange menu needs an MutationExchange location");
-        }
-        if (Input.GetKeyDown(KeyCode.E) && exchange.getInTrigger())
+        if (exchange && Input.GetKeyDown(KeyCode.E) && exchange.getInTrigger())
         {
             if (exShopping && !shopping)
             {
