@@ -3280,8 +3280,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6617355058431448734}
-  m_LocalRotation: {x: 0, y: -0.93871284, z: 0, w: 0.34470037}
-  m_LocalPosition: {x: 7.543282, y: 0.023303673, z: 31.076674}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3290,7 +3290,7 @@ Transform:
   - {fileID: 8503260476827137337}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -139.673, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &572332068
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3432,6 +3432,7 @@ MonoBehaviour:
   pickupHealthProb: 0.2
   pickupAmmoProb: 0.8
   MaxSpeed: 0.5
+  attackRange: 10
   maxLookAheadTime: 0.5
 --- !u!114 &3577907604552492342
 MonoBehaviour:
@@ -3472,8 +3473,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6df80c7e59e0a4e934881613d57fd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRange: 15
-  chaseRange: 5
+  sightRange: 12
+  chaseRange: 14
+  hearRange: 5
   angle: 15
   height: 2
   scanFrequency: 30
