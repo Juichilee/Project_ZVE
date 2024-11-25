@@ -1617,7 +1617,7 @@ MonoBehaviour:
   jumpGrunt: {fileID: 8300000, guid: ae2d1591bb3583f49b2650e40eeb1ff4, type: 3}
   specialJumpGrunt: {fileID: 8300000, guid: 6f9d6c16da6eb3b46a658431364168a7, type: 3}
   slamDunk: {fileID: 8300000, guid: 23c46d0063c88e24388a025b8096a74d, type: 3}
-  doTheRoar: {fileID: 8300000, guid: 6f9d6c16da6eb3b46a658431364168a7, type: 3}
+  doTheRoar: {fileID: 8300000, guid: 44f123769fc056040b900e6c500549c8, type: 3}
   mutantRoar: {fileID: 0}
   landingClip: {fileID: 8300000, guid: 6d83fca48a6177f4aa73859bf2039f86, type: 3}
   deathClip: {fileID: 8300000, guid: 68bc78c9c11f947479eede8841994bf8, type: 3}
