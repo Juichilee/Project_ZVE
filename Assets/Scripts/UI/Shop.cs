@@ -10,8 +10,17 @@ public class Shop : MonoBehaviour
     public AudioClip healthUpgradeAudio;
     public AudioClip speedUpgradeAudio;
     public AudioClip strengthUpgradeAudio;
-    public AudioClip gunPurchaseAudio;
+    #region Unstable Sound
     public AudioClip unstableUpgradeAudio;
+    public AudioClip swordArmUnlockAudio;
+    public AudioClip slamUnlockAudio;
+    public AudioClip screamUnlockAudio;
+    #endregion
+    #region Purchasable Items
+    public AudioClip gunPurchaseAudio;
+    public AudioClip healthPurchaseAudio;
+    public AudioClip ammoPurchaseAudio;
+    #endregion
     private GameObject exchange;
     private Transform exchangeItemDropPos;
 
@@ -144,9 +153,9 @@ public class Shop : MonoBehaviour
     {
         if (DNA.GetPoints() >= AmmoCost)
         {
-            if (gunPurchaseAudio != null && !audioSource.isPlaying)
+            if (ammoPurchaseAudio != null && !audioSource.isPlaying)
             {
-                audioSource.PlayOneShot(gunPurchaseAudio);
+                audioSource.PlayOneShot(ammoPurchaseAudio);
             }
             DNA.Addpoints(-1 * AmmoCost);
             Object.Instantiate(ammoPrefab, exchangeItemDropPos.position, exchangeItemDropPos.rotation);
@@ -157,9 +166,9 @@ public class Shop : MonoBehaviour
     {
         if (DNA.GetPoints() >= HealthPackCost)
         {
-            if (healthUpgradeAudio != null && !audioSource.isPlaying)
+            if (healthPurchaseAudio != null && !audioSource.isPlaying)
             {
-                audioSource.PlayOneShot(healthUpgradeAudio);
+                audioSource.PlayOneShot(healthPurchaseAudio);
             }
             DNA.Addpoints(-1 * HealthPackCost);
             Object.Instantiate(healthPackPrefab, exchangeItemDropPos.position, exchangeItemDropPos.rotation);
@@ -208,9 +217,9 @@ public class Shop : MonoBehaviour
     {
         if (DNA.GetPoints() >= SwordCost && !playerStatus.sword)
         {
-            if (unstableUpgradeAudio != null && !audioSource.isPlaying)
+            if (swordArmUnlockAudio != null && !audioSource.isPlaying)
             {
-                audioSource.PlayOneShot(unstableUpgradeAudio);
+                audioSource.PlayOneShot(swordArmUnlockAudio);
             }
             DNA.Addpoints(-1 * SwordCost);
             playerStatus.sword = true;
@@ -222,9 +231,9 @@ public class Shop : MonoBehaviour
     {
         if (DNA.GetPoints() >= SwordCost && !playerStatus.slam)
         {
-            if (unstableUpgradeAudio != null && !audioSource.isPlaying)
+            if (slamUnlockAudio != null && !audioSource.isPlaying)
             {
-                audioSource.PlayOneShot(unstableUpgradeAudio);
+                audioSource.PlayOneShot(slamUnlockAudio);
             }
             DNA.Addpoints(-1 * SwordCost);
             playerStatus.slam = true;
@@ -236,9 +245,9 @@ public class Shop : MonoBehaviour
     {
         if (DNA.GetPoints() >= SwordCost && !playerStatus.scream)
         {
-            if (unstableUpgradeAudio != null && !audioSource.isPlaying)
+            if (screamUnlockAudio != null && !audioSource.isPlaying)
             {
-                audioSource.PlayOneShot(unstableUpgradeAudio);
+                audioSource.PlayOneShot(screamUnlockAudio);
             }
             DNA.Addpoints(-1 * SwordCost);
             playerStatus.scream = true;

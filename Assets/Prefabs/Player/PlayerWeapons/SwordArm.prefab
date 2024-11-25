@@ -70,7 +70,7 @@ MonoBehaviour:
   damageAttributes: {fileID: 11400000, guid: cdd236c5a75c7624ea568c8633199129, type: 2}
   hitBoxInstance: {fileID: 4416667274099771021}
   audioSource: {fileID: 967787473925333331}
-  meleeSoundClip: {fileID: 8300000, guid: 09a2a530465bedd4b847ddf74392159a, type: 3}
+  meleeSoundClip: {fileID: 8300000, guid: 10d3f013d26a7cf41b6870948f3cbb61, type: 3}
   swordArmName: SwordArm
   swordArmCoolDownTime: 5
   swordArmWeaponAnimId: 4

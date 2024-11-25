@@ -29,10 +29,11 @@ public class SwordArmWeapon : MeleeWeapon, Ability
         if(IsReady)
         {
             // Read in combo input if the player is already attacking
+            PlayMeleeSound(); // sound won't attach itself to animation, temp fix
             WeaponHolderAnim.SetTrigger("attack");
         }
     }
-
+    #region sound
     public override void PlayMeleeSound()
     {
         if (meleeSoundClip != null)
@@ -40,4 +41,6 @@ public class SwordArmWeapon : MeleeWeapon, Ability
             audioSource.PlayOneShot(meleeSoundClip);
         }
     }
+
+    #endregion
 }

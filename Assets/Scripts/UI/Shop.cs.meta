@@ -3,7 +3,32 @@ guid: cb37bcd7f85486348a74cfd8941f7fbd
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - healthUpgradeAudio: {instanceID: 0}
+  - speedUpgradeAudio: {instanceID: 0}
+  - strengthUpgradeAudio: {instanceID: 0}
+  - gunPurchaseAudio: {instanceID: 0}
+  - unstableUpgradeAudio: {instanceID: 0}
+  - swordArmUnlockAudio: {instanceID: 0}
+  - slamUnlockAudio: {instanceID: 0}
+  - screamUnlockAudio: {instanceID: 0}
+  - gunPrefab: {instanceID: 0}
+  - ammoPrefab: {instanceID: 0}
+  - healthPackPrefab: {instanceID: 0}
+  - HealthStatText: {instanceID: 0}
+  - SpeedStatText: {instanceID: 0}
+  - StrengthStatText: {instanceID: 0}
+  - HealthText: {instanceID: 0}
+  - SpeedText: {instanceID: 0}
+  - StrengthText: {instanceID: 0}
+  - GunText: {instanceID: 0}
+  - HealthPackText: {instanceID: 0}
+  - AmmoPackText: {instanceID: 0}
+  - SwordText: {instanceID: 0}
+  - SlamText: {instanceID: 0}
+  - ScreamText: {instanceID: 0}
+  - UnstableText: {instanceID: 0}
+  - MonsterLevel: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -1244,6 +1244,7 @@ MonoBehaviour:
   hold: {fileID: 0}
   hitBoxInstance: {fileID: 3907679949017120791}
   audioSource: {fileID: 2743371833484276914}
+  holdParent: 0
   meleeSoundClip: {fileID: 0}
 --- !u!1 &3036682607025083244
 GameObject:
@@ -3514,8 +3515,8 @@ MonoBehaviour:
   pickupAmmoProb: 0.5
   footstepClip: {fileID: 8300000, guid: 54851d95d66a88048b3363148abbd14a, type: 3}
   attackSound: {fileID: 8300000, guid: 590e39cc7b3f50542856eeca6b05880f, type: 3}
-  roarSound: {fileID: 8300000, guid: 44f123769fc056040b900e6c500549c8, type: 3}
-  idleSound: {fileID: 8300000, guid: 73711505c7557b94885ec917772e41e0, type: 3}
+  roarSound: {fileID: 8300000, guid: eb6d7f9abaf3dd94d88384ab0ee5b0a1, type: 3}
+  idleSound: {fileID: 8300000, guid: 44f123769fc056040b900e6c500549c8, type: 3}
   maxLookAheadTime: 0.5
   MovementPredictionThreshold: 0.25
 --- !u!114 &6492570869657490946
@@ -3647,7 +3648,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: 950c9c8a773cba148b44d336b5808688, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.85
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
