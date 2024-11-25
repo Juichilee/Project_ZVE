@@ -197,7 +197,7 @@ public class Shop : MonoBehaviour
 
     void randomUpgrade()
     {
-        int randomvalue = Random.Range(0, 2);
+        int randomvalue = Random.Range(0, 3);
         switch (randomvalue)
         {
             case 0:
@@ -209,7 +209,7 @@ public class Shop : MonoBehaviour
                 SpeedCost += costIncrease;
                 break;
             case 2:
-                playerStatus.MaxHealth += 20;
+                playerStatus.hpUpgrade += 1;
                 HealthCost += costIncrease;
                 break;
             default:
