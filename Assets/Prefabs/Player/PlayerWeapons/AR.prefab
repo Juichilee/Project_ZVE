@@ -19502,7 +19502,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   gunshot: {fileID: 8300000, guid: 92432d8810eaa8d4ca8f70eb9caeaf60, type: 3}
   gunClick: {fileID: 8300000, guid: 62f3c2742fcbf434699da1a8e9414b84, type: 3}
-  muzzleFlashLineRenderer: {fileID: 6517544714768890516}
+  muzzleFlash: {fileID: 6517544714768890516}
 --- !u!82 &-4605851996556465678
 AudioSource:
   m_ObjectHideFlags: 0
