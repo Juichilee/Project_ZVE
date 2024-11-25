@@ -90,7 +90,6 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     protected override void Start() 
     {
         base.Start();
-        attackRange = 1.5f;
         playerInstance = PlayerControlScript.PlayerInstance;
         playerBodyTransform = playerInstance.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
         playerVelocityTracker = playerInstance.GetComponent<PlayerVelocityTracker>();
@@ -153,7 +152,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
 
     #region Movement
-    public float maxLookAheadTime = 0.5f;
+    public float maxLookAheadTime = 0.25f;
     public float MovementPredictionThreshold = 0.25f;
 
     public override bool GoTo(Vector3 position, float speed = 0)
@@ -163,11 +162,11 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         return base.GoTo(position, speed);
     }
 
-    public void LookAtPlayer()
-    {
-        Vector3 playerLookDir = (playerInstance.transform.position - transform.position).normalized;
-        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(playerLookDir), Time.deltaTime * zombieLookAtSpeed);
-    }
+    // public void LookAtPlayer()
+    // {
+    //     Vector3 playerLookDir = (playerInstance.transform.position - transform.position).normalized;
+    //     this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(playerLookDir), Time.deltaTime * zombieLookAtSpeed);
+    // }
 
     public bool GoToPlayer()
     {
@@ -236,7 +235,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
     
     #region Attack
-    private float attackRange;
+    private float attackRange = 1f;
 
     public bool IsInAttackRange()
     {

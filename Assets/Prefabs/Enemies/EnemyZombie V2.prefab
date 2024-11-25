@@ -1568,8 +1568,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2029171304277264259}
-  m_LocalRotation: {x: 0, y: -0.47464123, z: 0, w: 0.8801794}
-  m_LocalPosition: {x: 10.723766, y: 0.023303673, z: 23.299429}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1591,7 +1591,7 @@ Transform:
   - {fileID: 377053681349582679}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -56.672, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4969804195203815658
 Animator:
   serializedVersion: 5
@@ -1657,7 +1657,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 1
   m_AngularSpeed: 540
-  m_StoppingDistance: 1.4
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 0
   m_AutoBraking: 1
   m_AutoRepath: 1

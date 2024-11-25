@@ -3375,8 +3375,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7899536750643805355}
-  m_LocalRotation: {x: -0, y: -0.9998807, z: 0, w: -0.015454165}
-  m_LocalPosition: {x: 17.251825, y: 0.023303673, z: 0.83463705}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3385,7 +3385,7 @@ Transform:
   - {fileID: 4996087595066201139}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -181.771, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &3461920843000052843
 Animator:
   serializedVersion: 5
@@ -3451,7 +3451,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 540
-  m_StoppingDistance: 1.4
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -3513,6 +3513,7 @@ MonoBehaviour:
   currPickup2: {fileID: 0}
   pickupHealthProb: 0.5
   pickupAmmoProb: 0.5
+  mutantLookAtSpeed: 1
   footstepClip: {fileID: 8300000, guid: 54851d95d66a88048b3363148abbd14a, type: 3}
   attackSound: {fileID: 8300000, guid: 590e39cc7b3f50542856eeca6b05880f, type: 3}
   roarSound: {fileID: 8300000, guid: eb6d7f9abaf3dd94d88384ab0ee5b0a1, type: 3}

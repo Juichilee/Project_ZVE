@@ -117,6 +117,37 @@ Transform:
   m_Father: {fileID: 822366204}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &265386869
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 265386870}
+  m_Layer: 9
+  m_Name: EnemyAimTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &265386870
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265386869}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.375, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2447535518228274182}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &320036378
 GameObject:
   m_ObjectHideFlags: 0
@@ -1307,6 +1338,7 @@ Transform:
   - {fileID: 2734009223255890230}
   - {fileID: 7601325570708759817}
   - {fileID: 2733698974099644568}
+  - {fileID: 265386870}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1447,7 +1479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7688ae2a775f4c7baef8f572a0397f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyTarget: {fileID: 0}
+  enemyTarget: {fileID: 265386870}
   mainCamera: {fileID: 7601325570263251380}
   orientation: {fileID: 7601325571072961457}
   spawn: {fileID: 0}
@@ -4188,7 +4220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2734009223255890230}
   - component: {fileID: 2734009223255890233}
-  m_Layer: 9
+  m_Layer: 13
   m_Name: PickUpTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4900,7 +4932,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5516164000460788726}
-  m_LocalRotation: {x: 0.02329646, y: 0.000000088134826, z: -0.000000008937047, w: 0.9997286}
+  m_LocalRotation: {x: -0.0000000010183177, y: -0.9948982, z: 0.10088459, w: -0.000000043699526}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4978,7 +5010,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5516164001005601440}
-  m_LocalRotation: {x: -0.023195729, y: 0.00000011777256, z: -0.0000000064320766, w: 0.999731}
+  m_LocalRotation: {x: 0.0000000010139172, y: -0.998512, z: 0.054533135, w: -0.00000004369963}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5056,7 +5088,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5516164001458146056}
-  m_LocalRotation: {x: -0.00000002233485, y: 0.000000092312405, z: -0.0000000071925275, w: 1}
+  m_LocalRotation: {x: 1.2995929e-15, y: -0.9969784, z: 0.07767964, w: -0.000000043711392}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5989,7 +6021,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7601325569759504242}
   m_LocalRotation: {x: 0.038869206, y: -0.00000002245818, z: 8.7359175e-10, w: 0.99924433}
-  m_LocalPosition: {x: 0, y: 2, z: -4}
+  m_LocalPosition: {x: 0, y: 2, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6194,8 +6226,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7601325570263251382}
-  m_LocalRotation: {x: 0.0000000017380094, y: 0.99924433, z: -0.0388692, w: 0.000000044680522}
-  m_LocalPosition: {x: -9, y: 1.9999995, z: 28.58}
+  m_LocalRotation: {x: 0.0000000029648943, y: -0.99924433, z: 0.038869176, w: 0.000000076221156}
+  m_LocalPosition: {x: 0, y: 2, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

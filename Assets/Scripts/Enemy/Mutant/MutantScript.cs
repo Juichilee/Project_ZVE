@@ -32,7 +32,7 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     public float MaxSpeed { get; private set; }
     // Player Body Reference
     private Transform playerBodyTransform;
-    private float mutantLookAtSpeed = 2f;
+    public float mutantLookAtSpeed = 1f;
     private bool canCharge = true;
     private int chargeMinCooldown = 10;
     private int chargeMaxCooldown = 20;
@@ -92,7 +92,6 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     protected override void Start()
     {
         base.Start();
-        attackRange = 2f;
         playerInstance = PlayerControlScript.PlayerInstance;
         playerBodyTransform = playerInstance.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
         playerVelocityTracker = playerInstance.GetComponent<PlayerVelocityTracker>();
@@ -167,7 +166,7 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
 
     #endregion
     #region Movement
-    public float maxLookAheadTime = 0.5f;
+    public float maxLookAheadTime = 0.25f;
     public float MovementPredictionThreshold = 0.25f;
 
     public override bool GoTo(Vector3 position, float speed = 0)
@@ -178,11 +177,11 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
         return base.GoTo(position, speed);
     }
 
-    public void LookAtPlayer()
-    {
-        Vector3 playerLookDir = (playerInstance.transform.position - transform.position).normalized;
-        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(playerLookDir), Time.deltaTime * mutantLookAtSpeed);
-    }
+    // public void LookAtPlayer()
+    // {
+    //     Vector3 playerLookDir = (playerInstance.transform.position - transform.position).normalized;
+    //     this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(playerLookDir), Time.deltaTime * mutantLookAtSpeed);
+    // }
 
     public bool GoToPlayer(float speedModifier = 1)
     {
@@ -258,7 +257,7 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
 
     #region Attack
-    private float attackRange;
+    private float attackRange = 1f;
 
     public bool IsInAttackRange()
     {

@@ -86,8 +86,9 @@ public class MutantStateMachine : MonoBehaviour
         public override string Name => PatrolStateName;
         private List<Vector3> waypoints;
         private int currWaypointIndex = 0;
+        private Vector3 currWaypointPosition;
         private int numWaypoints = 1;
-        private float patrolRange = 20f; 
+        private float patrolRange = 2f; 
 
         public override void Init(IFiniteStateMachine<MutantFSMData> parentFSM, MutantFSMData mutantFSMData)
         {
@@ -97,6 +98,7 @@ public class MutantStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            currWaypointPosition = Mutant.gameObject.transform.position;
             CreateWaypoints();
         }
 
@@ -126,14 +128,16 @@ public class MutantStateMachine : MonoBehaviour
             for (int i = 0; i < numWaypoints; i++)
             {
                 Vector3 randomDirection = Random.insideUnitSphere * patrolRange; 
-                randomDirection += Mutant.transform.position;
+                randomDirection += currWaypointPosition;
 
                 if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRange, NavMesh.AllAreas))
                 {
                     waypoints.Add(hit.position);
+                    currWaypointPosition = hit.position;
+                } else {
+                    waypoints.Add(currWaypointPosition);
                 }
-            } 
-
+            }
         }
 
         private void GoToWaypoint()
@@ -174,7 +178,7 @@ public class MutantStateMachine : MonoBehaviour
             {   
                 return ParentFSM.CreateStateTransition(ChargeStateName);  
             }
-
+            // Mutant.LookAtPlayer();
             Mutant.GoToPlayer();
             if (Mutant.IsInSight() && Mutant.IsInAttackRange())
             {
@@ -218,7 +222,7 @@ public class MutantStateMachine : MonoBehaviour
                 return ParentFSM.CreateStateTransition(ChaseStateName);
             }
 
-            Mutant.LookAtPlayer();
+            // Mutant.LookAtPlayer();
             Mutant.AttackTarget();
 
             return null;

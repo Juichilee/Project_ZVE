@@ -36,6 +36,8 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
 
     #region Attack Variables
     public int attackRange = 10;
+    private float shootStoppingDistance = 10f;
+    private float normalStoppingDistance = 1f;
     #endregion
 
     void Awake()
@@ -84,6 +86,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     protected override void Start() 
     {
         base.Start();
+        SetShootingStoppingDistance(false);
         playerInstance = PlayerControlScript.PlayerInstance;
         playerBodyTransform = playerInstance.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
         
@@ -242,6 +245,15 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
 
         weapon.UpdateWeaponAim(enemyTarget);
         weapon.Attack();
+    }
+
+    public void SetShootingStoppingDistance(bool set)
+    {
+        if (set) {
+            aiAgent.stoppingDistance = shootStoppingDistance;
+        } else {
+            aiAgent.stoppingDistance = normalStoppingDistance;
+        }
     }
 
     #endregion

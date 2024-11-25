@@ -84,8 +84,9 @@ public class ZombieStateMachine : MonoBehaviour
         public override string Name => PatrolStateName;
         private List<Vector3> waypoints;
         private int currWaypointIndex = 0;
+        private Vector3 currWaypointPosition;
         private int numWaypoints = 1;
-        private float patrolRange = 20f;
+        private float patrolRange = 2f;
 
         private float idleSoundTimer;
         private float idleSoundInterval = 8f;
@@ -98,6 +99,7 @@ public class ZombieStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            currWaypointPosition = Zombie.gameObject.transform.position;
             CreateWaypoints();
             idleSoundTimer = 0f;
         }
@@ -128,16 +130,20 @@ public class ZombieStateMachine : MonoBehaviour
 
         private void CreateWaypoints()
         {
-            waypoints = new List<Vector3>();
+waypoints = new List<Vector3>();
             for (int i = 0; i < numWaypoints; i++)
             {
                 Vector3 randomDirection = Random.insideUnitSphere * patrolRange; 
-                randomDirection += Zombie.transform.position;
+                randomDirection += currWaypointPosition;
 
                 if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRange, NavMesh.AllAreas))
+                {
                     waypoints.Add(hit.position);
-            } 
-
+                    currWaypointPosition = hit.position;
+                } else {
+                    waypoints.Add(currWaypointPosition);
+                }
+            }
         }
 
         private void GoToWaypoint()
@@ -180,6 +186,7 @@ public class ZombieStateMachine : MonoBehaviour
                 hasPlayedAlertSound = true;
             }
 
+            // Zombie.LookAtPlayer();
             Zombie.GoToPlayer();
 
             if (Zombie.IsInSight() && Zombie.IsInAttackRange())
@@ -223,7 +230,7 @@ public class ZombieStateMachine : MonoBehaviour
                 return ParentFSM.CreateStateTransition(ChaseStateName);
             }
 
-            Zombie.LookAtPlayer();
+            // Zombie.LookAtPlayer();
             Zombie.AttackTarget();
 
             return null;

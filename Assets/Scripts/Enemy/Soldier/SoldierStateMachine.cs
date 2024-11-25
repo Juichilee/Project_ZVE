@@ -84,8 +84,9 @@ public class SoldierStateMachine : MonoBehaviour
         public override string Name => PatrolStateName;
         private List<Vector3> waypoints;
         private int currWaypointIndex = 0;
+        private Vector3 currWaypointPosition;
         private int numWaypoints = 1;
-        private float patrolRange = 20f; 
+        private float patrolRange = 2f; 
 
         public override void Init(IFiniteStateMachine<SoldierFSMData> parentFSM, SoldierFSMData soldierFSMData)
         {
@@ -95,6 +96,8 @@ public class SoldierStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            currWaypointPosition = Soldier.gameObject.transform.position;
+            Soldier.SetShootingStoppingDistance(false);
             CreateWaypoints();
         }
 
@@ -123,12 +126,16 @@ public class SoldierStateMachine : MonoBehaviour
             for (int i = 0; i < numWaypoints; i++)
             {
                 Vector3 randomDirection = Random.insideUnitSphere * patrolRange; 
-                randomDirection += Soldier.transform.position;
+                randomDirection += currWaypointPosition;
 
                 if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRange, NavMesh.AllAreas))
+                {
                     waypoints.Add(hit.position);
-            } 
-
+                    currWaypointPosition = hit.position;
+                } else {
+                    waypoints.Add(currWaypointPosition);
+                }
+            }
         }
 
         private void GoToWaypoint()
@@ -154,6 +161,7 @@ public class SoldierStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            Soldier.SetShootingStoppingDistance(true);
             Soldier.ResetAttack();
             Soldier.PlayAlert();
         }

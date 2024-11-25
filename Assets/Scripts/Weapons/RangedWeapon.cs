@@ -31,6 +31,10 @@ public class RangedWeapon : Weapon
     public AudioClip gunClick;
     private bool hasPlayedGunReady = false;
 
+    public LineRenderer muzzleFlash;
+    int hitScanDistance = 99;
+    private int muzzleFlashDist = 2;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -65,6 +69,7 @@ public class RangedWeapon : Weapon
         {
             WeaponHolderAnim.ResetTrigger("attack");
         }
+        if (muzzleFlash) muzzleFlash.enabled = false;
     }
 
     // Automatically sets the hold configurations
@@ -128,6 +133,13 @@ public class RangedWeapon : Weapon
         aimRay = new Ray(ShootPos.position, aimDir);
 
         aimDir = (aimTarget.position - ShootPos.position).normalized;
+
+        if (muzzleFlash)
+        {
+            Vector3 muzzleFlashEndPos = ShootPos.position + ShootPos.forward * muzzleFlashDist;
+            muzzleFlash.SetPosition(0, ShootPos.position);
+            muzzleFlash.SetPosition(1, muzzleFlashEndPos);
+        }
     }
 
     private void FireWeapon()
@@ -148,20 +160,34 @@ public class RangedWeapon : Weapon
         // Hitscan based damage
         // Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
         // Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-
-        int fixedDistance = 99;
         Collider damageableCollider = null;
-        if (Physics.Raycast(aimRay, out RaycastHit raycastHit, fixedDistance, hitLayer))
+        if (Physics.Raycast(aimRay, out RaycastHit raycastHit, hitScanDistance, hitLayer))
         {
             damageableCollider = raycastHit.collider;
         }
-        // Debug.Log("Damageable Collider: " + damageableCollider.gameObject.name);
 
         if (damageableCollider != null)
         {
             Damageable damageable = damageableCollider.GetComponent<Damageable>();
             damageable?.OnDamage(DamageAttributes);
         }
+
+        if (muzzleFlash)
+        {
+            if (muzzleRoutine != null)
+            {
+                StopCoroutine(muzzleRoutine);
+            }
+            muzzleRoutine = StartCoroutine(MuzzleFlashRoutine());
+        }
+    }
+
+    Coroutine muzzleRoutine = null;
+    IEnumerator MuzzleFlashRoutine()
+    {
+        muzzleFlash.enabled = true;
+        yield return new WaitForSeconds(0.1f);
+        muzzleFlash.enabled = false;
     }
 
     public void ResetGunReadySound()
