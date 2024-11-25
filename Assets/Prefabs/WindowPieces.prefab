@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6731076747265323447}
   - component: {fileID: 6731076747265323446}
   - component: {fileID: 6731076747265323441}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 6731076747490302554}
   - component: {fileID: 6731076747490302565}
   - component: {fileID: 6731076747490302564}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 6731076747628259921}
   - component: {fileID: 6731076747628259920}
   - component: {fileID: 6731076747628259923}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 6731076747665839514}
   - component: {fileID: 6731076747665839525}
   - component: {fileID: 6731076747665839524}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -651,7 +651,7 @@ GameObject:
   - component: {fileID: 6731076748232976792}
   - component: {fileID: 6731076748232976795}
   - component: {fileID: 6731076748232976794}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -765,7 +765,7 @@ GameObject:
   - component: {fileID: 6731076748399979906}
   - component: {fileID: 6731076748399979917}
   - component: {fileID: 6731076748399979916}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -879,7 +879,7 @@ GameObject:
   - component: {fileID: 6731076748520400319}
   - component: {fileID: 6731076748520400318}
   - component: {fileID: 6731076748520400313}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -993,7 +993,7 @@ GameObject:
   - component: {fileID: 6731076748521372934}
   - component: {fileID: 6731076748521372929}
   - component: {fileID: 6731076748521372928}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1107,7 +1107,7 @@ GameObject:
   - component: {fileID: 6731076749114267804}
   - component: {fileID: 6731076749114267807}
   - component: {fileID: 6731076749114267806}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WindowPiece3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
