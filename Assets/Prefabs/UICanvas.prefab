@@ -2663,7 +2663,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25.35
+  m_fontSize: 22.2
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4695,7 +4695,7 @@ MonoBehaviour:
   healthUpgradeAudio: {fileID: 8300000, guid: da634d3bf72560c4a9b9c4052c334306, type: 3}
   speedUpgradeAudio: {fileID: 8300000, guid: 3c6f6408ad468b3408bb0fbded42024a, type: 3}
   strengthUpgradeAudio: {fileID: 8300000, guid: e27edc062de11e24dbd1d771746e1d4f, type: 3}
-  unstableUpgradeAudio: {fileID: 8300000, guid: 2d7bc4f90de59ab49879c74190f761b4, type: 3}
+  unstableUpgradeAudio: {fileID: 8300000, guid: e9068e9ad9a5ac1479b623e85d9489d6, type: 3}
   swordArmUnlockAudio: {fileID: 8300000, guid: 4cde7deb7f12bd64eb3d078e8dc8478d, type: 3}
   slamUnlockAudio: {fileID: 8300000, guid: 4a657b4848ebe1c44a5b5eafbcfd0a37, type: 3}
   screamUnlockAudio: {fileID: 8300000, guid: e168721b0d5130342a3ea46241866572, type: 3}
@@ -7058,7 +7058,7 @@ MonoBehaviour:
   healthUpgradeAudio: {fileID: 8300000, guid: da634d3bf72560c4a9b9c4052c334306, type: 3}
   speedUpgradeAudio: {fileID: 8300000, guid: 3c6f6408ad468b3408bb0fbded42024a, type: 3}
   strengthUpgradeAudio: {fileID: 8300000, guid: e27edc062de11e24dbd1d771746e1d4f, type: 3}
-  unstableUpgradeAudio: {fileID: 8300000, guid: 2d7bc4f90de59ab49879c74190f761b4, type: 3}
+  unstableUpgradeAudio: {fileID: 8300000, guid: e9068e9ad9a5ac1479b623e85d9489d6, type: 3}
   swordArmUnlockAudio: {fileID: 8300000, guid: 4cde7deb7f12bd64eb3d078e8dc8478d, type: 3}
   slamUnlockAudio: {fileID: 8300000, guid: 4a657b4848ebe1c44a5b5eafbcfd0a37, type: 3}
   screamUnlockAudio: {fileID: 8300000, guid: e168721b0d5130342a3ea46241866572, type: 3}
@@ -8069,7 +8069,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.05
+  m_fontSize: 19.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8605,7 +8605,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.75
+  m_fontSize: 19
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -11554,7 +11554,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.45
+  m_fontSize: 30.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -15082,7 +15082,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.9
+  m_fontSize: 21.75
   m_fontSizeBase: 16
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -15752,7 +15752,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.2
+  m_fontSize: 20.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -15963,7 +15963,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.2
+  m_fontSize: 19.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -16234,7 +16234,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16.9
+  m_fontSize: 15.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -16369,7 +16369,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.55
+  m_fontSize: 18.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -19533,7 +19533,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.45
+  m_fontSize: 30.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
