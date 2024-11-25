@@ -1455,6 +1455,7 @@ MonoBehaviour:
   aimColliderLayerMask:
     serializedVersion: 2
     m_Bits: 193
+  playerTurnSpeed: 17
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 65
