@@ -86,7 +86,7 @@ public class Shop : MonoBehaviour
         if (SpeedText != null) SpeedText.text = SpeedCost.ToString();
         if (StrengthText != null) StrengthText.text = StrengthCost.ToString();
         if (GunText != null) GunText.text = GunCost.ToString();
-        if (HealthPackText != null) HealthPackText.text = HealthCost.ToString();
+        if (HealthPackText != null) HealthPackText.text = HealthPackCost.ToString();
         if (AmmoPackText != null) AmmoPackText.text = AmmoCost.ToString();
         if (SwordText != null) SwordText.text = SwordCost.ToString();
         if (SlamText != null) SlamText.text = SlamCost.ToString();
