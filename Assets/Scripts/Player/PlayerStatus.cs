@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class PlayerStatus : BasicDamageable
 {
@@ -24,7 +25,7 @@ public class PlayerStatus : BasicDamageable
     // TODO: public float iframes;
 
     private bool isDead = false;
-
+    private string lastupdated = "";
     #region Sound
     private PlayerSounds playerSounds;
     #endregion
@@ -40,17 +41,24 @@ public class PlayerStatus : BasicDamageable
             Debug.LogWarning("PlayerSounds component not found.");
         }
 
-        startSpeed = speedUpgrade;
-        startStrength = strengthUpgrade;
-        startHp = hpUpgrade;
-        startMonster = monsterPoints;
-        startSword = sword;
-        startSlam = slam;
-        startScream = scream;
+        
     }
 
     private void FixedUpdate()
     {
+        if(lastupdated != SceneManager.GetActiveScene().name)
+        {
+            startSpeed = speedUpgrade;
+            startStrength = strengthUpgrade;
+            startHp = hpUpgrade;
+            startMonster = monsterPoints;
+            startSword = sword;
+            startSlam = slam;
+            startScream = scream;
+            lastupdated = SceneManager.GetActiveScene().name; 
+        }
+        
+
         maxHealth = baseHealth + 20 * hpUpgrade;
         if(currentHealth <= 0)
         {
