@@ -84,7 +84,7 @@ public class ZombieStateMachine : MonoBehaviour
         public override string Name => PatrolStateName;
         private List<Vector3> waypoints;
         private int currWaypointIndex = 0;
-        private int numWaypoints = 3;
+        private int numWaypoints = 1;
         private float patrolRange = 20f;
 
         private float idleSoundTimer;
@@ -117,7 +117,7 @@ public class ZombieStateMachine : MonoBehaviour
                 idleSoundTimer = 0f;
             }
 
-            if (Zombie.IsInSight())
+            if (Zombie.IsInSight() || Zombie.IsInHearRange() || Zombie.TookDamageRecently() && Zombie.IsInChaseRange())
                 return ParentFSM.CreateStateTransition(ChaseStateName);
 
             if (Zombie.ReachedTarget())
@@ -144,6 +144,10 @@ public class ZombieStateMachine : MonoBehaviour
         {
             if (waypoints.Count > 0)
                 Zombie.GoTo(waypoints[currWaypointIndex], Zombie.MaxSpeed * 2 / 3);
+                if (Zombie.ReachedTarget())
+                {
+                    CreateWaypoints();
+                }
         }
     }
 
@@ -178,11 +182,11 @@ public class ZombieStateMachine : MonoBehaviour
 
             Zombie.GoToPlayer();
 
-            if (Zombie.IsInAttackRange())
+            if (Zombie.IsInSight() && Zombie.IsInAttackRange())
             {
                 return ParentFSM.CreateStateTransition(AttackStateName);
             }
-            if (!Zombie.IsInSight())
+            if (!Zombie.IsInSight() && !Zombie.IsInChaseRange())
                 return ParentFSM.CreateStateTransition(PatrolStateName);
             return null;
         }
@@ -219,6 +223,7 @@ public class ZombieStateMachine : MonoBehaviour
                 return ParentFSM.CreateStateTransition(ChaseStateName);
             }
 
+            Zombie.LookAtPlayer();
             Zombie.AttackTarget();
 
             return null;

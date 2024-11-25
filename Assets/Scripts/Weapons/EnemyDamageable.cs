@@ -11,6 +11,7 @@ public class EnemyDamageable : BasicDamageable
     public float AttackDamage { get; private set; }
     public float AttackSpeed { get; private set; }
     public bool CanAttack { get; private set; }
+    public bool TookDamageRecently { get; private set;}
 
 
     void Awake()
@@ -22,9 +23,15 @@ public class EnemyDamageable : BasicDamageable
         }
     }
 
+    void Update()
+    {
+        TookDamageRecently = IsInvincible ? true : false;
+    }
+
     public override void OnDamage(DamageData damageData)
     {
-        if (IsInvincible || !IsAlive) return;
+        if (!IsAlive || IsInvincible) return;
+
         CurrentHealth -= damageData.BaseDamage + PlayerControlScript.PlayerInstance.gameObject.GetComponent<PlayerStatus>().strengthUpgrade * 2;
 
         // Handle special damage effects

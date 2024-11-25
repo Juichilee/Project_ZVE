@@ -35,7 +35,7 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
 
     #region Attack Variables
-    private int attackRange = 15;
+    public int attackRange = 10;
     #endregion
 
     void Awake()
@@ -186,15 +186,31 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
     #endregion
     
     #region Attack
+
+    public void ResetAttack()
+    {
+        anim.ResetTrigger("attack");
+        anim.SetTrigger("endAttack");
+    }
     public bool IsInAttackRange()
     {
         Vector3 playerPosition = playerInstance.transform.position;
         bool inAttackRange = Vector3.Distance(this.transform.position, playerPosition) <= attackRange;
         if (!inAttackRange)
         {
-            anim.ResetTrigger("attack");
+            ResetAttack();
         }
         return inAttackRange;
+    }
+
+    public bool IsInChaseRange()
+    {
+        return aiSensor.IsInChase(playerInstance.gameObject);
+    }
+
+    public bool IsInHearRange()
+    {
+        return aiSensor.IsInHear(playerInstance.gameObject);
     }
 
     public bool IsInSight()
@@ -202,12 +218,17 @@ public class SoldierScript : EnemyBase, IAttacker, IWeaponHolder
         return aiSensor.IsInSight(playerInstance.gameObject);
     }
 
+    public bool TookDamageRecently()
+    {
+        return EnemyDamageable.TookDamageRecently;
+    }
+
     public void AttackTarget()
     {
         if (weapon.CurrentClip == 0)
             weapon.Reload();
 
-        anim.ResetTrigger("attack");
+        ResetAttack();
         anim.SetTrigger("attack");
     }
 

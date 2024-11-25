@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class AISensor : MonoBehaviour
 {
-    public float sightRange= 20f;
-    public float chaseRange = 10f;
-    public float angle = 30f;
+    public float sightRange = 12f;
+    public float chaseRange = 14f;
+    public float hearRange = 5f;
+    public float angle = 15f;
     public float height = 2f;
     public int scanFrequency = 30;
 
@@ -124,25 +125,58 @@ public class AISensor : MonoBehaviour
         Vector3 originPos = this.transform.position;
         Vector3 objPos = obj.transform.position;
 
+        Vector3 direction = objPos - originPos;
+
+        float distanceToObject = direction.magnitude;
+
+        // Check if the object is within the maximum sight distance
+        if (distanceToObject > sightRange)
+            return false;
+
+        // Project the direction onto the horizontal plane (XZ plane)
+        Vector3 directionHorizontal = new Vector3(direction.x, 0, direction.z).normalized;
+
+        // Calculate the horizontal angle between forward and direction to object
+        float horizontalAngle = Vector3.Angle(this.transform.forward, directionHorizontal);
+
+        // Check if the object is within the horizontal field of view
+        if (horizontalAngle > angle)
+            return false;
+
+        // Adjust the positions for the eye level
+        Vector3 eyePosition = originPos + Vector3.up * height / 2;
+        Vector3 targetPosition = objPos + Vector3.up * height / 2;
+
+        // Perform a linecast to check for occlusions
+        if (Physics.Linecast(eyePosition, targetPosition, out RaycastHit hitInfo, occlusionLayers))
+        {
+            // Check if the linecast hit the target object
+            if (hitInfo.collider.gameObject != obj)
+                return false;
+        }
+
+        // The object is in sight
+        return true;
+    }
+
+    public bool IsInChase(GameObject obj)
+    {
+        Vector3 originPos = this.transform.position;
+        Vector3 objPos = obj.transform.position;
         // Check if in Chase Range
         if (Vector3.Distance(originPos, objPos) < chaseRange) 
             return true;
+        return false;
+    }
 
-        // Check if Inside Height
-        Vector3 direction = objPos - originPos;
-        if (direction.y < 0 || direction.y > height)
-            return false;
-
-        // Check if Inside Angle Range
-        direction.y = 0;
-        float angleDiff = Vector3.Angle(this.transform.forward, direction);
-        if (angleDiff > angle) 
-            return false;
-
-        // See if anything is blocking view from player
-        originPos.y += height / 2;
-        objPos.y += originPos.y;
-        return !Physics.Linecast(originPos, objPos, occlusionLayers);
+    public bool IsInHear(GameObject obj)
+    {
+        Vector3 originPos = this.transform.position;
+        Vector3 objPos = obj.transform.position;
+        // Check if in Chase Range
+        if (Vector3.Distance(originPos, objPos) < hearRange) 
+            return true;
+        return false;
     }
 
     private void OnValidate() 
@@ -158,6 +192,9 @@ public class AISensor : MonoBehaviour
         red.a = 0.5f;
         Color green = Color.green;
         green.a = 0.5f;
+        Color yellow = Color.yellow;
+        yellow.a = 0.5f;
+
         // Draw Wedge
         if (mesh)
         {
@@ -170,6 +207,9 @@ public class AISensor : MonoBehaviour
         
         Gizmos.color = cyan;
         Gizmos.DrawWireSphere(this.transform.position, chaseRange);
+
+        Gizmos.color = yellow;
+        Gizmos.DrawWireSphere(this.transform.position, hearRange);
         
         // Make a red sphere on objects in range but not yet seen
         Gizmos.color = red;

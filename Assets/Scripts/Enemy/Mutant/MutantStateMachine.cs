@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using GameAI;
 #if UNITY__EDITOR
@@ -85,7 +86,7 @@ public class MutantStateMachine : MonoBehaviour
         public override string Name => PatrolStateName;
         private List<Vector3> waypoints;
         private int currWaypointIndex = 0;
-        private int numWaypoints = 3;
+        private int numWaypoints = 1;
         private float patrolRange = 20f; 
 
         public override void Init(IFiniteStateMachine<MutantFSMData> parentFSM, MutantFSMData mutantFSMData)
@@ -106,16 +107,15 @@ public class MutantStateMachine : MonoBehaviour
 
         public override StateTransitionBase<MutantFSMData> Update()
         {
-            if (Mutant.IsInSight())
+            if (Mutant.IsInSight() || Mutant.IsInHearRange() || Mutant.TookDamageRecently() && Mutant.IsInChaseRange())
             {
-                float random = Random.value;
-                if (random <= 0.5)
-                    return ParentFSM.CreateStateTransition(ChaseStateName);
-                return ParentFSM.CreateStateTransition(ChargeStateName);
+                return ParentFSM.CreateStateTransition(ChaseStateName);
             }
 
             if (Mutant.ReachedTarget())
+            {
                 currWaypointIndex = (currWaypointIndex + 1) % waypoints.Count;
+            }
             GoToWaypoint();   
             return null;
         }
@@ -129,7 +129,9 @@ public class MutantStateMachine : MonoBehaviour
                 randomDirection += Mutant.transform.position;
 
                 if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRange, NavMesh.AllAreas))
+                {
                     waypoints.Add(hit.position);
+                }
             } 
 
         }
@@ -137,7 +139,13 @@ public class MutantStateMachine : MonoBehaviour
         private void GoToWaypoint()
         {
             if (waypoints.Count > 0)
+            {
                 Mutant.GoTo(waypoints[currWaypointIndex], Mutant.MaxSpeed * 1 / 3);
+                if (Mutant.ReachedTarget())
+                {
+                    CreateWaypoints();
+                }
+            }
         }
     }
 
@@ -162,14 +170,21 @@ public class MutantStateMachine : MonoBehaviour
 
         public override StateTransitionBase<MutantFSMData> Update()
         {
-            Mutant.GoToPlayer();
+            if (Mutant.CanCharge())
+            {   
+                return ParentFSM.CreateStateTransition(ChargeStateName);  
+            }
 
-            if (Mutant.IsInAttackRange())
+            Mutant.GoToPlayer();
+            if (Mutant.IsInSight() && Mutant.IsInAttackRange())
             {
                 return ParentFSM.CreateStateTransition(AttackStateName);
             }
-            if (!Mutant.IsInSight())
+            if (!Mutant.IsInSight() && !Mutant.IsInChaseRange())
+            {
                 return ParentFSM.CreateStateTransition(PatrolStateName);
+            }
+                
             return null;
         }
     }
@@ -187,8 +202,6 @@ public class MutantStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
-            
-            Mutant.GoToPlayer();
         }
 
         public override void Exit()
@@ -205,6 +218,7 @@ public class MutantStateMachine : MonoBehaviour
                 return ParentFSM.CreateStateTransition(ChaseStateName);
             }
 
+            Mutant.LookAtPlayer();
             Mutant.AttackTarget();
 
             return null;
@@ -224,23 +238,25 @@ public class MutantStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
-            
+            Mutant.StartChargeCooldown();
             Mutant.Scream();
-            Mutant.GoToPlayer();
         }
 
         public override void Exit()
         {
             base.Exit();
+            Mutant.ChargeReset();
         }
 
         public override StateTransitionBase<MutantFSMData> Update()
         {
             Mutant.ChargeToPlayer();
-            if (Mutant.IsInAttackRange())
+            if (Mutant.IsInSight() && Mutant.IsInAttackRange())
             {
                 return ParentFSM.CreateStateTransition(AttackStateName);
             }
+            if (!Mutant.IsInSight() && !Mutant.IsInChaseRange())
+                return ParentFSM.CreateStateTransition(PatrolStateName);
 
             return null;
         }
@@ -306,7 +322,9 @@ public class MutantStateMachine : MonoBehaviour
     {
         Mutant = GetComponent<MutantScript>();
         if (Mutant == null) 
+        {
             Debug.LogError("No Mutant Script");
+        }
     }
 
     protected void Start()

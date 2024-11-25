@@ -315,8 +315,8 @@ public class PlayerControlScript : MonoBehaviour
                 // {
                 //     targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
                 // }
-                // this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 25f);
-                this.transform.rotation = targetRotation;
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 25f);
+                // this.transform.rotation = targetRotation;
             }
             // When player is facing the camera, set head aim target to forward head
             if (Vector3.Dot(this.transform.forward, cameraForward) <= 0f)

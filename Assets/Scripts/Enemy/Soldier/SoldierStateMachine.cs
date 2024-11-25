@@ -84,7 +84,7 @@ public class SoldierStateMachine : MonoBehaviour
         public override string Name => PatrolStateName;
         private List<Vector3> waypoints;
         private int currWaypointIndex = 0;
-        private int numWaypoints = 3;
+        private int numWaypoints = 1;
         private float patrolRange = 20f; 
 
         public override void Init(IFiniteStateMachine<SoldierFSMData> parentFSM, SoldierFSMData soldierFSMData)
@@ -106,7 +106,7 @@ public class SoldierStateMachine : MonoBehaviour
         public override StateTransitionBase<SoldierFSMData> Update()
         {
 
-            if (Soldier.IsInSight())
+            if (Soldier.IsInSight() || Soldier.IsInHearRange() || Soldier.TookDamageRecently() && Soldier.IsInChaseRange())
             {
                 Soldier.PlayAlert();
                 return ParentFSM.CreateStateTransition(ChaseStateName);
@@ -135,6 +135,10 @@ public class SoldierStateMachine : MonoBehaviour
         {
             if (waypoints.Count > 0)
                 Soldier.GoTo(waypoints[currWaypointIndex], Soldier.MaxSpeed * 2 / 3);
+                if (Soldier.ReachedTarget())
+                {
+                    CreateWaypoints();
+                }
         }
     }
 
@@ -150,6 +154,7 @@ public class SoldierStateMachine : MonoBehaviour
         public override void Enter()
         {
             base.Enter();
+            Soldier.ResetAttack();
             Soldier.PlayAlert();
         }
 
@@ -161,12 +166,13 @@ public class SoldierStateMachine : MonoBehaviour
         public override StateTransitionBase<SoldierFSMData> Update()
         {
             Soldier.GoToPlayer();
+            Soldier.LookAtPlayer();
 
-            if (Soldier.IsInAttackRange())
+            if (Soldier.IsInSight() && Soldier.IsInAttackRange())
             {
                 return ParentFSM.CreateStateTransition(AttackStateName);
             }
-            if (!Soldier.IsInSight())
+            if (!Soldier.IsInSight() && !Soldier.IsInChaseRange())
                 return ParentFSM.CreateStateTransition(PatrolStateName);
             return null;
         }

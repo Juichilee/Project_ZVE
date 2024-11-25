@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,6 +11,7 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor;
     public MeleeClawWeapon weapon;
+    private PlayerControlScript playerInstance;
     public PlayerVelocityTracker playerVelocityTracker;
     protected EnemiesRemaining enemiesRemaining;
     #endregion
@@ -30,6 +32,11 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     public float MaxSpeed { get; private set; }
     // Player Body Reference
     private Transform playerBodyTransform;
+    private float mutantLookAtSpeed = 2f;
+    private bool canCharge = true;
+    private int chargeMinCooldown = 10;
+    private int chargeMaxCooldown = 20;
+    private float chargeSpeed = 1.5f;
     #endregion
 
     #region Sound
@@ -86,9 +93,9 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     {
         base.Start();
         attackRange = 2f;
-        PlayerControlScript player = PlayerControlScript.PlayerInstance;
-        playerBodyTransform = player.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
-        playerVelocityTracker = player.GetComponent<PlayerVelocityTracker>();
+        playerInstance = PlayerControlScript.PlayerInstance;
+        playerBodyTransform = playerInstance.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
+        playerVelocityTracker = playerInstance.GetComponent<PlayerVelocityTracker>();
     }
 
     void Update() 
@@ -108,7 +115,12 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
 
     void FixedUpdate()
     {
-        anim.speed = animationSpeed;
+        if (inCharge)
+        {
+            anim.speed = chargeSpeed;
+        } else {
+            anim.speed = animationSpeed;
+        }
 
         float radius = GetComponent<CapsuleCollider>().radius * 0.9f;
         Vector3 pos = transform.position + Vector3.up * (radius * 0.5f);
@@ -166,13 +178,16 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
         return base.GoTo(position, speed);
     }
 
-
-    public bool GoToPlayer(float speedModifier = 1f)
+    public void LookAtPlayer()
     {
-        PlayerControlScript player = PlayerControlScript.PlayerInstance;
+        Vector3 playerLookDir = (playerInstance.transform.position - transform.position).normalized;
+        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(playerLookDir), Time.deltaTime * mutantLookAtSpeed);
+    }
 
+    public bool GoToPlayer(float speedModifier = 1)
+    {
         Vector3 currPos = this.transform.position;
-        Vector3 playerPos = player.transform.position;
+        Vector3 playerPos = playerInstance.transform.position;
 
         float distance = Vector3.Distance(currPos, playerPos);
 
@@ -183,21 +198,28 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
         Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
 
         Vector3 directionToPrediction = (predictedPosition - this.transform.position).normalized;
-        Vector3 directionToPlayer = (player.transform.position - this.transform.position).normalized;
+        Vector3 directionToPlayer = (playerInstance.transform.position - this.transform.position).normalized;
 
         float dot = Vector3.Dot(directionToPrediction, directionToPlayer);
 
         if (dot < MovementPredictionThreshold)
-            predictedPosition = player.transform.position;
+            predictedPosition = playerInstance.transform.position;
 
         if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
             predictedPosition = hit.position;
         return GoTo(predictedPosition, MaxSpeed * speedModifier);
     }
 
+    bool inCharge = false;
     public bool ChargeToPlayer()
     {
-        return GoToPlayer(5f);
+        inCharge = true;
+        return GoToPlayer(chargeSpeed);
+    }
+
+    public void ChargeReset()
+    {
+        inCharge = false;
     }
 
 
@@ -247,6 +269,44 @@ public class MutantScript : EnemyBase, IAttacker, IWeaponHolder
     public bool IsInSight()
     {
         return aiSensor.IsInSight(PlayerControlScript.PlayerInstance.gameObject);
+    }
+
+    public bool IsInChaseRange()
+    {
+        return aiSensor.IsInChase(PlayerControlScript.PlayerInstance.gameObject);
+    }
+
+    public bool IsInHearRange()
+    {
+        return aiSensor.IsInHear(PlayerControlScript.PlayerInstance.gameObject);
+    }
+
+    public bool TookDamageRecently()
+    {
+        return EnemyDamageable.TookDamageRecently;
+    }
+
+    public bool CanCharge()
+    {
+        return canCharge;
+    }
+
+    Coroutine chargeCoroutine = null;
+    IEnumerator ChargeCoolDownCoroutine()
+    {
+        canCharge = false;
+        int coolDown = Random.Range(chargeMinCooldown, chargeMaxCooldown);
+        yield return new WaitForSeconds(coolDown);
+        canCharge = true;
+        chargeCoroutine = null;
+    }
+    
+    public void StartChargeCooldown()
+    {
+        if (chargeCoroutine == null)
+        {
+            chargeCoroutine = StartCoroutine(ChargeCoolDownCoroutine());
+        }
     }
 
     public void AttackTarget()

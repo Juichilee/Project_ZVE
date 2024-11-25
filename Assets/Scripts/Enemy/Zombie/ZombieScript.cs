@@ -9,6 +9,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     public EnemyDamageable EnemyDamageable { get; private set; }
     public AISensor aiSensor;
     public MeleeClawWeapon weapon;
+    private PlayerControlScript playerInstance;
     public PlayerVelocityTracker playerVelocityTracker;
     // TODO: Replace this once Enemy Factory is Implemented
     protected EnemiesRemaining enemiesRemaining;
@@ -29,6 +30,7 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     public float MaxSpeed { get; private set; }
     // Player Body Reference
     private Transform playerBodyTransform;
+    private float zombieLookAtSpeed = 2f;
     #endregion
 
     #region Sound
@@ -89,9 +91,9 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     {
         base.Start();
         attackRange = 1.5f;
-        PlayerControlScript player = PlayerControlScript.PlayerInstance;
-        playerBodyTransform = player.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
-        playerVelocityTracker = player.GetComponent<PlayerVelocityTracker>();
+        playerInstance = PlayerControlScript.PlayerInstance;
+        playerBodyTransform = playerInstance.transform.Find("mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1");
+        playerVelocityTracker = playerInstance.GetComponent<PlayerVelocityTracker>();
     }
 
     void FixedUpdate()
@@ -161,12 +163,17 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         return base.GoTo(position, speed);
     }
 
+    public void LookAtPlayer()
+    {
+        Vector3 playerLookDir = (playerInstance.transform.position - transform.position).normalized;
+        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(playerLookDir), Time.deltaTime * zombieLookAtSpeed);
+    }
+
     public bool GoToPlayer()
     {
-        PlayerControlScript player = PlayerControlScript.PlayerInstance;
 
         Vector3 currPos = this.transform.position;
-        Vector3 playerPos = player.transform.position;
+        Vector3 playerPos = playerInstance.transform.position;
 
         float distance = Vector3.Distance(currPos, playerPos);
 
@@ -177,12 +184,12 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
         Vector3 predictedPosition = playerPos + velocity * lookAheadTime;
 
         Vector3 directionToPrediction = (predictedPosition - this.transform.position).normalized;
-        Vector3 directionToPlayer = (player.transform.position - this.transform.position).normalized;
+        Vector3 directionToPlayer = (playerInstance.transform.position - this.transform.position).normalized;
 
         float dot = Vector3.Dot(directionToPrediction, directionToPlayer);
 
         if (dot < MovementPredictionThreshold)
-            predictedPosition = player.transform.position;
+            predictedPosition = playerInstance.transform.position;
 
         if (NavMesh.Raycast(playerPos, predictedPosition, out NavMeshHit hit, NavMesh.AllAreas))
             predictedPosition = hit.position;
@@ -240,6 +247,21 @@ public class ZombieScript : EnemyBase, IAttacker, IWeaponHolder
     public bool IsInSight()
     {
         return aiSensor.IsInSight(PlayerControlScript.PlayerInstance.gameObject);
+    }
+
+    public bool IsInChaseRange()
+    {
+        return aiSensor.IsInChase(PlayerControlScript.PlayerInstance.gameObject);
+    }
+
+    public bool IsInHearRange()
+    {
+        return aiSensor.IsInHear(PlayerControlScript.PlayerInstance.gameObject);
+    }
+
+    public bool TookDamageRecently()
+    {
+        return EnemyDamageable.TookDamageRecently;
     }
 
     public void AttackTarget()
