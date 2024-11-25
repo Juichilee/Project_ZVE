@@ -25,7 +25,7 @@ public class BlastAfterContact : MonoBehaviour
 
     void OnCollisionEnter(Collision c)
     {
-        Debug.Log("Collision detected with: " + c.transform.tag);
+        // Debug.Log("Collision detected with: " + c.transform.tag);
 
         // collision with the player
         if (c.transform.CompareTag(playerTag))

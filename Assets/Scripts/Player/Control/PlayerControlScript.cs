@@ -156,6 +156,10 @@ public class PlayerControlScript : MonoBehaviour
             Debug.LogError("Player Script requires an orientation transform");
         }
 
+        if(enemyTarget == null){
+            Debug.LogError("Player Script requires an enemyTarget transform");
+        }
+
         headAim = headRig.transform.Find("HeadAim").GetComponent<MultiAimConstraint>();
 
         // Initialize State Machines

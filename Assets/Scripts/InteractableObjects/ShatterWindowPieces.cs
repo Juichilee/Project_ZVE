@@ -57,7 +57,7 @@ public class ShatterWindowPieces : MonoBehaviour
 
     void OnCollisionEnter(Collision c)
     {
-        Debug.Log("Colldier: " + c.gameObject.name);
+        // Debug.Log("Colldier: " + c.gameObject.name);
         if (alreadyShattered == false)
         {
             if (c.gameObject.tag == "Player" || c.gameObject.tag == "Projectile" || c.gameObject.tag == "Enemy")

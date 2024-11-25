@@ -46,7 +46,7 @@ public class EnemyDamageable : BasicDamageable
         }
 
         StartCoroutine(InvincibilityFrames());
-        Debug.Log(CurrentHealth);
+        // Debug.Log(CurrentHealth);
         if (CurrentHealth <= 0)
         {
             Die();

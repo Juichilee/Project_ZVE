@@ -57,7 +57,7 @@ public class MeleeClawWeapon : Weapon
     {
         if (IsReady) 
         {
-            Debug.Log($"Melee attack with {WeaponName}");
+            // Debug.Log($"Melee attack with {WeaponName}");
             SpawnDamageObject();
             StartCoroutine(AttackCooldown());
         }

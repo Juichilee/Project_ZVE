@@ -59,7 +59,7 @@ public class ZombieSounds : MonoBehaviour
     {
         if (idleSound != null && !audioSource.isPlaying)
         {
-            Debug.Log("ZombieIdle event triggered.");
+            // Debug.Log("ZombieIdle event triggered.");
             audioSource.PlayOneShot(idleSound);
         }
     }
