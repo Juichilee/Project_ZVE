@@ -29,6 +29,8 @@ public class PlayerControlScript : MonoBehaviour
     public Transform aimTarget; 
     public LayerMask aimColliderLayerMask;
     private float aimSpeed = 50f;
+    [SerializeField]
+    private int playerTurnSpeed = 15;
     public LayerMask groundLayerMask;
     private float slopeCheckDistance = 1f; // Adjust based on player height
     public Rig headRig; 
@@ -303,7 +305,7 @@ public class PlayerControlScript : MonoBehaviour
         if (forceStrafe)
         {
             // Strafing combat style (used for ranged attacks)
-            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * 25f);
+            this.transform.forward = Vector3.Slerp(this.transform.forward, cameraForward, Time.deltaTime * playerTurnSpeed);
         } else {
             // Regular combat style (character forward is in direction of movement keys)
             if (_inputDir != Vector3.zero)
@@ -315,7 +317,7 @@ public class PlayerControlScript : MonoBehaviour
                 // {
                 //     targetRotation = targetRotation * Quaternion.Euler(0, -45f, 0);
                 // }
-                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * 25f);
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * playerTurnSpeed);
                 // this.transform.rotation = targetRotation;
             }
             // When player is facing the camera, set head aim target to forward head

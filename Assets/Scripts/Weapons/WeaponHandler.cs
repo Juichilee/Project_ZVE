@@ -400,6 +400,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
 
         if (rangedWeapon.IsReady && playerControlScript.InputHoldAttack)
         {
+            playerControlScript.Anim.SetTrigger("attack");
             rangedWeapon.Attack();
         }
 
@@ -425,6 +426,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponHolder
             {
                 StopCoroutine(weaponsAtReadyCoroutine);
             }
+            playerControlScript.Anim.SetTrigger("attack");
             meleeWeapon.Attack();
         }
 
