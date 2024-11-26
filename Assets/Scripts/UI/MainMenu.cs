@@ -17,8 +17,9 @@ public class MainMenu : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         if(player != null)
         {
+            player.SetActive(false);
             SceneManager.MoveGameObjectToScene(player, SceneManager.GetActiveScene());
-            Destroy(player);
+            // Destroy(player);
         }
 
     }

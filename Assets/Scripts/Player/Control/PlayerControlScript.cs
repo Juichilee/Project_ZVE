@@ -193,23 +193,23 @@ public class PlayerControlScript : MonoBehaviour
         Cursor.visible = false;
     }
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
+    // private void OnEnable()
+    // {
+    //     SceneManager.sceneLoaded += OnSceneLoaded;
+    // }
 
-    // Make sure to reset necessary player attributes to prevent bugs
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        GameObject[] respawnObject = GameObject.FindGameObjectsWithTag("Respawn");
+    // // Make sure to reset necessary player attributes to prevent bugs
+    // void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    // {
+    //     GameObject[] respawnObject = GameObject.FindGameObjectsWithTag("Respawn");
 
-        if (respawnObject.Length != 0)
-        {
-            spawn = GameObject.FindGameObjectsWithTag("Respawn")[0].transform;
-            this.gameObject.transform.position = spawn.position;
-            // groundContactCount = 0;
-        }
-    }
+    //     if (respawnObject.Length != 0)
+    //     {
+    //         spawn = GameObject.FindGameObjectsWithTag("Respawn")[0].transform;
+    //         this.gameObject.transform.position = spawn.position;
+    //         // groundContactCount = 0;
+    //     }
+    // }
     // Responsible for reading (and caching) input, updating certain global environment properties, and interrupting global states
     private void Update()
     {

@@ -40,7 +40,7 @@ public class EndingText : MonoBehaviour
             }
 
             SceneManager.MoveGameObjectToScene(player, SceneManager.GetActiveScene());
-            Destroy(player);
+            // Destroy(player);
         }
 
         // Time scale is 1f
