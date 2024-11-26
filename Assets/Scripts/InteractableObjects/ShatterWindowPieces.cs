@@ -121,6 +121,7 @@ public class ShatterWindowPieces : MonoBehaviour
     {
         windowPieceRigidbody.isKinematic = false;
         windowPieceRigidbody.useGravity = true;
+        windowPieceRigidbody.GetComponent<BoxCollider>().enabled = true;
         Destroy(windowPieceGameObject, objectDestructionValue);
     }
 }
