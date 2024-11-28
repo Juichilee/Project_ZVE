@@ -33,7 +33,7 @@ public class ZombieSounds : MonoBehaviour
     {
         if (attackSound != null && !audioSource.isPlaying)
         {
-            Debug.Log("ZombieAttack event triggered.");
+            // Debug.Log("ZombieAttack event triggered.");
             audioSource.PlayOneShot(attackSound, 0.7f);
         }
     }
@@ -41,7 +41,7 @@ public class ZombieSounds : MonoBehaviour
     {
         if (zombieClose != null && !audioSource.isPlaying)
         {
-            Debug.Log("ZombieAttack event triggered.");
+            // Debug.Log("ZombieAttack event triggered.");
             audioSource.PlayOneShot(zombieClose, 0.5f);
         }
     }
@@ -50,7 +50,7 @@ public class ZombieSounds : MonoBehaviour
     {
         if (alertSound != null && !audioSource.isPlaying)
         {
-            Debug.Log("ZombieAlert event triggered.");
+            // Debug.Log("ZombieAlert event triggered.");
             audioSource.PlayOneShot(alertSound, 1.0f);
         }
     }
