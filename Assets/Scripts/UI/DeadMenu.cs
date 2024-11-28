@@ -36,11 +36,35 @@ public class DeadMenu : MonoBehaviour
 
     public void RestartLevel()
     {
-        WeaponHandler weaponHandler = GameObject.Find("Player").GetComponent<WeaponHandler>();
+        PlayerControlScript playerInst = PlayerControlScript.PlayerInstance;
+        WeaponHandler weaponHandler = playerInst.GetComponent<WeaponHandler>();
+        
         weaponHandler.ResetWeapons();
         PauseMenu.SetIsPaused(false);
         dna.GetComponent<DNA>().ResetPoints();
         playerStatus.CurrentHealth = playerStatus.MaxHealth;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void OnEnable()
+    {
+        // Subscribe to the sceneLoaded event
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        // Unsubscribe from the event
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // This method is called whenever a scene is loaded.
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        PlayerControlScript playerInst = PlayerControlScript.PlayerInstance;
+        Transform spawnPointLoc = SpawnPoint.spawnInstance.gameObject.transform;
+        playerInst.gameObject.transform.position = spawnPointLoc.position;
+        playerInst.gameObject.transform.rotation = spawnPointLoc.rotation;
+        Debug.Log("Scene loaded: " + scene.name);
     }
 }
