@@ -1,4 +1,4 @@
-# ![Project ZVE Logo](path_to_logo_image)
+# ![Project ZVE Logo](https://github.com/Juichilee/Project_ZVE/blob/main/DemoImages/pzve1.png)
 
 ## Project ZVE
 
@@ -45,6 +45,14 @@ In the near future, a scientific experiment gone wrong unleashes a zombie virus 
 - **Multiple Endings:** Your choices impact the game's outcome, leading to either a triumphant escape or a dire ending based on your use of mutations.
 
 ### **Gameplay Snippets**
+<img src="https://github.com/Juichilee/Project_ZVE/raw/main/DemoImages/pzve2.png" alt="pzve2" style="width:50%; height:50%;" />
+<img src="https://github.com/Juichilee/Project_ZVE/raw/main/DemoImages/pzve3.png" alt="pzve3" style="width:50%; height:50%;" />
+<img src="https://github.com/Juichilee/Project_ZVE/raw/main/DemoImages/pzve4.png" alt="pzve4" style="width:50%; height:50%;" />
+<img src="https://github.com/Juichilee/Project_ZVE/raw/main/DemoImages/pzve5.png" alt="pzve5" style="width:50%; height:50%;" />
+<img src="https://github.com/Juichilee/Project_ZVE/raw/main/DemoImages/pzve10.png" alt="pzve10" style="width:50%; height:50%;" />
+<img src="https://github.com/Juichilee/Project_ZVE/raw/main/DemoImages/pzve11.png" alt="pzve11" style="width:50%; height:50%;" />
+<img src="https://github.com/Juichilee/Project_ZVE/raw/main/DemoImages/pzve12.png" alt="pzve12" style="width:50%; height:50%;" />
+<img src="https://github.com/Juichilee/Project_ZVE/raw/main/DemoImages/pzve13.png" alt="pzve13" style="width:50%; height:50%;" />
 ---
 
 ## System Requirements
@@ -84,7 +92,7 @@ In the near future, a scientific experiment gone wrong unleashes a zombie virus 
 4. **Enjoy Playing:**
    - Use the Main Menu to start your adventure!
 ---
-
+![space_lotus_logo](https://github.com/Juichilee/Project_ZVE/blob/main/DemoImages/logo.png)
 ## Credits and Roles
 
 ### **Space Lotus Team Members**
